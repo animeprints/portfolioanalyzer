@@ -1,0 +1,50 @@
+{
+  "name": "cardzey",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "lint": "tsc --noEmit"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/animeprints/portfolioanalyzer.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/animeprints/portfolioanalyzer/issues"
+  },
+  "homepage": "https://github.com/animeprints/portfolioanalyzer#readme",
+  "dependencies": {
+    "@react-three/drei": "^10.7.7",
+    "@react-three/fiber": "^9.5.0",
+    "framer-motion": "^12.38.0",
+    "html2canvas": "^1.4.1",
+    "jspdf": "^4.2.1",
+    "lucide-react": "^1.7.0",
+    "mammoth": "^1.12.0",
+    "pdfjs-dist": "^5.6.205",
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4",
+    "react-dropzone": "^15.0.0",
+    "react-router-dom": "^7.13.2",
+    "three": "^0.183.2",
+    "zustand": "^5.0.12"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "@types/three": "^0.183.1",
+    "@vitejs/plugin-react": "^6.0.1",
+    "autoprefixer": "^10.4.27",
+    "postcss": "^8.5.8",
+    "tailwindcss": "^4.2.2",
+    "typescript": "^6.0.2",
+    "vite": "^8.0.3"
+  }
+}
