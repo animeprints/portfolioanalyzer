@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { shareService, SharedAnalysis } from '../services/shareService';
-import { BarChart3, Award, Target, Download, Lock, ExternalLink } from 'lucide-react';
+import { BarChart3, Award, Target, Download, Lock, ExternalLink, Shield } from 'lucide-react';
 
 export default function SharedAnalysisPage() {
   const { token } = useParams<{ token: string }>();
@@ -123,7 +123,7 @@ export default function SharedAnalysisPage() {
     return null;
   }
 
-  const { analysis: data, file_name } = analysis;
+  const { analysis: { analysis: data } } = analysis;
   const scores = data.scores;
 
   return (

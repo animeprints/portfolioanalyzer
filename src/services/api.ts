@@ -1,4 +1,4 @@
-import axios, { AxiosInstance, AxiosResponse } from 'axios';
+import axios, { AxiosInstance, AxiosResponse, AxiosRequestConfig } from 'axios';
 
 // Determine API URL based on environment
 const getApiBaseUrl = (): string => {
@@ -93,12 +93,12 @@ class ApiClient {
     return this.client.get(url, { params });
   }
 
-  async post<T>(url: string, data?: unknown): Promise<AxiosResponse<{ success: boolean; data?: T }>> {
-    return this.client.post(url, data);
+  async post<T>(url: string, data?: unknown, config?: AxiosRequestConfig): Promise<AxiosResponse<{ success: boolean; data?: T }>> {
+    return this.client.post(url, data, config);
   }
 
-  async put<T>(url: string, data?: unknown): Promise<AxiosResponse<{ success: boolean; data?: T }>> {
-    return this.client.put(url, data);
+  async put<T>(url: string, data?: unknown, config?: AxiosRequestConfig): Promise<AxiosResponse<{ success: boolean; data?: T }>> {
+    return this.client.put(url, data, config);
   }
 
   async delete<T>(url: string): Promise<AxiosResponse<{ success: boolean; data?: T }>> {

@@ -15,11 +15,11 @@ export interface ResumeTemplate {
 export const templateService = {
   async list(): Promise<{ templates: ResumeTemplate[]; count: number }> {
     const response = await api.get<{ templates: ResumeTemplate[]; count: number }>('/templates');
-    return response.data;
+    return response.data.data!;
   },
 
   async create(data: Partial<ResumeTemplate>): Promise<ResumeTemplate> {
     const response = await api.post<{ template: ResumeTemplate }>('/templates', data);
-    return response.data.template;
+    return response.data.data!.template;
   },
 };

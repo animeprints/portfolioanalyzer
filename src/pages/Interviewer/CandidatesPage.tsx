@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Search, Filter, X, User, Mail, BarChart3, Eye } from 'lucide-react';
-import { candidateService, CandidateResult } from '../../services/candidateService';
+import { Search, X, User, Mail, BarChart3, Eye } from 'lucide-react';
+import { candidateService, CandidateResult, CandidateSearchFilters } from '../../services/candidateService';
+import { Skill } from '../../store/useStore';
 import ProtectedRoute from '../../components/Auth/ProtectedRoute';
 
 export default function CandidatesPage() {
@@ -11,7 +12,6 @@ export default function CandidatesPage() {
 
   const [candidates, setCandidates] = useState<CandidateResult[]>([]);
   const [loading, setLoading] = useState(false);
-  const [showFilters, setShowFilters] = useState(false);
   const [filters, setFilters] = useState({
     skills: '',
     minExperience: '',
@@ -28,13 +28,12 @@ export default function CandidatesPage() {
   const searchCandidates = async () => {
     setLoading(true);
     try {
-      const queryParams: any = {};
+      const queryParams: CandidateSearchFilters = {};
       if (filters.skills) queryParams.skills = filters.skills.split(',').map(s => s.trim());
       if (filters.minExperience) queryParams.min_experience = parseInt(filters.minExperience);
       if (filters.keywords) queryParams.keywords = filters.keywords.split(',').map(k => k.trim());
 
-      // Build query string manually since service might not support
-      const result = await candidateService.search(filters);
+      const result = await candidateService.search(queryParams);
       setCandidates(result.candidates);
     } catch (err) {
       console.error('Search failed:', err);
@@ -219,7 +218,7 @@ export default function CandidatesPage() {
 
                         {/* Skills Preview */}
                         <div className="flex flex-wrap gap-2 mb-3">
-                          {candidate.analysis.skills.slice(0, 5).map(skill => (
+                          {candidate.analysis.skills.slice(0, 5).map((skill: Skill) => (
                             <span
                               key={skill.name}
                               className="px-2 py-1 bg-white/5 border border-cyan-400/30 rounded text-xs text-cyan-300"

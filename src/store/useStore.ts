@@ -68,13 +68,18 @@ export interface UserProfile {
   id: string
   email: string
   name: string
+  role?: 'candidate' | 'interviewer' | 'admin'
   createdAt: Date
   cvHistory: string[] // analysis IDs
   savedJobs: string[] // job description IDs
   preferences: {
-    theme: 'dark' | 'light'
-    animations: boolean
+    language?: string
+    theme: 'dark' | 'light' | 'system'
+    animations?: boolean
     notifications: boolean
+    linkedin_url?: string
+    github_url?: string
+    website_url?: string
   }
 }
 

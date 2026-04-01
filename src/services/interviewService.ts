@@ -32,7 +32,7 @@ export const interviewService = {
     limit?: number;
   }): Promise<{ questions: InterviewQuestion[]; count: number }> {
     const response = await api.get<{ questions: InterviewQuestion[]; count: number }>('/interview/questions', params);
-    return response.data;
+    return response.data.data!;
   },
 
   async recordPractice(data: {
@@ -45,6 +45,6 @@ export const interviewService = {
 
   async getPracticeHistory(): Promise<{ history: PracticeRecord[]; count: number }> {
     const response = await api.get<{ history: PracticeRecord[]; count: number }>('/interview/practice');
-    return response.data;
+    return response.data.data!;
   },
 };

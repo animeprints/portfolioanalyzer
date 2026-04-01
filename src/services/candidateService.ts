@@ -1,4 +1,5 @@
 import api from './api';
+import type { CVAnalysis as StoreCVAnalysis } from '../store/useStore';
 
 export interface CandidateSearchFilters {
   skills?: string[]; // Required skills - must have all
@@ -14,22 +15,9 @@ export interface CandidateResult {
   file_size?: number;
   file_type?: string;
   created_at: string;
-  analysis_data: {
-    personalInfo: {
-      name?: string;
-      email?: string;
-      phone?: string;
-      linkedin?: string;
-      github?: string;
-      website?: string;
-    };
-    summary?: string;
-    skills: Array<{ name: string; category: string; score: number; relevance: number }>;
-    experience: { years: number; level: string; positions: Array<any> };
-    education: Array<any>;
-    scores: { overall: number; ats: number; readability: number; impact: number; completeness: number };
-    feedback: { strengths: string[]; improvements: string[]; keywords: string[]; missingSkills: string[] };
-  };
+  analysis_data: StoreCVAnalysis;
+  // Alias for convenience
+  analysis: StoreCVAnalysis;
 }
 
 export interface CandidateSearchResponse {
@@ -41,6 +29,14 @@ export interface CandidateSearchResponse {
 export const candidateService = {
   async search(filters: CandidateSearchFilters): Promise<CandidateSearchResponse> {
     const response = await api.post<CandidateSearchResponse>('/candidates/search', filters);
-    return response.data;
+    const result = response.data.data!;
+    // Transform analysis_data to analysis for component compatibility
+    return {
+      ...result,
+      candidates: result.candidates.map(candidate => ({
+        ...candidate,
+        analysis: candidate.analysis_data
+      }))
+    };
   },
 };

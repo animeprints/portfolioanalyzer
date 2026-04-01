@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { ArrowLeft, Save } from 'lucide-react';
-import { jobService } from '../../services/jobService';
+import { jobService, Job } from '../../services/jobService';
 import ProtectedRoute from '../../components/Auth/ProtectedRoute';
 
 export default function JobEditPage() {
@@ -28,7 +28,7 @@ export default function JobEditPage() {
   const loadJob = async () => {
     try {
       const jobsResult = await jobService.list();
-      const job = jobsResult.jobs.find(j => j.id === id);
+      const job = jobsResult.jobs.find((j: Job) => j.id === id);
       if (job) {
         setTitle(job.title);
         setCompany(job.company || '');

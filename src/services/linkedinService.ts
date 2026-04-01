@@ -31,11 +31,11 @@ export interface LinkedInAnalysisResult {
 export const linkedinService = {
   async analyze(data: { profile_data: LinkedInProfileData }): Promise<LinkedInAnalysisResult> {
     const response = await api.post<LinkedInAnalysisResult>('/linkedin/analyze', data);
-    return response.data;
+    return response.data.data!;
   },
 
   async getProfile(): Promise<LinkedInAnalysisResult> {
     const response = await api.get<LinkedInAnalysisResult>('/linkedin/profile');
-    return response.data;
+    return response.data.data!;
   },
 };

@@ -22,7 +22,7 @@ export default function ProtectedRoute({ children, allowedRoles }: ProtectedRout
     return <Navigate to="/login" replace />;
   }
 
-  if (allowedRoles && user && !allowedRoles.includes(user.role)) {
+  if (allowedRoles && user && user.role && !allowedRoles.includes(user.role)) {
     // User doesn't have permission - could redirect to dashboard with error
     return <Navigate to="/dashboard" replace />;
   }

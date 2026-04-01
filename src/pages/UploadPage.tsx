@@ -103,7 +103,7 @@ export default function UploadPage() {
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
         >
-          <FileUpload onFileSelect={handleFileSelect} isLoading={false} error={error} />
+          <FileUpload onFileSelect={handleFileSelect} isLoading={loading} error={error} />
         </motion.div>
       </div>
 

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { authService, User } from '../services/authService';
+import { authService } from '../services/authService';
 import { useStore } from '../store/useStore';
 
 export function useAuth() {

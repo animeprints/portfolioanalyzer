@@ -27,11 +27,11 @@ export interface SharedAnalysis {
 
 export const shareService = {
   async createShareLink(analysisId: string, options?: { expires_in_days?: number; password?: string }): Promise<ShareLinkResponse> {
-    const response = await api.post<ShareLinkResponse>('/share', {
+    const response = await api.post<{ share_url: string; token: string; expires_at?: string }>('/share', {
       analysis_id: analysisId,
       ...options,
     });
-    return response.data;
+    return response.data.data!;
   },
 
   async revokeShareLink(token: string): Promise<void> {
@@ -39,9 +39,9 @@ export const shareService = {
   },
 
   async getSharedAnalysis(token: string, password?: string): Promise<SharedAnalysis> {
-    const response = await api.get<{ success: boolean; analysis: SharedAnalysis }>(`/share/${token}`, {
+    const response = await api.get<{ analysis: SharedAnalysis }>(`/share/${token}`, {
       data: { password },
     });
-    return response.data.analysis;
+    return response.data.data!.analysis;
   },
 };

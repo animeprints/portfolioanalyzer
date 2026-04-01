@@ -6,24 +6,11 @@ import {
   Edit2,
   Trash2,
   Briefcase,
-  MapPin,
   Clock,
-  ChevronRight,
   Search
 } from 'lucide-react';
-import { jobService } from '../../services/jobService';
+import { jobService, Job } from '../../services/jobService';
 import ProtectedRoute from '../../components/Auth/ProtectedRoute';
-
-interface Job {
-  id: string;
-  title: string;
-  company: string;
-  description?: string;
-  requirements?: any[];
-  filters?: any[];
-  status: 'draft' | 'active' | 'closed' | 'archived';
-  created_at: string;
-}
 
 export default function JobsPage() {
   const navigate = useNavigate();

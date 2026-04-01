@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { useStore } from '../store/useStore'
 import {
@@ -17,16 +16,14 @@ import {
 } from 'lucide-react'
 import { generatePDFReport } from '../utils/pdfExporter'
 import { matchJobDescription } from '../utils/jobMatcher'
-import { analysisService, CVAnalysis } from '../services/analysisService'
+import { analysisService, CVAnalysisResponse } from '../services/analysisService'
 import JobMatchCard from '../components/JobMatchCard'
 
 export default function DashboardPage() {
-  const navigate = useNavigate();
   const { currentCVAnalysis: storeAnalysis, setCurrentAnalysis, jobDescriptions, addJobDescription, updateJobMatch } = useStore();
 
   // State for loading analyses list
-  const [analysesList, setAnalysesList] = useState<CVAnalysis[]>([]);
-  const [loadingAnalyses, setLoadingAnalyses] = useState(false);
+  const [analysesList, setAnalysesList] = useState<CVAnalysisResponse[]>([]);
 
   // Load user's analyses list on mount
   useEffect(() => {

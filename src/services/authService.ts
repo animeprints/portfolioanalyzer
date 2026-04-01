@@ -38,7 +38,7 @@ export const authService = {
       name,
       role,
     });
-    return response.data;
+    return response.data.data!;
   },
 
   async login(email: string, password: string): Promise<AuthResponse> {
@@ -47,13 +47,13 @@ export const authService = {
       password,
     });
 
-    if (response.data.success) {
-      localStorage.setItem('access_token', response.data.tokens.access_token);
-      localStorage.setItem('refresh_token', response.data.tokens.refresh_token);
-      api.setToken(response.data.tokens.access_token);
+    if (response.data.data && response.data.data.tokens) {
+      localStorage.setItem('access_token', response.data.data.tokens.access_token);
+      localStorage.setItem('refresh_token', response.data.data.tokens.refresh_token);
+      api.setToken(response.data.data.tokens.access_token);
     }
 
-    return response.data;
+    return response.data.data!;
   },
 
   async refresh(): Promise<{ access_token: string }> {
@@ -66,12 +66,12 @@ export const authService = {
       refresh_token: refreshToken,
     });
 
-    if (response.data.success) {
-      localStorage.setItem('access_token', response.data.access_token);
-      api.setToken(response.data.access_token);
+    if (response.data.data) {
+      localStorage.setItem('access_token', response.data.data.access_token);
+      api.setToken(response.data.data.access_token);
     }
 
-    return response.data;
+    return response.data.data!;
   },
 
   async logout(): Promise<void> {
@@ -81,7 +81,7 @@ export const authService = {
 
   async getCurrentUser(): Promise<User> {
     const response = await api.get<{ user: User }>('/auth/me');
-    return response.data.user!;
+    return response.data.data?.user!;
   },
 
   isAuthenticated(): boolean {

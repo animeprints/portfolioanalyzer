@@ -8,11 +8,10 @@ import {
   Calendar,
   Plus,
   ChevronRight,
-  BarChart3,
-  Target
+  BarChart3
 } from 'lucide-react';
-import { jobService } from '../services/jobService';
-import ProtectedRoute from '../components/Auth/ProtectedRoute';
+import { jobService } from '../../services/jobService';
+import ProtectedRoute from '../../components/Auth/ProtectedRoute';
 
 interface Job {
   id: string;
