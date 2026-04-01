@@ -26,6 +26,9 @@
     "@react-three/fiber": "^9.5.0",
     "framer-motion": "^12.38.0",
     "html2canvas": "^1.4.1",
+    "i18next": "^23.7.6",
+    "i18next-browser-languagedetector": "^7.2.0",
+    "react-i18next": "^13.5.0",
     "jspdf": "^4.2.1",
     "lucide-react": "^1.7.0",
     "mammoth": "^1.12.0",
@@ -46,6 +49,7 @@
     "postcss": "^8.5.8",
     "tailwindcss": "^3.4.19",
     "typescript": "^6.0.2",
-    "vite": "^8.0.3"
+    "vite": "^8.0.3",
+    "vite-plugin-pwa": "^0.17.4"
   }
 }

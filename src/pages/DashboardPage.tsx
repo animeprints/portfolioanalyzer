@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { useStore } from '../store/useStore'
@@ -11,29 +11,80 @@ import {
   Award,
   TrendingUp,
   MessageSquare,
-  Shield
+  Shield,
+  History,
+  FileText
 } from 'lucide-react'
 import { generatePDFReport } from '../utils/pdfExporter'
 import { matchJobDescription } from '../utils/jobMatcher'
+import { analysisService, CVAnalysis } from '../services/analysisService'
 import JobMatchCard from '../components/JobMatchCard'
 
 export default function DashboardPage() {
-  const navigate = useNavigate()
-  const { currentCVAnalysis, jobDescriptions, addJobDescription, updateJobMatch } = useStore()
+  const navigate = useNavigate();
+  const { currentCVAnalysis: storeAnalysis, setCurrentAnalysis, jobDescriptions, addJobDescription, updateJobMatch } = useStore();
 
+  // State for loading analyses list
+  const [analysesList, setAnalysesList] = useState<CVAnalysis[]>([]);
+  const [loadingAnalyses, setLoadingAnalyses] = useState(false);
+
+  // Load user's analyses list on mount
   useEffect(() => {
-    if (!currentCVAnalysis) {
-      navigate('/')
-    }
-  }, [currentCVAnalysis, navigate])
+    const loadAnalyses = async () => {
+      try {
+        const result = await analysisService.list();
+        setAnalysesList(result.analyses);
+      } catch (err) {
+        console.error('Failed to load analyses:', err);
+      }
+    };
 
-  if (!currentCVAnalysis) return null
+    // If we've already got an analysis from store, keep it.
+    // If we navigate directly to /dashboard without analysis, try to load the most recent one.
+    if (!storeAnalysis && analysesList.length === 0) {
+      loadAnalyses();
+    }
+  }, [storeAnalysis, analysesList.length]);
+
+  // Set the most recent analysis if we have list but no current
+  useEffect(() => {
+    if (!storeAnalysis && analysesList.length > 0) {
+      // Fetch first analysis details
+      const loadAnalysis = async () => {
+        try {
+          const result = await analysisService.get(analysesList[0].id);
+          setCurrentAnalysis(result.analysis);
+        } catch (err) {
+          console.error('Failed to load analysis:', err);
+        }
+      };
+      loadAnalysis();
+    }
+  }, [storeAnalysis, analysesList, setCurrentAnalysis]);
+
+  // Redirect to home if no analysis can be loaded
+  useEffect(() => {
+    if (!storeAnalysis && analysesList.length === 0) {
+      // Still loading or no analyses
+    }
+  }, [storeAnalysis, analysesList]);
+
+  if (!storeAnalysis) {
+    return null; // or loading spinner
+  }
 
   const handleExportPDF = () => {
-    if (currentCVAnalysis) {
-      generatePDFReport(currentCVAnalysis)
+    generatePDFReport(storeAnalysis);
+  };
+
+  const handleAnalysisSelect = async (analysisId: string) => {
+    try {
+      const result = await analysisService.get(analysisId);
+      setCurrentAnalysis(result.analysis);
+    } catch (err) {
+      console.error('Failed to load analysis:', err);
     }
-  }
+  };
 
   const getScoreColor = (score: number) => {
     if (score >= 80) return 'text-green-400'
@@ -64,8 +115,8 @@ export default function DashboardPage() {
     addJobDescription(job)
 
     // Auto-match
-    if (currentCVAnalysis) {
-      const match = matchJobDescription(currentCVAnalysis.skills, job)
+    if (storeAnalysis) {
+      const match = matchJobDescription(storeAnalysis.skills, job)
       updateJobMatch(job.id, {
         matchScore: match.matchScore,
         matchedSkills: match.matchedSkills,
@@ -95,6 +146,36 @@ export default function DashboardPage() {
             <span>Export PDF</span>
           </button>
         </motion.div>
+
+        {/* CV History Selector */}
+        {analysesList.length > 1 && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="glass-card p-4 flex items-center gap-4"
+          >
+            <div className="flex items-center gap-2 text-gray-300">
+              <History className="w-5 h-5" />
+              <span className="font-medium">Your CV Analyses:</span>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {analysesList.map((analysis) => (
+                <button
+                  key={analysis.id}
+                  onClick={() => handleAnalysisSelect(analysis.id)}
+                  className={`px-4 py-2 rounded-lg text-sm flex items-center gap-2 transition-all ${
+                    storeAnalysis.id === analysis.id
+                      ? 'bg-gradient-to-r from-cyan-500 to-purple-500 text-white'
+                      : 'bg-white/5 text-gray-300 hover:bg-white/10'
+                  }`}
+                >
+                  <FileText className="w-4 h-4" />
+                  {analysis.file_name} - {new Date(analysis.created_at).toLocaleDateString()}
+                </button>
+              ))}
+            </div>
+          </motion.div>
+        )}
 
         {/* Overall Score */}
         <motion.div
@@ -127,7 +208,7 @@ export default function DashboardPage() {
                   stroke="url(#gradient)"
                   strokeWidth="8"
                   strokeDasharray={`${2 * Math.PI * 70}`}
-                  strokeDashoffset={`${2 * Math.PI * 70 * (1 - currentCVAnalysis.scores.overall / 100)}`}
+                  strokeDashoffset={`${2 * Math.PI * 70 * (1 - storeAnalysis.scores.overall / 100)}`}
                   strokeLinecap="round"
                 />
                 <defs>
@@ -138,8 +219,8 @@ export default function DashboardPage() {
                 </defs>
               </svg>
               <div className="absolute inset-0 flex items-center justify-center">
-                <span className={`text-5xl font-bold ${getScoreColor(currentCVAnalysis.scores.overall)}`}>
-                  {currentCVAnalysis.scores.overall}
+                <span className={`text-5xl font-bold ${getScoreColor(storeAnalysis.scores.overall)}`}>
+                  {storeAnalysis.scores.overall}
                 </span>
               </div>
             </div>
@@ -149,10 +230,10 @@ export default function DashboardPage() {
         {/* Score Breakdown */}
         <div className="grid md:grid-cols-4 gap-6">
           {[
-            { label: 'ATS Compatible', value: currentCVAnalysis.scores.ats, icon: Shield },
-            { label: 'Readability', value: currentCVAnalysis.scores.readability, icon: MessageSquare },
-            { label: 'Impact', value: currentCVAnalysis.scores.impact, icon: TrendingUp },
-            { label: 'Completeness', value: currentCVAnalysis.scores.completeness, icon: Award }
+            { label: 'ATS Compatible', value: storeAnalysis.scores.ats, icon: Shield },
+            { label: 'Readability', value: storeAnalysis.scores.readability, icon: MessageSquare },
+            { label: 'Impact', value: storeAnalysis.scores.impact, icon: TrendingUp },
+            { label: 'Completeness', value: storeAnalysis.scores.completeness, icon: Award }
           ].map((metric, index) => (
             <motion.div
               key={metric.label}
@@ -196,10 +277,10 @@ export default function DashboardPage() {
               <h2 className="text-2xl font-bold text-white">Your Skills</h2>
             </div>
             <p className="text-gray-400 text-sm mb-6">
-              {currentCVAnalysis.skills.length} skills identified from your CV
+              {storeAnalysis.skills.length} skills identified from your CV
             </p>
             <div className="flex flex-wrap gap-3">
-              {currentCVAnalysis.skills.map((skill, index) => (
+              {storeAnalysis.skills.map((skill, index) => (
                 <motion.span
                   key={skill.name}
                   initial={{ opacity: 0, scale: 0.8 }}
@@ -231,7 +312,7 @@ export default function DashboardPage() {
                   <Award className="w-4 h-4" /> Strengths
                 </h3>
                 <ul className="space-y-2">
-                  {currentCVAnalysis.feedback.strengths.slice(0, 4).map((strength, i) => (
+                  {storeAnalysis.feedback.strengths.slice(0, 4).map((strength, i) => (
                     <li key={i} className="text-gray-300 text-sm flex items-start gap-2">
                       <span className="text-green-400 mt-1">✓</span>
                       {strength}
@@ -245,7 +326,7 @@ export default function DashboardPage() {
                   <AlertCircle className="w-4 h-4" /> Improvements
                 </h3>
                 <ul className="space-y-2">
-                  {currentCVAnalysis.feedback.improvements.slice(0, 4).map((improvement, i) => (
+                  {storeAnalysis.feedback.improvements.slice(0, 4).map((improvement, i) => (
                     <li key={i} className="text-gray-300 text-sm flex items-start gap-2">
                       <span className="text-yellow-400 mt-1">→</span>
                       {improvement}

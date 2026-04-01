@@ -1,38 +1,35 @@
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { motion } from 'framer-motion'
-import FileUpload from '../components/UI/FileUpload'
-import { parseFile } from '../utils/cvParser'
-import { analyzeCV } from '../utils/analysisEngine'
-import { useStore } from '../store/useStore'
-import { Sparkles, Zap, Shield, BarChart3 } from 'lucide-react'
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import FileUpload from '../components/UI/FileUpload';
+import { analysisService } from '../services/analysisService';
+import { useStore } from '../store/useStore';
+import { Sparkles, Zap, Shield, BarChart3 } from 'lucide-react';
 
 export default function UploadPage() {
-  const navigate = useNavigate()
-  const { setCurrentAnalysis, setLoading } = useStore()
-  const [error, setError] = useState<string | undefined>(undefined)
+  const navigate = useNavigate();
+  const { setCurrentAnalysis } = useStore();
+  const [error, setError] = useState<string | undefined>(undefined);
+  const [loading, setLoading] = useState(false);
 
   const handleFileSelect = async (file: File) => {
-    setError(undefined)
-    setLoading(true)
+    setError(undefined);
+    setLoading(true);
 
     try {
-      // Parse the file
-      const parsed = await parseFile(file)
+      // Upload and analyze on server
+      const result = await analysisService.uploadCV(file);
 
-      // Analyze CV
-      const analysis = analyzeCV(parsed.text)
-
-      // Store analysis
-      setCurrentAnalysis(analysis)
+      // Store analysis in state
+      setCurrentAnalysis(result.analysis);
 
       // Navigate to dashboard
-      navigate('/dashboard')
+      navigate('/dashboard');
     } catch (err: any) {
-      setError(err.message || 'Failed to analyze CV')
-      setLoading(false)
+      setError(err.response?.data?.error || 'Failed to analyze CV');
+      setLoading(false);
     }
-  }
+  };
 
   const features = [
     {
