@@ -23,7 +23,8 @@ class CorsMiddleware
         // Debug logging (uncomment if needed)
         // error_log("CORS: Origin=$origin, Allowed=" . implode(',', $allowedOrigins));
 
-        if (in_array($origin, $allowedOrigins)) {
+        // Allow configured origins OR any vercel.app subdomain (for Vercel preview deployments)
+        if (in_array($origin, $allowedOrigins) || str_ends_with($origin, '.vercel.app')) {
             header("Access-Control-Allow-Origin: $origin");
             header('Access-Control-Allow-Credentials: true');
         }
