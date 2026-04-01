@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Controllers;
+use App\Utils\Response;
 
 use App\Models\User;
 
@@ -48,15 +49,18 @@ class AuthController
             Response::json([
                 'success' => true,
                 'message' => 'Registration successful',
-                'user' => [
-                    'id' => $user['id'],
-                    'email' => $user['email'],
-                    'name' => $user['name'],
-                    'role' => $user['role']
+                'data' => [
+                    'user' => [
+                        'id' => $user['id'],
+                        'email' => $user['email'],
+                        'name' => $user['name'],
+                        'role' => $user['role']
+                    ]
                 ]
             ], 201);
         } catch (\Exception $e) {
-            Response::error($e->getMessage(), 500);
+            error_log('Registration error: ' . $e->getMessage() . "\n" . $e->getTraceAsString());
+            Response::error('Registration failed: ' . $e->getMessage(), 500);
         }
     }
 
@@ -84,16 +88,18 @@ class AuthController
         Response::json([
             'success' => true,
             'message' => 'Login successful',
-            'user' => [
-                'id' => $user['id'],
-                'email' => $user['email'],
-                'name' => $user['name'],
-                'role' => $user['role']
-            ],
-            'tokens' => [
-                'access_token' => $accessToken,
-                'refresh_token' => $refreshToken,
-                'expires_in' => $_ENV['JWT_EXPIRES_IN'] ?? 900
+            'data' => [
+                'user' => [
+                    'id' => $user['id'],
+                    'email' => $user['email'],
+                    'name' => $user['name'],
+                    'role' => $user['role']
+                ],
+                'tokens' => [
+                    'access_token' => $accessToken,
+                    'refresh_token' => $refreshToken,
+                    'expires_in' => $_ENV['JWT_EXPIRES_IN'] ?? 900
+                ]
             ]
         ]);
     }
@@ -124,8 +130,10 @@ class AuthController
 
             Response::json([
                 'success' => true,
-                'access_token' => $accessToken,
-                'expires_in' => $_ENV['JWT_EXPIRES_IN'] ?? 900
+                'data' => [
+                    'access_token' => $accessToken,
+                    'expires_in' => $_ENV['JWT_EXPIRES_IN'] ?? 900
+                ]
             ]);
         } catch (\Exception $e) {
             Response::error('Invalid refresh token', 401);
@@ -149,7 +157,9 @@ class AuthController
 
         Response::json([
             'success' => true,
-            'user' => $user
+            'data' => [
+                'user' => $user
+            ]
         ]);
     }
 

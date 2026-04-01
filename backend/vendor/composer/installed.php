@@ -3,7 +3,7 @@
         'name' => 'cardzey/cv-analyzer-backend',
         'pretty_version' => 'dev-master',
         'version' => 'dev-master',
-        'reference' => '3798f40c164e084a9c2eeeb1eac0b7368dde31bc',
+        'reference' => '6188f5cad47a4ba34d9e38eda537ee873579f6c8',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -13,7 +13,7 @@
         'cardzey/cv-analyzer-backend' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '3798f40c164e084a9c2eeeb1eac0b7368dde31bc',
+            'reference' => '6188f5cad47a4ba34d9e38eda537ee873579f6c8',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

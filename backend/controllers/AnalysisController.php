@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Controllers;
+use App\Utils\Response;
 
 use App\Utils\CVUploader;
 use App\Utils\AnalysisEngine;

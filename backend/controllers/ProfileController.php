@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Controllers;
+use App\Utils\Response;
 
 use App\Models\Profile;
 

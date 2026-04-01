@@ -16,11 +16,15 @@ class Database
 
     public function __construct()
     {
+        // Try environment variables first, fallback to hardcoded production values
         $this->host = $_ENV['DB_HOST'] ?? 'localhost';
-        $this->dbname = $_ENV['DB_NAME'] ?? 'cardzey';
-        $this->username = $_ENV['DB_USER'] ?? 'root';
-        $this->password = $_ENV['DB_PASS'] ?? '';
+        $this->dbname = $_ENV['DB_NAME'] ?? 'u518052050_cv';
+        $this->username = $_ENV['DB_USER'] ?? 'u518052050_cv';
+        $this->password = $_ENV['DB_PASS'] ?? 'Rajeev@Anu2010';
         $this->charset = $_ENV['DB_CHARSET'] ?? 'utf8mb4';
+
+        // Log which config is being used
+        error_log("Database config - Host: {$this->host}, DB: {$this->dbname}, User: {$this->username}");
     }
 
     public static function getConnection(): PDO
@@ -35,6 +39,9 @@ class Database
 
     private function connect(): PDO
     {
+        // Log environment variables for debugging (remove in production)
+        error_log("DB Config - Host: {$this->host}, DB: {$this->dbname}, User: {$this->username}");
+
         $dsn = "mysql:host={$this->host};dbname={$this->dbname};charset={$this->charset}";
         $options = [
             PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
@@ -46,7 +53,7 @@ class Database
             return new PDO($dsn, $this->username, $this->password, $options);
         } catch (PDOException $e) {
             error_log('Database connection failed: ' . $e->getMessage());
-            throw new PDOException('Database connection error');
+            throw new PDOException('Database connection error: ' . $e->getMessage());
         }
     }
 }

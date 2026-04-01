@@ -9,8 +9,15 @@
   },
   "autoload": {
     "psr-4": {
-      "App\\": "src/"
-    }
+      "App\\": "./"
+    },
+    "classmap": [
+      "controllers/",
+      "models/",
+      "middleware/",
+      "config/",
+      "utils/"
+    ]
   },
   "scripts": {
     "post-install-cmd": [

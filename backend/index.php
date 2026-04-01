@@ -1,7 +1,7 @@
 <?php
 
-// Enable error logging but don't display
-ini_set('display_errors', 'environ');
+// Enable error logging and display
+ini_set('display_errors', '1');
 error_reporting(E_ALL);
 
 // Load environment variables
@@ -14,10 +14,14 @@ require_once __DIR__ . '/middleware/cors.php';
 $cors = new \App\Middleware\CorsMiddleware();
 $cors->handle();
 
+// Load core classes
+require_once __DIR__ . '/utils/Response.php';
+class_alias('App\Utils\Response', 'Response');
+
 // Parse request
 $method = $_SERVER['REQUEST_METHOD'];
 $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
-$path = str_replace('/api', '', $path);
+$path = str_replace('/api', '', $uri);
 
 // Remove trailing slash
 if ($path !== '/' && str_ends_with($path, '/')) {
@@ -355,8 +359,21 @@ try {
     http_response_code(404);
     Response::error('Endpoint not found', 404);
 
-} catch (\Exception $e) {
+} catch (\Throwable $e) {
+    // Log to error log
     error_log('API Error: ' . $e->getMessage() . "\n" . $e->getTraceAsString());
-    http_response_code(500);
-    Response::error('Internal server error: ' . $e->getMessage(), 500);
+
+    // Also output to screen for debugging
+    if (!headers_sent()) {
+        header('Content-Type: application/json');
+    }
+    echo json_encode([
+        'success' => false,
+        'error' => 'Internal server error',
+        'message' => $e->getMessage(),
+        'file' => $e->getFile(),
+        'line' => $e->getLine(),
+        'trace' => $e->getTraceAsString()
+    ], JSON_PRETTY_PRINT);
+    exit;
 }
