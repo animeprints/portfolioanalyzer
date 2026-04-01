@@ -91,10 +91,10 @@ function App() {
               </ProtectedRoute>
             }
           />
-        </Routes>
 
-        {/* Fallback */}
-        <Route path="*" element={<Navigate to="/" replace />} />
+          {/* Fallback - 404 */}
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
       </div>
     </Router>
   );
