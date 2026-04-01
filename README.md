@@ -203,4 +203,4 @@ ISC
 
 ## Credits
 
-Built with ❤️ using modern web technologies and AI assistance.
+Built with ❤️ Rajeev Reddy
