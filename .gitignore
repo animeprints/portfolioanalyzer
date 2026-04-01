@@ -6,6 +6,9 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
+# PHP Dependencies (vendor will be committed for deployment)
+# vendor/  <-- We're committing this, so don't ignore
+
 # Build outputs
 dist/
 dist-ssr/
@@ -50,3 +53,6 @@ coverage/
 # Temp files
 tmp/
 temp/
+
+# Deployment artifacts
+backend-deploy.zip
