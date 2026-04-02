@@ -3,17 +3,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useStore } from '../../store/useStore';
 import { authService } from '../../services/authService';
-import { Menu, X, User, LogOut, FileCode } from 'lucide-react';
+import { Menu, X, User, LogOut } from 'lucide-react';
 
-// Get API base URL for documentation link
-const getApiDocsUrl = (): string => {
-  // In production, VITE_API_URL points to backend (e.g., https://domain.com/api)
-  if (import.meta.env.VITE_API_URL) {
-    return import.meta.env.VITE_API_URL;
-  }
-  // Fallback
-  return 'http://localhost:8000/api';
-};
 
 export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -31,7 +22,6 @@ export default function Navbar() {
     { name: 'Launch App', href: '/upload' },
     { name: 'LinkedIn Optimizer', href: '/linkedin' },
     { name: 'Interview Prep', href: '/interview' },
-    { name: 'API Docs', href: getApiDocsUrl(), external: true },
   ];
 
   return (
