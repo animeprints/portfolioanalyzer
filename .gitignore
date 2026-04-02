@@ -13,6 +13,10 @@ lerna-debug.log*
 dist/
 dist-ssr/
 *.local
+deploy/
+
+# Generated deployment packages (use: npm run build && cp -r dist deploy/)
+# The deploy/ folder should be regenerated, not committed
 
 # IDE
 .vscode/*
