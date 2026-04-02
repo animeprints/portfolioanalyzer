@@ -13,6 +13,9 @@ import InterviewerDashboardPage from './pages/Interviewer/DashboardPage';
 import InterviewerJobsPage from './pages/Interviewer/JobsPage';
 import InterviewerJobEditPage from './pages/Interviewer/JobEditPage';
 import InterviewerCandidatesPage from './pages/Interviewer/CandidatesPage';
+import InterviewerApplicationsPage from './pages/Interviewer/ApplicationsPage';
+import JobsPage from './pages/JobsPage';
+import ApplicationsPage from './pages/ApplicationsPage';
 import ProtectedRoute from './components/Auth/ProtectedRoute';
 import Navbar from './components/Layout/Navbar';
 
@@ -145,6 +148,42 @@ function App() {
             <ProtectedRoute allowedRoles={['interviewer', 'admin']}>
               <AppLayout withParticle>
                 <InterviewerCandidatesPage />
+              </AppLayout>
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Interviewer Applications */}
+        <Route
+          path="/interviewer/applications"
+          element={
+            <ProtectedRoute allowedRoles={['interviewer', 'admin']}>
+              <AppLayout withParticle>
+                <InterviewerApplicationsPage />
+              </AppLayout>
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Candidate Jobs - view and apply */}
+        <Route
+          path="/jobs"
+          element={
+            <ProtectedRoute>
+              <AppLayout withParticle={false}>
+                <JobsPage />
+              </AppLayout>
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Candidate Applications - track my applications */}
+        <Route
+          path="/applications"
+          element={
+            <ProtectedRoute>
+              <AppLayout withParticle={false}>
+                <ApplicationsPage />
               </AppLayout>
             </ProtectedRoute>
           }

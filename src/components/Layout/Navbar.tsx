@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useStore } from '../../store/useStore';
 import { authService } from '../../services/authService';
-import { Menu, X, User, LogOut } from 'lucide-react';
+import { Menu, X, User, LogOut, Briefcase, FileText } from 'lucide-react';
 
 
 export default function Navbar() {
@@ -61,7 +61,7 @@ export default function Navbar() {
                   </div>
                   <span className="text-gray-300 text-sm">{currentUser.email?.split('@')[0]}</span>
                 </button>
-                <div className="absolute right-0 mt-2 w-48 py-2 bg-white/5 backdrop-blur-xl border border-white/10 rounded-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                <div className="absolute right-0 mt-2 w-56 py-2 bg-white/5 backdrop-blur-xl border border-white/10 rounded-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
                   <Link
                     to="/dashboard"
                     className="block px-4 py-2 text-gray-300 hover:text-white hover:bg-white/5"
@@ -74,6 +74,33 @@ export default function Navbar() {
                   >
                     Profile
                   </Link>
+                  <div className="border-t border-white/10 my-2" />
+                  <Link
+                    to="/jobs"
+                    className="block px-4 py-2 text-gray-300 hover:text-white hover:bg-white/5 flex items-center gap-2"
+                  >
+                    <Briefcase className="w-4 h-4" />
+                    Browse Jobs
+                  </Link>
+                  <Link
+                    to="/applications"
+                    className="block px-4 py-2 text-gray-300 hover:text-white hover:bg-white/5 flex items-center gap-2"
+                  >
+                    <FileText className="w-4 h-4" />
+                    My Applications
+                  </Link>
+                  {currentUser?.role === 'interviewer' || currentUser?.role === 'admin' ? (
+                    <>
+                      <div className="border-t border-white/10 my-2" />
+                      <Link
+                        to="/interviewer"
+                        className="block px-4 py-2 text-cyan-400 hover:text-cyan-300 hover:bg-white/5 font-medium"
+                      >
+                        Interviewer Portal
+                      </Link>
+                    </>
+                  ) : null}
+                  <div className="border-t border-white/10 my-2" />
                   <button
                     onClick={handleLogout}
                     className="w-full text-left px-4 py-2 text-gray-300 hover:text-white hover:bg-white/5 flex items-center gap-2"
@@ -147,6 +174,31 @@ export default function Navbar() {
                       >
                         Profile
                       </Link>
+                      <Link
+                        to="/jobs"
+                        className="block py-2 text-gray-300 hover:text-white flex items-center gap-2"
+                        onClick={() => setMobileMenuOpen(false)}
+                      >
+                        <Briefcase className="w-4 h-4" />
+                        Browse Jobs
+                      </Link>
+                      <Link
+                        to="/applications"
+                        className="block py-2 text-gray-300 hover:text-white flex items-center gap-2"
+                        onClick={() => setMobileMenuOpen(false)}
+                      >
+                        <FileText className="w-4 h-4" />
+                        My Applications
+                      </Link>
+                      {currentUser?.role === 'interviewer' || currentUser?.role === 'admin' ? (
+                        <Link
+                          to="/interviewer"
+                          className="block py-2 text-cyan-400 hover:text-cyan-300 font-medium"
+                          onClick={() => setMobileMenuOpen(false)}
+                        >
+                          Interviewer Portal
+                        </Link>
+                      ) : null}
                       <button
                         onClick={() => {
                           handleLogout();

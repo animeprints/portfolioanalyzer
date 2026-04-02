@@ -7,7 +7,8 @@ import {
   Trash2,
   Briefcase,
   Clock,
-  Search
+  Search,
+  Users
 } from 'lucide-react';
 import { jobService, Job } from '../../services/jobService';
 import ProtectedRoute from '../../components/Auth/ProtectedRoute';
@@ -188,6 +189,13 @@ export default function JobsPage() {
                       >
                         <Search className="w-4 h-4" />
                         Find Candidates
+                      </button>
+                      <button
+                        onClick={() => navigate(`/interviewer/applications?jobId=${job.id}`)}
+                        className="px-4 py-2 bg-purple-500/20 border border-purple-400/30 rounded-lg text-purple-300 hover:bg-purple-500/30 transition-colors flex items-center gap-2"
+                      >
+                        <Users className="w-4 h-4" />
+                        View Applications
                       </button>
                     </div>
                   </div>

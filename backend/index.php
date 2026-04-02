@@ -183,6 +183,84 @@ try {
         exit;
     }
 
+    // Application routes
+    if (preg_match('#^/applications$#', $path) && $method === 'POST') {
+        require_once __DIR__ . '/middleware/auth.php';
+        $auth = new \App\Middleware\AuthMiddleware();
+        $auth->handle();
+
+        // Candidates and admins can apply
+        require_once __DIR__ . '/middleware/role.php';
+        $role = new \App\Middleware\RoleMiddleware(['candidate', 'admin']);
+        $role->handle();
+
+        require_once __DIR__ . '/controllers/ApplicationController.php';
+        $controller = new \App\Controllers\ApplicationController();
+        $controller->apply();
+        exit;
+    }
+
+    if (preg_match('#^/applications/(\w+)$#', $path, $matches) && $method === 'GET') {
+        require_once __DIR__ . '/middleware/auth.php';
+        $auth = new \App\Middleware\AuthMiddleware();
+        $auth->handle();
+
+        require_once __DIR__ . '/controllers/ApplicationController.php';
+        $controller = new \App\Controllers\ApplicationController();
+        $controller->get($matches[1]);
+        exit;
+    }
+
+    if (preg_match('#^/applications/(\w+)$#', $path, $matches) && $method === 'PUT') {
+        require_once __DIR__ . '/middleware/auth.php';
+        $auth = new \App\Middleware\AuthMiddleware();
+        $auth->handle();
+
+        require_once __DIR__ . '/controllers/ApplicationController.php';
+        $controller = new \App\Controllers\ApplicationController();
+
+        if (isset($matches[1])) {
+            // Check if it's status or notes update based on query param
+            $action = $_GET['action'] ?? 'status';
+            if ($action === 'status') {
+                require_once __DIR__ . '/middleware/role.php';
+                $role = new \App\Middleware\RoleMiddleware(['interviewer', 'admin']);
+                $role->handle();
+                $controller->updateStatus();
+            } elseif ($action === 'notes') {
+                require_once __DIR__ . '/middleware/role.php';
+                $role = new \App\Middleware\RoleMiddleware(['interviewer', 'admin']);
+                $role->handle();
+                $controller->updateNotes();
+            } else {
+                Response::error('Invalid action', 404);
+            }
+        }
+        exit;
+    }
+
+    if (preg_match('#^/applications/(\w+)$#', $path, $matches) && $method === 'DELETE') {
+        require_once __DIR__ . '/middleware/auth.php';
+        $auth = new \App\Middleware\AuthMiddleware();
+        $auth->handle();
+
+        require_once __DIR__ . '/controllers/ApplicationController.php';
+        $controller = new \App\Controllers\ApplicationController();
+        $controller->delete();
+        exit;
+    }
+
+    if (preg_match('#^/jobs/([a-zA-Z0-9]+)/applications$#', $path, $matches) && $method === 'GET') {
+        require_once __DIR__ . '/middleware/auth.php';
+        $auth = new \App\Middleware\AuthMiddleware();
+        $auth->handle();
+
+        require_once __DIR__ . '/controllers/ApplicationController.php';
+        $controller = new \App\Controllers\ApplicationController();
+        $controller->listByJob();
+        exit;
+    }
+
     // Share routes
     if (preg_match('#^/share(?:/([a-f0-9]+))?$#', $path, $matches)) {
         require_once __DIR__ . '/controllers/ShareController.php';
