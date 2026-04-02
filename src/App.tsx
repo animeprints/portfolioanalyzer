@@ -8,6 +8,7 @@ import TemplatesPage from './pages/TemplatesPage';
 import LinkedInPage from './pages/LinkedInPage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
+import InterviewPage from './pages/InterviewPage';
 import SharedAnalysisPage from './pages/SharedAnalysisPage';
 import InterviewerDashboardPage from './pages/Interviewer/DashboardPage';
 import InterviewerJobsPage from './pages/Interviewer/JobsPage';
@@ -101,6 +102,17 @@ function App() {
             <ProtectedRoute>
               <AppLayout withParticle={false}>
                 <LinkedInPage />
+              </AppLayout>
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/interview"
+          element={
+            <ProtectedRoute>
+              <AppLayout withParticle={false}>
+                <InterviewPage />
               </AppLayout>
             </ProtectedRoute>
           }
