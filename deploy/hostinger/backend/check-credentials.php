@@ -18,7 +18,7 @@ print_r([
 
 echo "\nTrying connection with fallback values...\n";
 try {
-    $pdo = new PDO('mysql:host=localhost;dbname=[REDACTED_DB];charset=utf8mb4', '[REDACTED_DB]', '[REDACTED]');
+    $pdo = new PDO('mysql:host=localhost;dbname=u518052050_cv;charset=utf8mb4', 'u518052050_cv', 'Rajeev@Anu2010');
     echo "SUCCESS with hardcoded credentials\n";
 } catch (Exception $e) {
     echo "FAILED: " . $e->getMessage() . "\n";
