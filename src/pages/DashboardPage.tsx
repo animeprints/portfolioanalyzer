@@ -24,10 +24,14 @@ import {
   Calendar,
   Building,
   ChevronDown,
-  Loader2
+  Loader2,
+  Share2,
+  Copy,
+  Check
 } from 'lucide-react';
 import { generatePDFReport } from '../utils/pdfExporter';
 import { analysisService } from '../services/analysisService';
+import { shareService } from '../services/shareService';
 import NeonButton from '../components/UI/NeonButton';
 import { matchJobDescription } from '../utils/jobMatcher';
 
@@ -44,6 +48,11 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState(true);
   const [exporting, setExporting] = useState(false);
   const [showJobModal, setShowJobModal] = useState(false);
+  const [showShareModal, setShowShareModal] = useState(false);
+  const [shareUrl, setShareUrl] = useState('');
+  const [shareLoading, setShareLoading] = useState(false);
+  const [shareError, setShareError] = useState<string | null>(null);
+  const [copied, setCopied] = useState(false);
   const [showAllSkills, setShowAllSkills] = useState(false);
   const [expandedSections, setExpandedSections] = useState<string[]>(['personal', 'experience', 'education']);
 
@@ -89,6 +98,26 @@ export default function DashboardPage() {
     } finally {
       setExporting(false);
     }
+  };
+
+  const handleCreateShare = async () => {
+    if (!storeAnalysis) return;
+    setShareLoading(true);
+    setShareError(null);
+    try {
+      const result = await shareService.createShareLink(storeAnalysis.id);
+      setShareUrl(result.share_url);
+    } catch (err: any) {
+      setShareError(err.response?.data?.error || 'Failed to create share link');
+    } finally {
+      setShareLoading(false);
+    }
+  };
+
+  const handleCopyLink = async () => {
+    await navigator.clipboard.writeText(shareUrl);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
   };
 
   const toggleSection = (section: string) => {
@@ -186,6 +215,13 @@ export default function DashboardPage() {
             >
               <Target className="w-5 h-5 text-cyan-400" />
               <span>Match Job</span>
+            </button>
+            <button
+              onClick={() => setShowShareModal(true)}
+              className="glass-card px-6 py-3 flex items-center gap-2 hover:scale-105 transition-all"
+            >
+              <Share2 className="w-5 h-5 text-cyan-400" />
+              <span>Share</span>
             </button>
             <button
               onClick={handleExportPDF}
@@ -893,6 +929,101 @@ export default function DashboardPage() {
                   className="flex-1 px-6 py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-purple-600 text-white font-medium hover:opacity-90 transition-opacity"
                 >
                   Add Job
+                </button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Share Modal */}
+      <AnimatePresence>
+        {showShareModal && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+            onClick={() => setShowShareModal(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              className="glass-card p-8 max-w-lg w-full"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <h2 className="text-2xl font-bold text-white mb-6">Share Your Analysis</h2>
+
+              {shareError ? (
+                <div className="p-4 rounded-xl bg-red-500/20 border border-red-500/30 text-red-300 mb-6">
+                  {shareError}
+                </div>
+              ) : shareUrl ? (
+                <div className="space-y-6">
+                  <p className="text-gray-300">
+                    Anyone with this link can view your analysis results. No login required.
+                  </p>
+                  <div className="p-4 rounded-xl bg-white/5 border border-white/10">
+                    <p className="text-gray-400 text-sm mb-2">Share URL</p>
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="text"
+                        readOnly
+                        value={shareUrl}
+                        className="flex-1 bg-transparent text-white text-sm outline-none"
+                      />
+                      <button
+                        onClick={handleCopyLink}
+                        className="px-4 py-2 rounded-lg bg-cyan-500/20 text-cyan-300 hover:bg-cyan-500/30 transition-colors flex items-center gap-2 text-sm"
+                      >
+                        {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+                        {copied ? 'Copied!' : 'Copy'}
+                      </button>
+                    </div>
+                  </div>
+                  <p className="text-gray-500 text-sm">
+                    Share via email, Slack, or any messaging app.
+                  </p>
+                </div>
+              ) : (
+                <div className="space-y-6">
+                  <p className="text-gray-300">
+                    Create a secure, shareable link for your CV analysis.
+                  </p>
+                  <button
+                    onClick={handleCreateShare}
+                    disabled={shareLoading}
+                    className="w-full px-6 py-4 rounded-xl bg-gradient-to-r from-cyan-500 to-purple-600 text-white font-medium hover:opacity-90 transition-opacity flex items-center justify-center gap-2"
+                  >
+                    {shareLoading ? (
+                      <>
+                        <Loader2 className="w-5 h-5 animate-spin" />
+                        Generating...
+                      </>
+                    ) : (
+                      <>
+                        <Share2 className="w-5 h-5" />
+                        Create Share Link
+                      </>
+                    )}
+                  </button>
+                </div>
+              )}
+
+              <div className="mt-8 flex justify-end">
+                <button
+                  onClick={() => {
+                    setShowShareModal(false);
+                    if (shareUrl) {
+                      setShareUrl('');
+                      setShareError(null);
+                      setCopied(false);
+                    }
+                  }}
+                  className="px-6 py-2 rounded-lg border border-white/20 text-gray-300 hover:bg-white/5 transition-colors"
+                >
+                  {shareUrl ? 'Done' : 'Cancel'}
                 </button>
               </div>
             </motion.div>
