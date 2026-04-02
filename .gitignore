@@ -60,6 +60,7 @@ temp/
 
 # Deployment artifacts
 backend-deploy.zip
+*-release.zip
 
 # Backend uploads (user-uploaded CV files)
 backend/upload/
