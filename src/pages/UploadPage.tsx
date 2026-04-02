@@ -106,11 +106,6 @@ export default function UploadPage() {
           <FileUpload onFileSelect={handleFileSelect} isLoading={loading} error={error} />
         </motion.div>
       </div>
-
-      {/* Decorative elements */}
-      <div className="absolute bottom-10 left-10 text-gray-500 text-sm">
-        Built with React • Three.js • AI
-      </div>
     </div>
   )
 }
