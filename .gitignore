@@ -33,6 +33,9 @@ Thumbs.db
 .env
 .env.local
 .env.*.local
+# Never commit any .env file anywhere
+**/.env
+**/.env.local
 
 # Logs
 logs

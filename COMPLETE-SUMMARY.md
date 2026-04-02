@@ -104,10 +104,10 @@ cd portfolioanalyzer
 
 ### ⚠️ **Before Deploying:**
 
-1. **Rotate Database Password**
-   - Old password `Rajeev@Anu2010` was in Git history
-   - Change it in Hostinger → Databases
-   - Update `backend/.env` with new password
+1. **Use Strong Database Password**
+   - Ensure your database has a strong, unique password
+   - Set it in `backend/.env` as `DB_PASS`
+   - Never use default or easy-to-guess passwords
 
 2. **Generate Strong JWT Secret**
    ```bash

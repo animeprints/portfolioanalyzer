@@ -21,9 +21,11 @@ mkdir -p release
 echo "  → Copying frontend..."
 cp -r dist/* release/
 
-# Copy backend
+# Copy backend (excluding sensitive files)
 echo "  → Copying backend..."
 cp -r backend release/
+# Remove any .env files (security: never include actual credentials)
+rm -f release/backend/.env 2>/dev/null || true
 
 # Copy backend .htaccess
 cp backend/.htaccess release/backend/ 2>/dev/null || true

@@ -16,14 +16,20 @@ class Database
 
     public function __construct()
     {
-        // Try environment variables first, fallback to hardcoded production values
+        // Require environment variables - no hardcoded fallbacks for security
         $this->host = $_ENV['DB_HOST'] ?? 'localhost';
-        $this->dbname = $_ENV['DB_NAME'] ?? 'u518052050_cv';
-        $this->username = $_ENV['DB_USER'] ?? 'u518052050_cv';
-        $this->password = $_ENV['DB_PASS'] ?? 'Rajeev@Anu2010';
+        $this->dbname = $_ENV['DB_NAME'] ?? null;
+        $this->username = $_ENV['DB_USER'] ?? null;
+        $this->password = $_ENV['DB_PASS'] ?? null;
         $this->charset = $_ENV['DB_CHARSET'] ?? 'utf8mb4';
 
-        // Log which config is being used
+        // Validate that credentials are set
+        if (!$this->dbname || !$this->username || !$this->password) {
+            error_log('ERROR: Database credentials not set in .env file');
+            throw new \RuntimeException('Database credentials not configured. Please set DB_NAME, DB_USER, and DB_PASS in .env');
+        }
+
+        // Log which config is being used (without sensitive data)
         error_log("Database config - Host: {$this->host}, DB: {$this->dbname}, User: {$this->username}");
     }
 

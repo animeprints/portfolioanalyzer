@@ -29,6 +29,8 @@ cp -r dist/* deploy/hostinger/
 
 # Copy backend
 cp -r backend deploy/hostinger/
+# Remove any .env files (security: never include actual credentials)
+rm -f deploy/hostinger/backend/.env 2>/dev/null || true
 
 # Copy .htaccess
 cp deploy/hostinger/.htaccess deploy/hostinger/ 2>/dev/null || true
