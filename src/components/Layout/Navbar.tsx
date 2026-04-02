@@ -29,6 +29,7 @@ export default function Navbar() {
   const navLinks = [
     { name: 'Home', href: '/' },
     { name: 'Launch App', href: '/upload' },
+    { name: 'Templates', href: '/templates' },
     { name: 'API Docs', href: getApiDocsUrl(), external: true },
   ];
 
