@@ -41,26 +41,13 @@ export default function Navbar() {
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center gap-8">
             {navLinks.map((link) => (
-              link.external ? (
-                <a
-                  key={link.name}
-                  href={link.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-gray-300 hover:text-white transition-colors flex items-center gap-1"
-                >
-                  {link.name}
-                  <FileCode className="w-3 h-3" />
-                </a>
-              ) : (
-                <Link
-                  key={link.name}
-                  to={link.href}
-                  className="text-gray-300 hover:text-white transition-colors"
-                >
-                  {link.name}
-                </Link>
-              )
+              <Link
+                key={link.name}
+                to={link.href}
+                className="text-gray-300 hover:text-white transition-colors"
+              >
+                {link.name}
+              </Link>
             ))}
           </div>
 
@@ -134,28 +121,14 @@ export default function Navbar() {
             >
               <div className="flex flex-col gap-4">
                 {navLinks.map((link) => (
-                  link.external ? (
-                    <a
-                      key={link.name}
-                      href={link.href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-gray-300 hover:text-white transition-colors flex items-center gap-2 py-2"
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      {link.name}
-                      <FileCode className="w-4 h-4" />
-                    </a>
-                  ) : (
-                    <Link
-                      key={link.name}
-                      to={link.href}
-                      className="text-gray-300 hover:text-white transition-colors py-2"
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      {link.name}
-                    </Link>
-                  )
+                  <Link
+                    key={link.name}
+                    to={link.href}
+                    className="text-gray-300 hover:text-white transition-colors py-2"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    {link.name}
+                  </Link>
                 ))}
                 <div className="border-t border-white/10 pt-4 mt-2">
                   {currentUser ? (
