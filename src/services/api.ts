@@ -3,11 +3,19 @@ import axios, { AxiosInstance, AxiosResponse, AxiosRequestConfig } from 'axios';
 // Determine API URL based on environment
 const getApiBaseUrl = (): string => {
   // In development, use localhost
-  // In production on Vercel, use environment variable
   if (import.meta.env.DEV) {
     return 'http://localhost:8000/api'; // Local PHP backend
   }
-  return import.meta.env.VITE_API_URL || 'https://api.yourdomain.com/api';
+
+  // Production: Use VITE_API_URL if set (different domain)
+  // Otherwise, use relative path (same domain deployment like Hostinger)
+  const configuredUrl = import.meta.env.VITE_API_URL;
+  if (configuredUrl && configuredUrl.trim() !== '') {
+    return configuredUrl;
+  }
+
+  // Same-domain deployment: backend is at /api
+  return '/api';
 };
 
 class ApiClient {

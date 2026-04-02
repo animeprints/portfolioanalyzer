@@ -1,11 +1,12 @@
-# CV Analyzer - Deployment Guide
+# CV Analyzer - Deployment Guide (Hostinger Only)
 
 ## Overview
 
-This project consists of:
-- **Frontend**: React + Vite app deployed to Vercel
-- **Backend**: PHP API deployed to Hostinger shared hosting
-- **Database**: MySQL on Hostinger
+This project is configured for **Hostinger-only deployment**:
+- **Frontend**: React + Vite static site
+- **Backend**: PHP API
+- **Database**: MySQL
+- **Target Hosting**: Hostinger shared hosting (all-in-one)
 
 ## What's Implemented
 
@@ -124,14 +125,32 @@ This project consists of:
    ```
 8. Test API: `https://your-domain.com/api/` should show API docs
 
-### 2. Frontend (Vercel)
+### 2. Frontend (Hostinger)
 
-1. Push code to GitHub repository
-2. Import project in Vercel
-3. Set environment variable:
-   - `VITE_API_URL` = `https://your-domain.com/api`
-4. Deploy
-5. Set custom domain in Vercel if desired
+Frontend is pre-built in `deploy/hostinger/` with static assets.
+
+**Option A: Upload via Hostinger File Manager (Recommended)**
+1. Go to hPanel → Files → File Manager
+2. Navigate to `public_html/`
+3. Upload all files from `deploy/hostinger/` **EXCEPT** the `backend/` folder
+4. These files go directly in `public_html/`:
+   - `index.html`
+   - `assets/` folder
+   - `sw.js`, `manifest.webmanifest`, `.htaccess`, etc.
+
+**Option B: Deploy fresh build**
+```bash
+npm run build
+# Then upload dist/ contents to Hostinger public_html/
+```
+
+**Same-domain setup** (frontend + backend on same domain):
+- No environment variable needed
+- Frontend automatically uses `/api` endpoint
+
+**Separate subdomain setup** (e.g., `app.yourdomain.com` frontend, `api.yourdomain.com` backend):
+- Rebuild frontend with: `VITE_API_URL=https://api.yourdomain.com npm run build`
+- Upload both to their respective locations
 
 ### 3. CORS & Security
 
@@ -141,23 +160,24 @@ This project consists of:
 
 ## Testing Checklist
 
-- [ ] Backend health endpoint returns JSON
-- [ ] Can register new user via API (Postman)
+- [ ] Backend health endpoint returns JSON at `/api/`
+- [ ] Can register new user via API (Postman or frontend)
 - [ ] Can login and receive JWT tokens
 - [ ] Can upload CV and get analysis
-- [ ] Can list analyses
+- [ ] Can list analyses from dashboard
 - [ ] Can create job posting as interviewer
 - [ ] Can search candidates (with filters)
 - [ ] Can share analysis and view via public link
-- [ ] Frontend loads on Vercel
-- [ ] Can login through Vercel frontend
+- [ ] Frontend loads at `https://yourdomain.com`
+- [ ] Can login through frontend
 - [ ] Can upload CV and see analysis
 - [ ] Can see CV history and switch between analyses
 - [ ] Can navigate to Interviewer Dashboard (`/interviewer`)
 - [ ] Can create job posting
 - [ ] Can search candidates
-- [ ] Language switcher shows available languages (need to integrate)
 - [ ] PWA install prompt appears (after manifest)
+- [ ] All assets load correctly (CSS, JS, images)
+- [ ] API calls succeed (check browser console for CORS errors)
 
 ## Future Enhancements (Not Yet Implemented)
 
