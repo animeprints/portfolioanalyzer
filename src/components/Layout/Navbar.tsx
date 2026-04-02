@@ -30,6 +30,7 @@ export default function Navbar() {
     { name: 'Home', href: '/' },
     { name: 'Launch App', href: '/upload' },
     { name: 'Templates', href: '/templates' },
+    { name: 'LinkedIn Optimizer', href: '/linkedin' },
     { name: 'API Docs', href: getApiDocsUrl(), external: true },
   ];
 

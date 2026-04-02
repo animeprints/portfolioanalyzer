@@ -5,6 +5,7 @@ import UploadPage from './pages/UploadPage';
 import DashboardPage from './pages/DashboardPage';
 import ProfilePage from './pages/ProfilePage';
 import TemplatesPage from './pages/TemplatesPage';
+import LinkedInPage from './pages/LinkedInPage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import SharedAnalysisPage from './pages/SharedAnalysisPage';
@@ -91,6 +92,17 @@ function App() {
             <AppLayout withParticle={false}>
               <TemplatesPage />
             </AppLayout>
+          }
+        />
+
+        <Route
+          path="/linkedin"
+          element={
+            <ProtectedRoute>
+              <AppLayout withParticle={false}>
+                <LinkedInPage />
+              </AppLayout>
+            </ProtectedRoute>
           }
         />
 
