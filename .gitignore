@@ -13,8 +13,10 @@ lerna-debug.log*
 dist/
 dist-ssr/
 *.local
+deploy/
 
-# Note: deploy/ is committed (pre-built deployment package for easy downloads)
+# Note: release/ contains the official deployment package (tracked in Git)
+# Use create-release.sh to generate fresh release packages
 
 # IDE
 .vscode/*
