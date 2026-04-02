@@ -217,4 +217,25 @@ API returns JSON with `{ success, data, error }`. Check `success` field.
 
 ---
 
+## 📦 Quick Deploy Package
+
+A ready-to-deploy package is in `deploy/hostinger/`:
+
+**Contents:**
+- Frontend static files (`index.html`, `assets/`, PWA files)
+- `.htaccess` for SPA routing
+- Complete backend PHP API with vendor dependencies
+- Backend `.env.example`
+
+**Deployment:**
+1. Upload `deploy/hostinger/` contents to Hostinger
+2. Frontend → `public_html/` (root files only)
+3. Backend → `public_html/api/` (complete `backend/` folder)
+4. Configure `public_html/api/.env` with DB credentials
+5. Import `public_html/api/install.sql` via phpMyAdmin
+
+See `deploy/hostinger/README-HOSTINGER.md` for detailed steps.
+
+---
+
 **Contact**: For issues, check logs and consult backend README.
