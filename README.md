@@ -1,12 +1,14 @@
 # Cardzey - AI-Powered CV Analyzer & Career Platform
 
-🚀 **Easy to Deploy**: Download the release package `cardzey-hostinger-release.zip` (3MB) or get the pre-built folder from `deploy/hostinger/`. Upload to Hostinger in minutes with no coding required!
+🚀 **Easy to Deploy**: Download `cardzey-hostinger-release.zip` from [GitHub Releases](https://github.com/animeprints/portfolioanalyzer/releases) (3MB) or use the `release/` folder in this repo. Upload to Hostinger in minutes with no coding required!
 
-**New!** Simple deployment for non-technical users:
-1. Download the ZIP or clone repo
-2. Upload files via Hostinger File Manager
+**For non-technical users**:
+1. Download ZIP from Releases page
+2. Extract and upload via Hostinger File Manager
 3. Fill in database details in `.env`
-4. Done! See `README-DEPLOY.txt` for steps
+4. Done! See `README-DEPLOY.txt` (included) or `DEPLOY.html` (visual guide)
+
+**For developers**: Use `release/` folder or run `./create-release.sh` to rebuild
 
 A full-stack career platform with immersive 3D CV analysis, interview preparation, LinkedIn profile optimization, and interviewer portal. Built with React (frontend) and PHP (backend API) with MySQL database.
 
