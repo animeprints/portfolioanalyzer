@@ -4,7 +4,6 @@ import LandingPage from './pages/LandingPage';
 import UploadPage from './pages/UploadPage';
 import DashboardPage from './pages/DashboardPage';
 import ProfilePage from './pages/ProfilePage';
-import TemplatesPage from './pages/TemplatesPage';
 import LinkedInPage from './pages/LinkedInPage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
@@ -84,15 +83,6 @@ function App() {
                 <ProfilePage />
               </AppLayout>
             </ProtectedRoute>
-          }
-        />
-
-        <Route
-          path="/templates"
-          element={
-            <AppLayout withParticle={false}>
-              <TemplatesPage />
-            </AppLayout>
           }
         />
 

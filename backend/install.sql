@@ -99,21 +99,6 @@ CREATE TABLE IF NOT EXISTS `job_applications` (
   CONSTRAINT `job_applications_ibfk_3` FOREIGN KEY (`analysis_id`) REFERENCES `cv_analyses` (`id`) ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Resume Templates Table
-CREATE TABLE IF NOT EXISTS `resume_templates` (
-  `id` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `industry` json NOT NULL COMMENT 'Array of industries',
-  `file_url` varchar(500) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `preview_url` varchar(500) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `structure` json DEFAULT NULL,
-  `ats_score` decimal(5,2) DEFAULT NULL,
-  `is_active` tinyint(1) DEFAULT 1,
-  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
-  PRIMARY KEY (`id`),
-  KEY `is_active` (`is_active`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
 -- Interview Questions Table
 CREATE TABLE IF NOT EXISTS `interview_questions` (
   `id` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL,

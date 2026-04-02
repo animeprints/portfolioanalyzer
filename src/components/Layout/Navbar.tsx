@@ -29,7 +29,6 @@ export default function Navbar() {
   const navLinks = [
     { name: 'Home', href: '/' },
     { name: 'Launch App', href: '/upload' },
-    { name: 'Templates', href: '/templates' },
     { name: 'LinkedIn Optimizer', href: '/linkedin' },
     { name: 'Interview Prep', href: '/interview' },
     { name: 'API Docs', href: getApiDocsUrl(), external: true },

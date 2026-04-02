@@ -10,7 +10,6 @@ PHP 8+ backend API for the CV Analyzer platform. Deployable on shared hosting (H
 - Job posting and candidate search (interviewer role)
 - Interview question bank and practice tracking
 - LinkedIn profile optimization
-- Resume template management
 - Analysis export (JSON, HTML, DOCX)
 - Shareable analysis links
 - MySQL database with full schema
@@ -160,10 +159,6 @@ The frontend's `api.ts` will use this to make requests.
 ### Candidate Search (Interviewer only)
 - `POST /api/candidates/search` - Search candidates with filters
 
-### Templates
-- `GET /api/templates` - List active templates
-- `POST /api/templates` - Create template (admin)
-
 ### Interview Prep
 - `GET /api/interview/questions` - Get questions (query params: industry, role, difficulty, limit)
 - `GET /api/interview/questions/:id` - Get specific question
@@ -199,7 +194,6 @@ Key tables:
 - `cv_analyses` - CV analysis results
 - `job_postings` - Interviewer job postings
 - `job_applications` - Candidate applications
-- `resume_templates` - Template database
 - `interview_questions` - Question bank
 - `interview_practice` - User practice tracking
 - `linkedin_profiles` - LinkedIn optimization data

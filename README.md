@@ -171,7 +171,6 @@ Extend `src/utils/analysisEngine.ts`:
 - [ ] User accounts with persistent storage (backend)
 - [ ] Advanced 3D visualizations (skills network graph, timeline)
 - [ ] Multiple language support
-- [ ] Template suggestions based on industry
 - [ ] Interview preparation tips
 - [ ] LinkedIn profile optimization
 - [ ] Export to other formats (Word, HTML)

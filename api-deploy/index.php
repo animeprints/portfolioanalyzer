@@ -206,28 +206,6 @@ try {
         exit;
     }
 
-    // Templates routes (public or auth)
-    if ($path === '/templates' && $method === 'GET') {
-        // Optionally require auth? For now, public
-        require_once __DIR__ . '/controllers/TemplateController.php';
-        $controller = new \App\Controllers\TemplateController();
-        $controller->list();
-        exit;
-    }
-
-    if ($path === '/templates' && $method === 'POST') {
-        // Create template (admin only could be enforced)
-        require_once __DIR__ . '/middleware/auth.php';
-        $auth = new \App\Middleware\AuthMiddleware();
-        $auth->handle();
-
-        // Optional: role check for admin
-        require_once __DIR__ . '/controllers/TemplateController.php';
-        $controller = new \App\Controllers\TemplateController();
-        $controller->create();
-        exit;
-    }
-
     // Interview routes
     if (preg_match('#^/interview/questions(?:/([a-zA-Z0-9-]+))?$#', $path, $matches) && $method === 'GET') {
         require_once __DIR__ . '/controllers/InterviewController.php';
@@ -305,52 +283,6 @@ try {
             'timestamp' => date('c'),
             'version' => '1.0.0'
         ]);
-        exit;
-    }
-
-    // API Documentation
-    if ($path === '/' || $path === '') {
-        header('Content-Type: text/html');
-        echo "<!DOCTYPE html>
-        <html>
-        <head><title>CV Analyzer API</title></head>
-        <body style='font-family: monospace; padding: 20px; background: #1a1a1a; color: #0f0;'>
-            <h1>CV Analyzer API</h1>
-            <p>Status: <strong style='color: #0f0;'>✓ Online</strong></p>
-            <h3>Available Endpoints:</h3>
-            <ul>
-                <li><strong>POST</strong> /api/auth/register - Register new user</li>
-                <li><strong>POST</strong> /api/auth/login - User login</li>
-                <li><strong>POST</strong> /api/auth/refresh - Refresh token</li>
-                <li><strong>GET</strong>  /api/auth/me - Get current user</li>
-                <li><strong>POST</strong> /api/analysis/upload - Upload CV (multipart/form-data)</li>
-                <li><strong>GET</strong>  /api/analysis - List user's CV analyses</li>
-                <li><strong>GET</strong>  /api/analysis/:id - Get specific analysis</li>
-                <li><strong>DELETE</strong> /api/analysis/:id - Delete analysis</li>
-                <li><strong>GET</strong>  /api/profile - Get profile</li>
-                <li><strong>PUT</strong>  /api/profile - Update profile</li>
-                <li><strong>POST</strong> /api/jobs - Create job posting (interviewer only)</li>
-                <li><strong>GET</strong>  /api/jobs - List jobs (interviewer only)</li>
-                <li><strong>POST</strong> /api/candidates/search - Search candidates (interviewer only)</li>
-                <li><strong>GET</strong>  /api/templates - List resume templates</li>
-                <li><strong>POST</strong> /api/templates - Create template (admin)</li>
-                <li><strong>GET</strong>  /api/interview/questions - Get interview questions (filters: industry, role, difficulty)</li>
-                <li><strong>GET</strong>  /api/interview/questions/:id - Get specific question</li>
-                <li><strong>POST</strong> /api/interview/practice - Record practice answer</li>
-                <li><strong>GET</strong>  /api/interview/practice - Get practice history</li>
-                <li><strong>POST</strong> /api/linkedin/analyze - Analyze LinkedIn profile</li>
-                <li><strong>GET</strong>  /api/linkedin/profile - Get saved LinkedIn analysis</li>
-                <li><strong>POST</strong> /api/export - Export analysis (formats: json, html, docx)</li>
-                <li><strong>POST</strong> /api/share - Create share link for analysis</li>
-                <li><strong>GET</strong>  /api/share/:token - View shared analysis (public)</li>
-                <li><strong>DELETE</strong> /api/share/:token - Revoke share link</li>
-                <li><strong>GET</strong>  /api/health - Health check</li>
-            </ul>
-            <p><em>All endpoints except /auth/register and /auth/login require Bearer token</em></p>
-            <hr>
-            <small>CV Analyzer Backend API v1.0</small>
-        </body>
-        </html>";
         exit;
     }
 

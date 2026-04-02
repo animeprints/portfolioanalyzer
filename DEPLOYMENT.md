@@ -15,7 +15,6 @@ This project consists of:
 - Profile management
 - Job posting management (interviewer role)
 - Candidate search and filtering
-- Resume templates API
 - Interview questions bank and practice tracking
 - LinkedIn profile optimization analysis
 - Export endpoints (JSON, HTML, DOCX)
@@ -31,7 +30,7 @@ This project consists of:
 - Profile service
 - Job service for interviewers
 - Candidate search service
-- Template, interview, LinkedIn services
+- Interview, LinkedIn services
 - Share service
 - CV history selector on dashboard
 - Updated Dashboard to load analyses from server
@@ -63,7 +62,6 @@ This project consists of:
 - `controllers/ProfileController.php`
 - `controllers/JobController.php`
 - `controllers/CandidateController.php`
-- `controllers/TemplateController.php`
 - `controllers/InterviewController.php`
 - `controllers/LinkedinController.php`
 - `controllers/ExportController.php`
@@ -80,7 +78,6 @@ This project consists of:
 - `services/authService.ts` - Auth API
 - `services/analysisService.ts` - CV analysis
 - `services/profileService.ts` - User profile
-- `services/templateService.ts` - Templates
 - `services/interviewService.ts` - Interview prep
 - `services/linkedinService.ts` - LinkedIn optimizer
 - `services/exportService.ts` - Export formats
@@ -167,7 +164,6 @@ This project consists of:
 - Full light theme styling (infrastructure present)
 - Interview prep page frontend (backend API ready)
 - LinkedIn optimizer frontend page
-- Templates page frontend
 - Export service integration (backend ready)
 - Email sending (password reset, notifications)
 - Admin panel for user management
