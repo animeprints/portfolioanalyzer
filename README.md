@@ -1,8 +1,10 @@
-# Cardzey - AI-Powered Career Development Platform
+# Cardzey - AI-Powered CV Analyzer & Career Platform
 
-A revolutionary, full-stack career platform featuring immersive 3D CV analysis, interview preparation, LinkedIn profile optimization, and an interviewer portal. Built with React, Three.js, PHP, and MySQL.
+🚀 **Easy to Deploy**: Download the pre-built package from `deploy/hostinger/` and upload to Hostinger in minutes. No coding required! See `DEPLOYMENT-INSTRUCTIONS.txt` or open `deploy/hostinger/DEPLOY.html` for simple step-by-step guide.
 
-Privacy-focused design: CV analysis can be performed entirely client-side, while optional backend services provide user accounts, cloud storage, and advanced features.
+A full-stack career platform with immersive 3D CV analysis, interview preparation, LinkedIn profile optimization, and interviewer portal. Built with React (frontend) and PHP (backend API) with MySQL database.
+
+**Privacy-focused**: CV analysis works client-side without backend, or use cloud storage for accounts and persistence.
 
 ## Features
 
@@ -117,109 +119,135 @@ Privacy-focused design: CV analysis can be performed entirely client-side, while
 
 ```
 cardzey/
-├── .claude/                   # Claude Code memory
+├── deploy/                    # Deployment packages (pre-built, ready to upload)
+│   └── hostinger/            # Complete Hostinger deployment package
+│       ├── index.html        # Frontend entry
+│       ├── assets/           # Compiled CSS/JS
+│       ├── DEPLOY.html       # Visual deployment guide
+│       └── backend/          # PHP API with all dependencies
 ├── backend/                   # PHP API backend
-│   ├── config/               # Database and JWT configuration
-│   │   ├── database.php
-│   │   └── jwt.php
-│   ├── controllers/          # API controllers (Auth, Analysis, Profile, Job, etc.)
-│   ├── middleware/           # CORS, Auth, Role middleware
-│   ├── models/               # Data models
-│   ├── utils/                # Response helper, CV parser, analysis engine
-│   ├── upload/               # Uploaded CV files (writable)
-│   ├── vendor/               # Composer dependencies
-│   ├── index.php             # API entry point
-│   ├── install.sql           # Database schema
-│   ├── .htaccess             # Apache rewrite rules
-│   └── README.md             # Backend documentation
-├── src/                      # Frontend React app
-│   ├── components/
-│   │   ├── 3D/               # 3D graphics and effects
-│   │   ├── Auth/             # Authentication components (ProtectedRoute)
-│   │   ├── Landing/          # Landing page specific components
-│   │   ├── Layout/           # Navbar, layout wrappers
-│   │   └── UI/               # Reusable UI components (GlassCard, NeonButton, etc.)
-│   │   └── ErrorBoundary.tsx
-│   ├── pages/
-│   │   ├── LandingPage.tsx        # Home page with 3D showcase
-│   │   ├── UploadPage.tsx         # CV upload
-│   │   ├── DashboardPage.tsx      # CV analysis results
-│   │   ├── ProfilePage.tsx        # User profile management
-│   │   ├── LinkedInPage.tsx       # LinkedIn profile optimizer
-│   │   ├── InterviewPage.tsx      # Interview preparation
-│   │   ├── LoginPage.tsx          # Login form
-│   │   ├── RegisterPage.tsx       # Registration form
-│   │   ├── SharedAnalysisPage.tsx # Public shared view
-│   │   └── Interviewer/           # Recruiter portal
-│   │       ├── DashboardPage.tsx
-│   │       ├── JobsPage.tsx
-│   │       ├── JobEditPage.tsx
-│   │       └── CandidatesPage.tsx
-│   ├── services/             # API service modules (auth, analysis, profile, etc.)
-│   ├── hooks/                # Custom React hooks (useAuth, etc.)
-│   ├── store/                # Zustand store
-│   │   └── useStore.ts
-│   ├── utils/                # Client-side CV parsing, analysis algorithms (fallback)
-│   ├── i18n/                 # Internationalization config and translations
-│   ├── App.tsx               # Main app component with routing
-│   ├── main.tsx              # Entry point
-│   └── index.css             # Global styles
-├── public/                   # Static assets
-├── dist/                     # Build output
-├── package.json
-├── vite.config.ts
-├── tailwind.config.js
-├── tsconfig.json
-├── DEPLOYMENT.md             # Comprehensive deployment guide
-└── README.md                 # This file
+│   ├── config/              # Database & JWT config
+│   ├── controllers/         # API controllers
+│   ├── middleware/          # CORS, Auth, Role
+│   ├── models/              # Data models
+│   ├── utils/               # CV parser, analysis engine, helpers
+│   ├── vendor/              # Composer dependencies (included)
+│   ├── index.php            # API entry point
+│   ├── install.sql          # Database schema
+│   ├── .env.example         # Configuration template
+│   └── .htaccess            # Apache rewrite rules
+├── src/                      # Frontend React app (source)
+│   ├── components/          # UI components (3D, Auth, Layout, etc.)
+│   ├── pages/               # App pages and views
+│   ├── services/            # API client modules
+│   ├── hooks/               # Custom React hooks
+│   ├── store/               # Zustand state management
+│   ├── utils/               # Client-side utilities
+│   ├── i18n/                # Internationalization
+│   ├── App.tsx, main.tsx    # React entry points
+│   └── index.css            # Global styles
+├── dist/                    # Build output (not tracked, regenerated)
+├── package.json             # Node dependencies
+├── vite.config.ts           # Vite build configuration
+├── tailwind.config.js       # Tailwind CSS config
+├── tsconfig.json            # TypeScript config
+├── DEPLOYMENT.md            # Full deployment documentation
+├── QUICK-START-HOSTINGER.md # Quick reference
+├── DEPLOYMENT-INSTRUCTIONS.txt # Simple non-technical guide
+└── README.md                # This file
 ```
 
-## Getting Started
+## 🚀 Quick Deploy (Non-Technical Users)
+
+**Easiest way**: Use the pre-built Hostinger package.
+
+1. **Download** `deploy/hostinger/` from this repository
+2. **Open** `deploy/hostinger/DEPLOY.html` in your browser for visual instructions
+3. **Or read** `DEPLOYMENT-INSTRUCTIONS.txt` for simple numbered steps
+4. **Upload** files to Hostinger via File Manager
+5. **Configure** the `.env` file with your database details
+6. **Done!** Your CV Analyzer is live
+
+**Full documentation**: See `QUICK-START-HOSTINGER.md` or `DEPLOYMENT.md`
+
+---
+
+## 🛠️ For Developers
 
 ### Prerequisites
 - **Frontend**: Node.js 20+ and npm
 - **Backend**: PHP 8+, MySQL, Composer
+- **Server**: Apache with mod_rewrite (Hostinger has this)
 
-### Quick Start (Development)
+### Local Development
 
 1. **Clone and install**:
 ```bash
-git clone <repo>
-cd cardzey
+git clone https://github.com/animeprints/portfolioanalyzer.git
+cd portfolioanalyzer
 npm install
 ```
 
-2. **Set up backend** (see [Backend Setup](#backend-setup) below or DEPLOYMENT.md)
+2. **Set up backend**:
+```bash
+cd backend
+composer install
+cp .env.example .env
+# Edit .env with your local DB credentials
+```
 
-3. **Configure environment**:
-   - Create `.env` in project root with `VITE_API_URL=https://your-backend.test/api` (or local API URL)
+3. **Create database**:
+   - Import `backend/install.sql` into MySQL
+   - Note database name, username, password
 
-4. **Start development servers**:
-   - Backend: Deploy to local server or use PHP built-in server (see backend/README.md)
-   - Frontend: `npm run dev` (default: http://localhost:3000)
+4. **Configure frontend**:
+   Create `.env` in project root:
+   ```env
+   VITE_API_URL=http://localhost:8000/api
+   ```
 
-5. Access the app and start exploring!
+5. **Start development servers**:
+   - Backend: `cd backend && php -S localhost:8000` (or use Apache localhost)
+   - Frontend: `npm run dev` → http://localhost:3000
 
-### Backend Setup
+6. Open the app and start developing!
 
-The backend is a PHP + MySQL API. See `backend/README.md` and `DEPLOYMENT.md` for full instructions.
+---
 
-Quick steps:
-
-1. Create MySQL database and import `backend/install.sql`
-2. Configure `backend/.env` with DB credentials and JWT secret
-3. Install PHP dependencies: `cd backend && composer install`
-4. Deploy backend to a PHP-enabled server (e.g., Hostinger shared hosting) or use local server with Apache/Nginx
-   - Ensure `backend/upload/` directory is writable
-5. Set `VITE_API_URL` in frontend `.env` to point to your backend API
-
-### Production Build
+## 📦 Build for Production
 
 ```bash
 npm run build
 ```
 
-Deploy the `dist/` folder to Vercel or static hosting, and the backend to a PHP host.
+This creates the `dist/` folder with optimized static files.
+
+**Option A**: Use pre-built package (recommended for deployment)
+- The repo includes `deploy/hostinger/` with everything ready to upload
+- Built automatically on every commit
+
+**Option B**: Build your own package
+```bash
+npm run build
+./deploy-hosting.sh  # Creates fresh deploy/hostinger/ package
+```
+
+---
+
+## Backend API
+
+The PHP backend provides:
+- **Authentication**: JWT-based register/login/refresh
+- **CV Analysis**: Upload, parse, analyze PDFs/DOCX/TXT
+- **User Profiles**: Manage personal info and analysis history
+- **Job Management**: Create jobs, search candidates (interviewer role)
+- **LinkedIn Optimization**: Analyze and improve LinkedIn profiles
+- **Export**: JSON, HTML, DOCX formats
+- ** sharing**: Password-protected public links
+
+**Endpoints**: All under `/api/` (e.g., `/api/auth/register`, `/api/analysis/upload`)
+
+**See**: `backend/README.md` for full API documentation
 
 ## Usage
 
@@ -314,19 +342,99 @@ Extend `src/utils/analysisEngine.ts`:
 - Additional language support beyond current 6
 - Advanced 3D visualizations: skills network graph, experience timeline
 
+## 🚀 Deployment
+
+**For non-technical users**: We've made deployment incredibly easy!
+
+1. Download the `deploy/hostinger/` folder from this repository
+2. Open `deploy/hostinger/DEPLOY.html` in your browser for visual step-by-step guide
+3. Or follow `DEPLOYMENT-INSTRUCTIONS.txt` (plain English, numbered steps)
+4. Upload files to Hostinger via File Manager (no command line needed)
+5. Configure `.env` with your database credentials
+6. Done! Your CV Analyzer is live
+
+**For developers**:
+- See `DEPLOYMENT.md` for comprehensive deployment guide
+- See `QUICK-START-HOSTINGER.md` for quick reference
+- Run `./deploy-hosting.sh` to build and create fresh deployment package
+
+**What's included in `deploy/hostinger/`:**
+- ✅ Complete frontend (index.html, assets, PWA)
+- ✅ Backend PHP API with all dependencies (`vendor/` included)
+- ✅ `.htaccess` files for routing
+- ✅ Database schema (`install.sql`)
+- ✅ Full documentation (README-HOSTINGER.md, DEPLOY.html)
+
+**Target hosting**: Hostinger shared hosting (works on any PHP 7.4+ MySQL host)
+
+---
+
+## 🏗️ Development Commands
+
+```bash
+# Install dependencies
+npm install
+
+# Development server (frontend only)
+npm run dev
+
+# Build for production
+npm run build
+
+# Create deployment package (optional)
+./deploy-hosting.sh
+```
+
+---
+
+## 📖 Documentation
+
+| Document | Audience | Description |
+|----------|----------|-------------|
+| `DEPLOYMENT-INSTRUCTIONS.txt` | Non-technical | Simple 8-step guide in plain English |
+| `deploy/hostinger/DEPLOY.html` | Non-technical | Beautiful visual guide (open in browser) |
+| `QUICK-START-HOSTINGER.md` | Technical | 3-step quick reference |
+| `deploy/hostinger/README-HOSTINGER.md` | Technical | Detailed instructions with troubleshooting |
+| `DEPLOYMENT.md` | Developers | Comprehensive deployment documentation |
+| `COMPLETE-SUMMARY.md` | Everyone | Overview of all changes and improvements |
+
+---
+
+## 🔒 Security Notes
+
+⚠️ **Important**: Before deploying, please:
+
+1. **Rotate database password** - If you're using the example credentials from the repo, change them immediately in your hosting control panel
+2. **Generate strong JWT secret**:
+   ```bash
+   openssl rand -hex 32
+   ```
+   Use this in `backend/.env` as `JWT_SECRET`
+3. **Configure ALLOWED_ORIGINS** - Set to your actual domain in `.env`
+4. **Keep `.env` private** - Never commit or share this file
+
+The repository's `.env` files are ignored by Git, but old commits may contain placeholder credentials.
+
+---
+
 ## Performance Notes
 
-- PDF.js worker is loaded from CDN for efficient parsing
-- 3D scenes are optimized with instancing and LODs
+- PDF.js worker loaded from CDN for efficient parsing
+- 3D scenes optimized with instancing and LODs
 - Smooth 60fps target on modern devices
 - Responsive design for all screen sizes
+- PWA with offline caching (service worker)
+
+---
 
 ## Browser Support
 
-- Chrome/Edge (recommended)
-- Firefox
-- Safari (partial 3D support)
-- Mobile browsers (optimized touch interactions)
+- **Chrome/Edge** (recommended, full 3D support)
+- **Firefox** (good 3D support)
+- **Safari** (partial 3D support, all features work)
+- **Mobile browsers** (optimized touch interactions)
+
+---
 
 ## Privacy & Data Handling
 
@@ -336,10 +444,24 @@ Extend `src/utils/analysisEngine.ts`:
 - **Authentication**: JWT tokens stored in browser localStorage; never shared with third parties.
 - **Data deletion**: You can delete your account and all associated data at any time via account settings or by contacting the administrator.
 
+---
+
 ## License
 
 ISC
 
+---
+
 ## Credits
 
-Built with ❤️ Rajeev Reddy
+Built with ❤️ by Rajeev Reddy
+
+**Technologies**: React, Three.js, TypeScript, Vite, Tailwind CSS, PHP, MySQL, JWT
+
+---
+
+## 📞 Support
+
+- Check error logs in your hosting control panel
+- Review the deployment documentation (`DEPLOYMENT.md`)
+- Open an issue on GitHub for bugs or feature requests
