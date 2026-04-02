@@ -3,6 +3,7 @@ import ParticleBackground from './components/3D/ParticleBackground';
 import LandingPage from './pages/LandingPage';
 import UploadPage from './pages/UploadPage';
 import DashboardPage from './pages/DashboardPage';
+import ProfilePage from './pages/ProfilePage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import SharedAnalysisPage from './pages/SharedAnalysisPage';
@@ -67,6 +68,17 @@ function App() {
             <ProtectedRoute>
               <AppLayout withParticle>
                 <DashboardPage />
+              </AppLayout>
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/profile"
+          element={
+            <ProtectedRoute>
+              <AppLayout withParticle>
+                <ProfilePage />
               </AppLayout>
             </ProtectedRoute>
           }

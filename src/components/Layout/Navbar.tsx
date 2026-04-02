@@ -89,6 +89,12 @@ export default function Navbar() {
                   >
                     Dashboard
                   </Link>
+                  <Link
+                    to="/profile"
+                    className="block px-4 py-2 text-gray-300 hover:text-white hover:bg-white/5"
+                  >
+                    Profile
+                  </Link>
                   <button
                     onClick={handleLogout}
                     className="w-full text-left px-4 py-2 text-gray-300 hover:text-white hover:bg-white/5 flex items-center gap-2"
@@ -168,6 +174,13 @@ export default function Navbar() {
                         onClick={() => setMobileMenuOpen(false)}
                       >
                         Dashboard
+                      </Link>
+                      <Link
+                        to="/profile"
+                        className="block py-2 text-gray-300 hover:text-white"
+                        onClick={() => setMobileMenuOpen(false)}
+                      >
+                        Profile
                       </Link>
                       <button
                         onClick={() => {
