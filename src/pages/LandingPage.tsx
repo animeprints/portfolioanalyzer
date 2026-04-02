@@ -3,7 +3,6 @@ import { motion } from 'framer-motion';
 import { ArrowRight, Zap, Shield, BarChart3, Sparkles } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import CodeBlock from '../components/Landing/CodeBlock';
-import PricingTable from '../components/Landing/PricingTable';
 import LogoGrid from '../components/Landing/LogoGrid';
 import NeonButton from '../components/UI/NeonButton';
 
@@ -222,11 +221,34 @@ export default function LandingPage() {
           </div>
         </section>
 
-        {/* Pricing Section */}
-        <PricingTable />
-
         {/* Integrations / Tech Stack */}
         <LogoGrid />
+
+        {/* Free Badge */}
+        <section className="py-16 px-4">
+          <div className="max-w-4xl mx-auto text-center">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="glass-card p-12 border-cyan-500/30"
+            >
+              <div className="w-16 h-16 rounded-full bg-gradient-to-br from-green-500/20 to-emerald-500/20 flex items-center justify-center mx-auto mb-6">
+                <Zap className="w-8 h-8 text-green-400" />
+              </div>
+              <h2 className="text-3xl font-bold text-white mb-4">Always Free</h2>
+              <p className="text-xl text-gray-400 mb-8 max-w-xl mx-auto">
+                No hidden fees, no trial limits. Get unlimited CV analysis, job matching, and PDF exports — forever.
+              </p>
+              <Link to="/upload">
+                <NeonButton variant="primary" size="lg" icon={<ArrowRight className="w-5 h-5" />}>
+                  Start Analyzing Now
+                </NeonButton>
+              </Link>
+            </motion.div>
+          </div>
+        </section>
 
         {/* Footer */}
         <footer className="py-16 px-4 border-t border-white/10">
