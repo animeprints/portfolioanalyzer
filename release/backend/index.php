@@ -9,10 +9,13 @@ require_once __DIR__ . '/vendor/autoload.php';
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
 $dotenv->load();
 
-// Load middleware
-require_once __DIR__ . '/middleware/cors.php';
-$cors = new \App\Middleware\CorsMiddleware();
-$cors->handle();
+// Handle OPTIONS preflight requests (for same-origin, simple 200 OK)
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    header('Content-Type: application/json');
+    echo json_encode(['status' => 'ok']);
+    exit;
+}
 
 // Load core classes
 require_once __DIR__ . '/utils/Response.php';

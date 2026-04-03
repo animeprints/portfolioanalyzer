@@ -3,7 +3,7 @@
 
 RewriteEngine On
 
-# Allow OPTIONS method for CORS preflight
+# Allow OPTIONS method for API preflight
 RewriteCond %{REQUEST_METHOD} OPTIONS
 RewriteRule ^(.*)$ index.php [L,QSA]
 
@@ -20,4 +20,4 @@ Header always set X-Frame-Options DENY
 Header always set X-XSS-Protection "1; mode=block"
 Header always set Referrer-Policy "strict-origin-when-cross-origin"
 
-# CORS headers will be set by PHP
+# Same-origin deployment - CORS not required
