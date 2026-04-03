@@ -136,7 +136,7 @@ cardzey/
 ├── backend/                   # PHP API backend
 │   ├── config/              # Database & JWT config
 │   ├── controllers/         # API controllers
-│   ├── middleware/          # CORS, Auth, Role
+│   ├── middleware/          # Auth, Role (CORS not needed - same-origin)
 │   ├── models/              # Data models
 │   ├── utils/               # CV parser, analysis engine, helpers
 │   ├── vendor/              # Composer dependencies (included)
@@ -254,6 +254,8 @@ The PHP backend provides:
 - ** sharing**: Password-protected public links
 
 **Endpoints**: All under `/api/` (e.g., `/api/auth/register`, `/api/analysis/upload`)
+- **Same-Origin**: Frontend and backend run on same domain, so no CORS needed
+- Preflight OPTIONS requests handled automatically
 
 **See**: `backend/README.md` for full API documentation
 
@@ -418,8 +420,7 @@ npm run build
    openssl rand -hex 32
    ```
    Use this in `backend/.env` as `JWT_SECRET`
-3. **Configure ALLOWED_ORIGINS** - Set to your actual domain in `.env`
-4. **Keep `.env` private** - Never commit or share this file
+3. **Keep `.env` private** - Never commit or share this file
 
 The repository's `.env` files are ignored by Git, but old commits may contain placeholder credentials.
 
