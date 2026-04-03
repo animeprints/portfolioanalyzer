@@ -2,11 +2,16 @@
 
 ## Overview
 
-This project is configured for **Hostinger-only deployment**:
-- **Frontend**: React + Vite static site
-- **Backend**: PHP API
+This project is configured for **Hostinger-only deployment** with **same-domain architecture**:
+- **Frontend**: React + Vite static site (served from domain root)
+- **Backend**: PHP API (served from `/api` subdirectory on same domain)
 - **Database**: MySQL
 - **Target Hosting**: Hostinger shared hosting (all-in-one)
+
+**Same-domain deployment means:**
+- Frontend: `https://yourdomain.com`
+- Backend API: `https://yourdomain.com/api`
+- No CORS needed because both are on the same origin
 
 ## What's Implemented
 
@@ -21,7 +26,7 @@ This project is configured for **Hostinger-only deployment**:
 - Export endpoints (JSON, HTML, DOCX)
 - Shareable analysis links with optional password protection
 - Full database schema with MySQL
-- CORS configuration for Vercel frontend
+- Same-domain architecture (no CORS needed)
 
 ### ✅ Frontend Enhancements
 - Authentication pages (Login, Register)
@@ -121,7 +126,7 @@ This project is configured for **Hostinger-only deployment**:
    DB_USER=your_db_user
    DB_PASS=your_db_password
    JWT_SECRET=generate-random-32-char-hex
-   ALLOWED_ORIGINS=https://your-app.vercel.app,https://your-domain.com
+   # ALLOWED_ORIGINS not needed for same-domain deployment (no CORS)
    ```
 8. Test API: `https://your-domain.com/api/` should show API docs
 
@@ -144,19 +149,17 @@ npm run build
 # Then upload dist/ contents to Hostinger public_html/
 ```
 
-**Same-domain setup** (frontend + backend on same domain):
-- No environment variable needed
-- Frontend automatically uses `/api` endpoint
+**Same-domain deployment** (frontend + backend on same domain):
+- **Do NOT set** `VITE_API_URL` environment variable
+- Frontend automatically uses `/api` endpoint (relative path)
+- No CORS configuration needed
 
-**Separate subdomain setup** (e.g., `app.yourdomain.com` frontend, `api.yourdomain.com` backend):
-- Rebuild frontend with: `VITE_API_URL=https://api.yourdomain.com npm run build`
-- Upload both to their respective locations
+### 3. Security
 
-### 3. CORS & Security
-
-- Ensure `.env` on backend has correct `ALLOWED_ORIGINS`
-- Use HTTPS both frontend and backend
+- Use HTTPS
 - JWT_SECRET must be strong and kept secret
+- Ensure PHP version is up to date
+- Keep dependencies updated
 
 ## Testing Checklist
 

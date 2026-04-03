@@ -21,6 +21,6 @@
 7. Enable SSL
 8. Done! 🎉
 
-🔐 SECURITY: Change DB password, generate JWT_SECRET, set ALLOWED_ORIGINS
+🔐 SECURITY: Change DB password, generate strong JWT_SECRET
 
 See DEPLOYMENT-INSTRUCTIONS.txt or DEPLOY.html for detailed guide.

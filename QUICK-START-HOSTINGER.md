@@ -45,7 +45,7 @@ DB_NAME=your_hostinger_db_name
 DB_USER=your_hostinger_db_user
 DB_PASS=your_hostinger_db_password
 JWT_SECRET=your_generated_32_char_hex
-ALLOWED_ORIGINS=https://yourdomain.com,https://www.yourdomain.com
+# ALLOWED_ORIGINS not needed - same domain deployment (no CORS)
 ```
 
 **Tip**: Keep defaults for other settings unless you know what you're changing.
@@ -91,7 +91,6 @@ ALLOWED_ORIGINS=https://yourdomain.com,https://www.yourdomain.com
 | Issue | Solution |
 |-------|----------|
 | 500 Error | Check `api/.env` exists and has correct DB credentials |
-| CORS errors | Update ALLOWED_ORIGINS in `.env` to match your domain |
 | Upload fails | Ensure `api/upload/` exists and is writable (755) |
 | CSS/JS not loading | Verify `.htaccess` is in `public_html/` |
 | PDF parsing fails | Hostinger usually has `pdftotext`. If not, use alternative parser |

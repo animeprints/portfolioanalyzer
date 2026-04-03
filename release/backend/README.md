@@ -84,11 +84,8 @@ composer install
    ```
    Copy the output into `JWT_SECRET`
 
-4. Set allowed origins for CORS:
-   ```env
-   ALLOWED_ORIGINS=https://your-app.vercel.app,https://your-domain.com
-   ```
-   Include your Vercel frontend URL.
+4. For same-domain deployment, `ALLOWED_ORIGINS` is not required (CORS not used).
+   Only set it if you need cross-origin requests.
 
 5. If using email features (future), configure SMTP.
 
@@ -120,19 +117,19 @@ If your API is at a subdirectory like `/api`, configure accordingly.
 
 ### Step 7: Connect Frontend
 
-In your Vercel frontend (CV Analyzer React app), set environment variable:
+**For same-domain deployment** (frontend and backend on same domain):
+- **Do NOT set** `VITE_API_URL` environment variable
+- The frontend automatically uses relative path `/api` (same origin)
+- Build the frontend normally: `npm run build`
 
-**Vercel Environment Variable:**
-```
-VITE_API_URL=https://your-domain.com/api
-```
-
-Or in development, create `.env.local` in frontend:
+**For local development:**
+Create `.env.local` in frontend directory:
 ```env
 VITE_API_URL=http://localhost:8000/api
 ```
+Then run backend: `php -S localhost:8000` from `/backend` folder.
 
-The frontend's `api.ts` will use this to make requests.
+The frontend's `api.ts` automatically detects the correct API URL based on environment.
 
 ## API Endpoints
 
@@ -237,11 +234,6 @@ Roles:
 - Ensure `pdftotext` CLI is available on your Hostinger plan
 - If not, install or use alternative PHP PDF library (e.g., `smalot/pdfparser`)
 - For quick fix, the code falls back to simple text extraction which may be limited
-
-**CORS errors**
-- Add your frontend domain to `ALLOWED_ORIGINS` in `.env`
-- Clear any CDN cache
-- Ensure `.htaccess` CORS headers are applied (check browser devtools)
 
 **Upload fails (403 Forbidden)**
 - Check `upload/` directory permissions (755)

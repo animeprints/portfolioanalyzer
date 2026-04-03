@@ -41,13 +41,13 @@
    1. In File Manager, go to "public_html/api/"
    2. Find ".env.example" file
    3. Click "Edit" and change these lines:
-   
+
       DB_NAME=__________
       DB_USER=__________
       DB_PASS=__________
       JWT_SECRET=openssl rand -hex 32 (or any random 32-char string)
-      ALLOWED_ORIGINS=https://yourdomain.com
-   
+      # ALLOWED_ORIGINS not needed - same domain deployment (no CORS)
+
    4. Save the file as ".env" (without .example)
 
 ┌──────────────────────────────────────────────────────────────────┐
@@ -102,9 +102,6 @@
 
    ❌ Upload fails
       → Ensure api/upload/ folder exists and has 755 permissions
-
-   ❌ CORS errors
-      → Edit api/.env and set ALLOWED_ORIGINS to your domain
 
    ❌ PDF parsing fails
       → Some hosts don't have pdftotext. Contact support.
