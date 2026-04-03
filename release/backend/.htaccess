@@ -20,4 +20,4 @@ Header always set X-Frame-Options DENY
 Header always set X-XSS-Protection "1; mode=block"
 Header always set Referrer-Policy "strict-origin-when-cross-origin"
 
-# Same-origin deployment - CORS not required
+# CORS not needed - same-origin deployment (frontend and backend on same domain)
