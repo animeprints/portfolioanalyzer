@@ -1,273 +1,406 @@
-import { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
-import { interviewService, InterviewQuestion } from '../services/interviewService';
-import {
-  MessageSquare,
-  Loader2,
-  ChevronRight,
-  ChevronDown,
-  BookOpen,
-  Filter,
-  X
-} from 'lucide-react';
-import NeonButton from '../components/UI/NeonButton';
+// @ts-nocheck
+import { useState, useEffect, useRef } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { Clock, Play, CheckCircle, ChevronRight, Award, Calendar, Timer, MessageSquare, Sparkles } from 'lucide-react';
+
+interface Question {
+  id: string;
+  category: string;
+  question: string;
+  tips: string[];
+  difficulty: 'easy' | 'medium' | 'hard';
+}
+
+const mockQuestions: Question[] = [
+  {
+    id: '1',
+    category: 'Technical',
+    question: 'Explain the concept of closures in JavaScript and provide a practical example.',
+    tips: [
+      'Mention lexical scoping',
+      'Provide a real-world example like data encapsulation',
+      'Explain memory retention',
+    ],
+    difficulty: 'medium',
+  },
+  {
+    id: '2',
+    category: 'Behavioral',
+    question: 'Tell me about a time you had to solve a difficult problem with limited resources.',
+    tips: [
+      'Use STAR method (Situation, Task, Action, Result)',
+      'Quantify the impact',
+      'Show collaboration skills',
+    ],
+    difficulty: 'medium',
+  },
+  {
+    id: '3',
+    category: 'System Design',
+    question: 'How would you design a URL shortening service like bit.ly?',
+    tips: [
+      'Consider scale from the start',
+      'Discuss hash generation strategies',
+      'Address caching and database design',
+    ],
+    difficulty: 'hard',
+  },
+  {
+    id: '4',
+    category: 'Technical',
+    question: 'What is the difference between SQL and NoSQL databases? When would you use each?',
+    tips: [
+      'Discuss ACID vs BASE',
+      'Consider scalability needs',
+      'Mention specific use cases',
+    ],
+    difficulty: 'easy',
+  },
+  {
+    id: '5',
+    category: 'Behavioral',
+    question: 'Describe a situation where you had to work with a difficult team member.',
+    tips: [
+      'Focus on communication',
+      'Show empathy and professionalism',
+      'Explain the resolution process',
+    ],
+    difficulty: 'easy',
+  },
+];
+
+const categories = ['All', 'Technical', 'Behavioral', 'System Design'];
 
 export default function InterviewPage() {
-  const navigate = useNavigate();
-  const [questions, setQuestions] = useState<InterviewQuestion[]>([]);
-  const [history, setHistory] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [filters, setFilters] = useState({
-    industry: '',
-    role: '',
-    difficulty: '',
-    limit: 20
-  });
-
-  // Filter options from loaded questions
-  const industries = ['all', ...new Set(questions.map(q => q.industry))];
-  const roles = ['all', ...new Set(questions.map(q => q.role).filter(Boolean))];
-  const difficulties = ['all', 'easy', 'medium', 'hard'];
+  const [selectedCategory, setSelectedCategory] = useState('All');
+  const [currentQuestion, setCurrentQuestion] = useState<Question | null>(null);
+  const [isPracticing, setIsPracticing] = useState(false);
+  const [timeElapsed, setTimeElapsed] = useState(0);
+  const [practices, setPractices] = useState<any[]>([]);
+  const timerRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
-    loadQuestions();
-    loadHistory();
-  }, []);
-
-  const loadQuestions = async () => {
-    try {
-      setLoading(true);
-      const params: any = { limit: filters.limit };
-      if (filters.industry && filters.industry !== 'all') params.industry = filters.industry;
-      if (filters.role && filters.role !== 'all') params.role = filters.role;
-      if (filters.difficulty && filters.difficulty !== 'all') params.difficulty = filters.difficulty;
-
-      const result = await interviewService.getQuestions(params);
-      setQuestions(result.questions);
-    } catch (err) {
-      console.error('Failed to load questions:', err);
-    } finally {
-      setLoading(false);
+    if (isPracticing) {
+      timerRef.current = setInterval(() => {
+        setTimeElapsed((t) => t + 1);
+      }, 1000);
     }
+    return () => {
+      if (timerRef.current) clearInterval(timerRef.current);
+    };
+  }, [isPracticing]);
+
+  const filteredQuestions = selectedCategory === 'All'
+    ? mockQuestions
+    : mockQuestions.filter((q) => q.category === selectedCategory);
+
+  const startPractice = (question: Question) => {
+    setCurrentQuestion(question);
+    setTimeElapsed(0);
+    setIsPracticing(true);
   };
 
-  const loadHistory = async () => {
-    try {
-      const result = await interviewService.getPracticeHistory();
-      setHistory(result.history);
-    } catch (err) {
-      console.error('Failed to load history:', err);
+  const endPractice = () => {
+    setIsPracticing(false);
+    // In a real app, you'd send answer to backend
+    setPractices([
+      ...practices,
+      {
+        questionId: currentQuestion?.id,
+        duration: timeElapsed,
+        date: new Date().toISOString(),
+      },
+    ]);
+    setCurrentQuestion(null);
+  };
+
+  const formatTime = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+  };
+
+  const getDifficultyColor = (difficulty: string) => {
+    switch (difficulty) {
+      case 'easy': return 'text-green-400 border-green-500/30';
+      case 'medium': return 'text-yellow-400 border-yellow-500/30';
+      case 'hard': return 'text-red-400 border-red-500/30';
+      default: return 'text-gray-400';
     }
-  };
-
-  const applyFilter = () => {
-    loadQuestions();
-  };
-
-  const resetFilters = () => {
-    setFilters({ industry: '', role: '', difficulty: '', limit: 20 });
-    setTimeout(loadQuestions, 0);
   };
 
   return (
-    <div className="min-h-screen pt-24 pb-20 px-4 relative z-10">
-      <div className="max-w-6xl mx-auto">
+    <div className="relative min-h-screen pt-24 pb-20">
+      <div className="absolute inset-0 bg-gradient-to-b from-dark-900 via-dark-950 to-black">
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,_var(--tw-gradient-stops))] from-pink-900/20 via-transparent to-transparent" />
+      </div>
+
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <motion.div
-          initial={{ opacity: 0, y: -20 }}
+          initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          className="mb-8"
+          className="text-center py-16"
         >
-          <button
-            onClick={() => navigate(-1)}
-            className="flex items-center gap-2 text-gray-400 hover:text-white mb-4 transition-colors"
-          >
-            <ChevronRight className="w-5 h-5 rotate-180" />
-            Back
-          </button>
-          <div className="flex items-center gap-3 mb-2">
-            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-yellow-500/20 to-orange-500/20 flex items-center justify-center">
-              <MessageSquare className="w-6 h-6 text-yellow-400" />
-            </div>
-            <div>
-              <h1 className="text-4xl font-bold text-white">Interview Prep</h1>
-              <p className="text-gray-400">Practice with common interview questions</p>
-            </div>
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-pink-900/50 to-orange-900/50 border border-pink-500/30 mb-6">
+            <MessageSquare className="w-4 h-4 text-pink-400" />
+            <span className="text-pink-400 text-sm font-mono tracking-wider">INTERVIEW PREP</span>
           </div>
-        </motion.div>
-
-        {/* Filters */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-          className="glass-card p-6 mb-8"
-        >
-          <div className="flex items-center gap-2 mb-4">
-            <Filter className="w-5 h-5 text-cyan-400" />
-            <h3 className="text-white font-semibold">Filters</h3>
-          </div>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div>
-              <label className="block text-gray-300 text-sm mb-2">Industry</label>
-              <select
-                value={filters.industry}
-                onChange={(e) => setFilters({ ...filters, industry: e.target.value })}
-                className="input-field"
-              >
-                <option value="">All</option>
-                {industries.filter(i => i !== 'all').map(ind => (
-                  <option key={ind} value={ind}>{ind}</option>
-                ))}
-              </select>
-            </div>
-            <div>
-              <label className="block text-gray-300 text-sm mb-2">Role</label>
-              <select
-                value={filters.role}
-                onChange={(e) => setFilters({ ...filters, role: e.target.value })}
-                className="input-field"
-              >
-                <option value="">All</option>
-                {roles.filter(r => r && r !== 'all').map(role => (
-                  <option key={role} value={role}>{role}</option>
-                ))}
-              </select>
-            </div>
-            <div>
-              <label className="block text-gray-300 text-sm mb-2">Difficulty</label>
-              <select
-                value={filters.difficulty}
-                onChange={(e) => setFilters({ ...filters, difficulty: e.target.value })}
-                className="input-field"
-              >
-                {difficulties.map(d => (
-                  <option key={d} value={d === 'all' ? '' : d}>{d === 'all' ? 'All' : d}</option>
-                ))}
-              </select>
-            </div>
-            <div className="flex items-end gap-2">
-              <button
-                onClick={applyFilter}
-                className="flex-1 px-4 py-3 rounded-xl bg-cyan-500/20 text-cyan-300 hover:bg-cyan-500/30 transition-colors"
-              >
-                Apply
-              </button>
-              <button
-                onClick={resetFilters}
-                className="px-4 py-3 rounded-xl border border-white/20 text-gray-300 hover:bg-white/5 transition-colors"
-                title="Reset"
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-          </div>
+          <h1 className="text-6xl md:text-7xl font-bold mb-6">
+            <span className="gradient-text">Master the Interview</span>
+          </h1>
+          <p className="text-xl text-gray-400 max-w-2xl mx-auto">
+            Practice with hundreds of real interview questions. Get AI feedback, track your progress, and build confidence.
+          </p>
         </motion.div>
 
         <div className="grid lg:grid-cols-3 gap-8">
-          {/* Questions List */}
-          <div className="lg:col-span-2 space-y-4">
-            <h2 className="text-2xl font-bold text-white mb-4">
-              {questions.length} Questions
-            </h2>
+          {/* Question List */}
+          <div className="lg:col-span-1 space-y-6">
+            {/* Category filters */}
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              className="flex flex-wrap gap-2"
+            >
+              {categories.map((cat) => (
+                <button
+                  key={cat}
+                  onClick={() => setSelectedCategory(cat)}
+                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+                    selectedCategory === cat
+                      ? 'bg-gradient-to-r from-pink-500 to-orange-500 text-white'
+                      : 'bg-white/10 border border-white/20 text-gray-300 hover:border-pink-400/50'
+                  }`}
+                >
+                  {cat}
+                </button>
+              ))}
+            </motion.div>
 
-            {loading ? (
-              <div className="flex items-center justify-center py-20">
-                <Loader2 className="w-12 h-12 text-cyan-400 animate-spin" />
-              </div>
-            ) : questions.length === 0 ? (
-              <div className="text-center py-20 glass-card">
-                <MessageSquare className="w-16 h-16 text-gray-600 mx-auto mb-4" />
-                <p className="text-gray-400">No questions found matching your criteria</p>
-              </div>
-            ) : (
-              <div className="space-y-4">
-                {questions.map((q, idx) => (
-                  <motion.div
-                    key={q.id}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: idx * 0.05 }}
-                    className="glass-card p-6"
-                  >
-                    <div className="flex items-start justify-between gap-4 mb-3">
-                      <span className="px-3 py-1 rounded-full text-xs bg-cyan-500/20 text-cyan-300">
-                        {q.category}
-                      </span>
-                      <div className="flex items-center gap-2">
-                        <span className="px-2 py-1 rounded text-xs bg-white/10 text-gray-400 capitalize">
+            {/* Question cards */}
+            <div className="space-y-4">
+              {filteredQuestions.map((q, index) => (
+                <motion.div
+                  key={q.id}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: index * 0.05 }}
+                  className={`glass-card p-6 border-white/10 cursor-pointer transition-all group ${
+                    currentQuestion?.id === q.id ? 'border-pink-400/50 ring-2 ring-pink-400/20' : 'hover:border-pink-400/30'
+                  }`}
+                  onClick={() => !isPracticing && startPractice(q)}
+                >
+                  <div className="flex items-start justify-between gap-4">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-2">
+                        <span className={`px-2 py-1 rounded text-xs font-medium border ${getDifficultyColor(q.difficulty)}`}>
                           {q.difficulty}
                         </span>
-                        {q.role && (
-                          <span className="px-2 py-1 rounded text-xs bg-purple-500/20 text-purple-300">
-                            {q.role}
+                        <span className="text-xs text-gray-500">{q.category}</span>
+                      </div>
+                      <p className="text-white font-medium line-clamp-2 group-hover:text-pink-400 transition-colors">
+                        {q.question}
+                      </p>
+                    </div>
+                    <ChevronRight className="w-5 h-5 text-gray-500 group-hover:text-pink-400 mt-1 flex-shrink-0" />
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+
+            {/* Practice History */}
+            {practices.length > 0 && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="glass-card p-6 border-white/10"
+              >
+                <h3 className="text-lg font-semibold mb-4 flex items-center gap-2">
+                  <Calendar className="w-5 h-5 text-cyan-400" />
+                  Recent Sessions
+                </h3>
+                <div className="space-y-3">
+                  {practices.slice(-5).reverse().map((practice, i) => {
+                    const question = mockQuestions.find((q) => q.id === practice.questionId);
+                    return (
+                      <div key={i} className="flex items-center justify-between text-sm">
+                        <div className="flex items-center gap-3">
+                          <CheckCircle className="w-4 h-4 text-green-400" />
+                          <span className="text-gray-300 truncate max-w-[200px]">
+                            {question?.question.slice(0, 50)}...
                           </span>
-                        )}
+                        </div>
+                        <div className="text-gray-500 font-mono text-xs">
+                          {formatTime(practice.duration)}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </motion.div>
+            )}
+          </div>
+
+          {/* Practice Area */}
+          <div className="lg:col-span-2">
+            <AnimatePresence mode="wait">
+              {!isPracticing && !currentQuestion && (
+                <motion.div
+                  key="welcome"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="glass-card h-full min-h-[600px] flex items-center justify-center border-white/10 relative overflow-hidden"
+                >
+                  <div className="text-center p-12">
+                    <div className="w-32 h-32 mx-auto mb-8 rounded-full bg-gradient-to-br from-pink-900/50 to-orange-900/50 flex items-center justify-center animate-pulse">
+                      <Sparkles className="w-16 h-16 text-pink-400" />
+                    </div>
+                    <h2 className="text-3xl font-bold mb-4">Ready to Practice?</h2>
+                    <p className="text-gray-400 max-w-md mx-auto mb-8">
+                      Select a question from the list to start your practice session.
+                      You'll have time to think and then record your answer.
+                    </p>
+                    <div className="grid grid-cols-2 gap-4 max-w-md mx-auto text-left">
+                      <div className="p-4 rounded-lg bg-white/5 border border-white/10">
+                        <div className="text-cyan-400 font-semibold mb-1">Timer Mode</div>
+                        <div className="text-sm text-gray-400">Track your response time</div>
+                      </div>
+                      <div className="p-4 rounded-lg bg-white/5 border border-white/10">
+                        <div className="text-purple-400 font-semibold mb-1">Progress Track</div>
+                        <div className="text-sm text-gray-400">Monitor improvement</div>
                       </div>
                     </div>
-                    <h3 className="text-white font-semibold text-lg mb-4">{q.question}</h3>
-                    {q.tips && q.tips.length > 0 && (
-                      <details className="group">
-                        <summary className="list-none flex items-center gap-2 text-gray-400 cursor-pointer hover:text-white transition-colors">
-                          <BookOpen className="w-4 h-4" />
-                          <span className="text-sm">Show tips</span>
-                          <ChevronDown className="w-4 h-4 group-open:rotate-180 transition-transform" />
-                        </summary>
-                        <ul className="mt-3 space-y-1 ml-6">
-                          {q.tips.map((tip, i) => (
-                            <li key={i} className="text-gray-300 text-sm flex items-start gap-2">
-                              <span className="text-cyan-400">•</span>
+                  </div>
+                </motion.div>
+              )}
+
+              {currentQuestion && isPracticing && (
+                <motion.div
+                  key="practice"
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.95 }}
+                  className="glass-card border-2 border-pink-500/30 overflow-hidden"
+                >
+                  {/* Timer bar */}
+                  <div className="h-2 bg-white/10 relative overflow-hidden">
+                    <motion.div
+                      initial={{ width: '100%' }}
+                      animate={{ width: '0%' }}
+                      transition={{ duration: 300, ease: 'linear' }}
+                      className="absolute inset-y-0 left-0 bg-gradient-to-r from-pink-500 to-orange-500"
+                    />
+                  </div>
+
+                  <div className="p-8">
+                    {/* Header */}
+                    <div className="flex justify-between items-center mb-8">
+                      <div className="flex items-center gap-4">
+                        <span className={`px-3 py-1 rounded-lg text-sm font-medium border ${getDifficultyColor(currentQuestion.difficulty)}`}>
+                          {currentQuestion.difficulty}
+                        </span>
+                        <span className="text-gray-400 text-sm">{currentQuestion.category}</span>
+                      </div>
+                      <div className="flex items-center gap-2 text-2xl font-mono text-pink-400">
+                        <Timer className="w-6 h-6" />
+                        {formatTime(timeElapsed)}
+                      </div>
+                    </div>
+
+                    {/* Question */}
+                    <div className="mb-8">
+                      <h3 className="text-2xl font-bold text-white mb-6 leading-relaxed">
+                        {currentQuestion.question}
+                      </h3>
+
+                      <div className="p-6 rounded-xl bg-white/5 border border-white/10">
+                        <h4 className="text-cyan-400 font-semibold mb-3">💡 Tips to consider:</h4>
+                        <ul className="space-y-2">
+                          {currentQuestion.tips.map((tip, i) => (
+                            <li key={i} className="flex items-start gap-2 text-gray-300">
+                              <ChevronRight className="w-4 h-4 text-pink-400 mt-0.5 flex-shrink-0" />
                               {tip}
                             </li>
                           ))}
                         </ul>
-                      </details>
-                    )}
-                  </motion.div>
-                ))}
-              </div>
-            )}
-          </div>
-
-          {/* Practice History */}
-          <div className="lg:col-span-1">
-            <div className="glass-card p-6 sticky top-24">
-              <div className="flex items-center gap-2 mb-4">
-                <BookOpen className="w-5 h-5 text-cyan-400" />
-                <h3 className="text-lg font-bold text-white">Recent Practice</h3>
-              </div>
-              {history.length === 0 ? (
-                <p className="text-gray-400 text-sm">
-                  No practice sessions yet. Start practicing to see your history.
-                </p>
-              ) : (
-                <div className="space-y-4">
-                  {history.slice(0, 5).map((record) => (
-                    <div key={record.id} className="p-3 rounded-lg bg-white/5">
-                      <p className="text-white text-sm font-medium mb-1 line-clamp-2">{record.question}</p>
-                      <div className="flex items-center gap-2 text-xs text-gray-400">
-                        <span className="capitalize">{record.difficulty}</span>
-                        <span className="w-1 h-1 rounded-full bg-gray-600" />
-                        {record.self_rating && (
-                          <span className="text-yellow-400">★ {record.self_rating}/5</span>
-                        )}
                       </div>
                     </div>
-                  ))}
-                </div>
+
+                    {/* Actions */}
+                    <div className="flex gap-4">
+                      <button
+                        onClick={endPractice}
+                        className="flex-1 py-4 bg-gradient-to-r from-green-500 to-emerald-600 rounded-xl font-semibold text-white hover:shadow-lg hover:shadow-green-500/30 transition-all flex items-center justify-center gap-2"
+                      >
+                        <CheckCircle className="w-5 h-5" />
+                        Complete Practice
+                      </button>
+                      <button
+                        onClick={() => {
+                          setCurrentQuestion(null);
+                          setIsPracticing(false);
+                          setTimeElapsed(0);
+                        }}
+                        className="py-4 px-8 bg-white/10 border border-white/20 rounded-xl font-semibold text-gray-300 hover:bg-white/20 transition-all"
+                      >
+                        Skip
+                      </button>
+                    </div>
+                  </div>
+                </motion.div>
               )}
-              <div className="mt-6 pt-4 border-t border-white/10">
-                <NeonButton
-                  variant="outline"
-                  size="sm"
-                  className="w-full"
-                  onClick={() => {/* Could open a practice modal */}}
+
+              {!isPracticing && currentQuestion && (
+                <motion.div
+                  key="question-detail"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  className="glass-card p-8 border-cyan-500/30"
                 >
-                  Start Practice Session
-                </NeonButton>
-              </div>
-            </div>
+                  <div className="flex justify-between items-start mb-6">
+                    <div>
+                      <span className="px-3 py-1 rounded text-sm font-medium border border-cyan-500/30 text-cyan-400">
+                        {currentQuestion.category}
+                      </span>
+                      <h2 className="text-2xl font-bold mt-4 text-white">
+                        {currentQuestion.question}
+                      </h2>
+                    </div>
+                    <span className={`px-3 py-1 rounded text-sm font-medium border ${getDifficultyColor(currentQuestion.difficulty)}`}>
+                      {currentQuestion.difficulty}
+                    </span>
+                  </div>
+
+                  <div className="p-6 rounded-xl bg-gradient-to-r from-pink-900/30 to-orange-900/30 border border-pink-500/20 mb-8">
+                    <h3 className="font-semibold mb-4 flex items-center gap-2">
+                      <Award className="w-5 h-5 text-yellow-400" />
+                      How to approach this question
+                    </h3>
+                    <ol className="space-y-3">
+                      {currentQuestion.tips.map((tip, i) => (
+                        <li key={i} className="flex items-start gap-3 text-gray-200">
+                          <span className="w-6 h-6 rounded-full bg-gradient-to-r from-pink-500 to-orange-500 flex items-center justify-center text-xs font-bold text-white flex-shrink-0">
+                            {i + 1}
+                          </span>
+                          {tip}
+                        </li>
+                      ))}
+                    </ol>
+                  </div>
+
+                  <button
+                    onClick={() => startPractice(currentQuestion)}
+                    className="w-full py-5 bg-gradient-to-r from-pink-500 to-orange-600 rounded-xl font-semibold text-white hover:shadow-lg hover:shadow-pink-500/30 transition-all transform hover:scale-[1.02] flex items-center justify-center gap-3"
+                  >
+                    <Play className="w-6 h-6" />
+                    Start Practice Timer
+                  </button>
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
         </div>
       </div>

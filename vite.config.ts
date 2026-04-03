@@ -10,9 +10,9 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'masked-icon.svg'],
       manifest: {
-        name: 'CV Analyzer - AI-Powered Resume Analysis',
-        short_name: 'CV Analyzer',
-        description: 'Analyze your CV with AI and get instant feedback',
+        name: 'animeprints - Creative Developer Portfolio',
+        short_name: 'animeprints',
+        description: 'Portfolio of a creative developer specializing in immersive web experiences',
         theme_color: '#0a0a0a',
         background_color: '#0a0a0a',
         display: 'standalone',

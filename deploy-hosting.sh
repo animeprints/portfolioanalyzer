@@ -27,10 +27,10 @@ mkdir -p deploy/hostinger
 # Copy frontend
 cp -r dist/* deploy/hostinger/
 
-# Copy backend
-cp -r backend deploy/hostinger/
+# Copy api
+cp -r api deploy/hostinger/
 # Remove any .env files (security: never include actual credentials)
-rm -f deploy/hostinger/backend/.env 2>/dev/null || true
+rm -f deploy/hostinger/api/.env 2>/dev/null || true
 
 # Copy .htaccess
 cp deploy/hostinger/.htaccess deploy/hostinger/ 2>/dev/null || true
@@ -106,7 +106,7 @@ echo "📊 Package size: $(du -sh deploy/hostinger | cut -f1)"
 echo ""
 echo "Contents:"
 echo "  - Frontend files (index.html, assets/)"
-echo "  - Backend API (api/ with vendor/)"
+echo "  - API backend (api/ with vendor/)"
 echo "  - DEPLOY.html (visual guide)"
 echo "  - README-HOSTINGER.md (detailed guide)"
 echo ""

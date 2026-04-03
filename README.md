@@ -132,8 +132,8 @@ cardzey/
 │       ├── index.html        # Frontend entry
 │       ├── assets/           # Compiled CSS/JS
 │       ├── DEPLOY.html       # Visual deployment guide
-│       └── backend/          # PHP API with all dependencies
-├── backend/                   # PHP API backend
+│       └── api/              # PHP API with all dependencies
+├── api/                       # PHP API backend
 │   ├── config/              # Database & JWT config
 │   ├── controllers/         # API controllers
 │   ├── middleware/          # Auth, Role (CORS not needed - same-origin)
@@ -198,14 +198,14 @@ npm install
 
 2. **Set up backend**:
 ```bash
-cd backend
+cd api
 composer install
 cp .env.example .env
 # Edit .env with your local DB credentials
 ```
 
 3. **Create database**:
-   - Import `backend/install.sql` into MySQL
+   - Import `api/install.sql` into MySQL
    - Note database name, username, password
 
 4. **Configure frontend**:
@@ -215,7 +215,7 @@ cp .env.example .env
    ```
 
 5. **Start development servers**:
-   - Backend: `cd backend && php -S localhost:8000` (or use Apache localhost)
+   - Backend: `cd api && php -S localhost:8000` (or use Apache localhost)
    - Frontend: `npm run dev` → http://localhost:3000
 
 6. Open the app and start developing!
@@ -257,7 +257,7 @@ The PHP backend provides:
 - **Same-Origin**: Frontend and backend run on same domain, so no CORS needed
 - Preflight OPTIONS requests handled automatically
 
-**See**: `backend/README.md` for full API documentation
+**See**: `api/README.md` for full API documentation
 
 ## Usage
 
@@ -419,7 +419,7 @@ npm run build
    ```bash
    openssl rand -hex 32
    ```
-   Use this in `backend/.env` as `JWT_SECRET`
+   Use this in `api/.env` as `JWT_SECRET`
 3. **Keep `.env` private** - Never commit or share this file
 
 The repository's `.env` files are ignored by Git, but old commits may contain placeholder credentials.

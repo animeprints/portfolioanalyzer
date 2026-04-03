@@ -1,197 +1,204 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { AnimatePresence } from 'framer-motion';
 import ParticleBackground from './components/3D/ParticleBackground';
-import LandingPage from './pages/LandingPage';
-import UploadPage from './pages/UploadPage';
-import DashboardPage from './pages/DashboardPage';
-import ProfilePage from './pages/ProfilePage';
-import LinkedInPage from './pages/LinkedInPage';
+import { AuthProvider, useAuth } from './contexts/AuthContext';
+import Navbar from './components/Layout/Navbar';
+import ScrollProgress from './components/ScrollProgress';
+import CustomCursor from './components/CustomCursor';
+
+// Pages
+import HomePage from './pages/HomePage';
+import WorkPage from './pages/WorkPage';
+import AboutPage from './pages/AboutPage';
+import ContactPage from './pages/ContactPage';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
+import AnalyzePage from './pages/AnalyzePage';
+import DashboardPage from './pages/DashboardPage';
+import JobMatchPage from './pages/JobMatchPage';
 import InterviewPage from './pages/InterviewPage';
-import SharedAnalysisPage from './pages/SharedAnalysisPage';
-import InterviewerDashboardPage from './pages/Interviewer/DashboardPage';
-import InterviewerJobsPage from './pages/Interviewer/JobsPage';
-import InterviewerJobEditPage from './pages/Interviewer/JobEditPage';
-import InterviewerCandidatesPage from './pages/Interviewer/CandidatesPage';
-import InterviewerApplicationsPage from './pages/Interviewer/ApplicationsPage';
-import JobsPage from './pages/JobsPage';
-import ApplicationsPage from './pages/ApplicationsPage';
-import ProtectedRoute from './components/Auth/ProtectedRoute';
-import Navbar from './components/Layout/Navbar';
+import LinkedInPage from './pages/LinkedInPage';
 
-// Layout wrapper with Navbar and optional 3D background
+// Protected Route wrapper
+function ProtectedRoute({ children }: { children: React.ReactNode }) {
+  const { loading, isAuthenticated } = useAuth();
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-dark-950">
+        <div className="w-16 h-16 rounded-full border-4 border-cyan-500/20 border-t-cyan-400 animate-spin" />
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace />;
+  }
+
+  return <>{children}</>;
+}
+
+// Layout wrapper with effects
 function AppLayout({
   children,
-  withParticle = false
+  withParticle = true,
+  withCursor = false,
+  withNavbar = true,
 }: {
   children: React.ReactNode;
   withParticle?: boolean;
+  withCursor?: boolean;
+  withNavbar?: boolean;
 }) {
+  const { isAuthenticated } = useAuth();
+
   return (
-    <div className="relative min-h-screen">
-      <Navbar />
-      {withParticle && <ParticleBackground count={1500} color="#06b6d4" size={0.03} speed={0.5} />}
-      <main className="relative z-10 pt-16">{children}</main>
-    </div>
+    <>
+      {withCursor && isAuthenticated && <CustomCursor />}
+      <div className="relative min-h-screen">
+        {withNavbar && <Navbar />}
+        {withParticle && isAuthenticated && <ParticleBackground count={800} color="#06b6d4" size={0.02} speed={0.3} />}
+        {withParticle && !isAuthenticated && (
+          <div className="fixed inset-0 z-0">
+            <div className="absolute inset-0 bg-gradient-to-b from-dark-900 via-dark-950 to-black" />
+          </div>
+        )}
+        <ScrollProgress />
+        <main className="relative z-10">{children}</main>
+      </div>
+    </>
   );
 }
 
-function App() {
+function AppRoutes() {
+  const { loading } = useAuth();
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-dark-950">
+        <div className="w-16 h-16 rounded-full border-4 border-cyan-500/20 border-t-cyan-400 animate-spin" />
+      </div>
+    );
+  }
+
   return (
-    <Router>
+    <AnimatePresence mode="wait">
       <Routes>
-        {/* Public routes without navbar */}
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/register" element={<RegisterPage />} />
-
-        {/* Public shared analysis - no navbar, no auth */}
-        <Route path="/shared/:token" element={<SharedAnalysisPage />} />
-
-        {/* Landing page - with navbar, no particles */}
+        {/* Public routes */}
         <Route
           path="/"
           element={
-            <AppLayout>
-              <LandingPage />
+            <AppLayout withNavbar={true} withParticle={true}>
+              <HomePage />
             </AppLayout>
           }
         />
-
-        {/* App routes - with navbar and particles */}
         <Route
-          path="/upload"
+          path="/about"
           element={
-            <AppLayout withParticle>
-              <UploadPage />
+            <AppLayout withNavbar={true} withParticle={true}>
+              <AboutPage />
+            </AppLayout>
+          }
+        />
+        <Route
+          path="/work"
+          element={
+            <AppLayout withNavbar={true} withParticle={true}>
+              <WorkPage />
+            </AppLayout>
+          }
+        />
+        <Route
+          path="/contact"
+          element={
+            <AppLayout withNavbar={true} withParticle={false}>
+              <ContactPage />
+            </AppLayout>
+          }
+        />
+        <Route
+          path="/login"
+          element={
+            <AppLayout withNavbar={false} withParticle={false}>
+              <LoginPage />
+            </AppLayout>
+          }
+        />
+        <Route
+          path="/register"
+          element={
+            <AppLayout withNavbar={false} withParticle={false}>
+              <RegisterPage />
             </AppLayout>
           }
         />
 
+        {/* Protected routes - full immersive experience */}
+        <Route
+          path="/analyze"
+          element={
+            <ProtectedRoute>
+              <AppLayout withNavbar={true} withParticle={true} withCursor={true}>
+                <AnalyzePage />
+              </AppLayout>
+            </ProtectedRoute>
+          }
+        />
         <Route
           path="/dashboard"
           element={
             <ProtectedRoute>
-              <AppLayout withParticle>
+              <AppLayout withNavbar={true} withParticle={true} withCursor={true}>
                 <DashboardPage />
               </AppLayout>
             </ProtectedRoute>
           }
         />
-
         <Route
-          path="/profile"
+          path="/jobs"
           element={
             <ProtectedRoute>
-              <AppLayout withParticle>
-                <ProfilePage />
+              <AppLayout withNavbar={true} withParticle={true} withCursor={true}>
+                <JobMatchPage />
               </AppLayout>
             </ProtectedRoute>
           }
         />
-
+        <Route
+          path="/interview"
+          element={
+            <ProtectedRoute>
+              <AppLayout withNavbar={true} withParticle={true} withCursor={true}>
+                <InterviewPage />
+              </AppLayout>
+            </ProtectedRoute>
+          }
+        />
         <Route
           path="/linkedin"
           element={
             <ProtectedRoute>
-              <AppLayout withParticle={false}>
+              <AppLayout withNavbar={true} withParticle={true} withCursor={true}>
                 <LinkedInPage />
               </AppLayout>
             </ProtectedRoute>
           }
         />
 
-        <Route
-          path="/interview"
-          element={
-            <ProtectedRoute>
-              <AppLayout withParticle={false}>
-                <InterviewPage />
-              </AppLayout>
-            </ProtectedRoute>
-          }
-        />
-
-        {/* Interviewer routes - with navbar and particles */}
-        <Route
-          path="/interviewer"
-          element={
-            <ProtectedRoute allowedRoles={['interviewer', 'admin']}>
-              <AppLayout withParticle>
-                <InterviewerDashboardPage />
-              </AppLayout>
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/interviewer/jobs"
-          element={
-            <ProtectedRoute allowedRoles={['interviewer', 'admin']}>
-              <AppLayout withParticle>
-                <InterviewerJobsPage />
-              </AppLayout>
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/interviewer/jobs/:id"
-          element={
-            <ProtectedRoute allowedRoles={['interviewer', 'admin']}>
-              <AppLayout withParticle>
-                <InterviewerJobEditPage />
-              </AppLayout>
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/interviewer/candidates"
-          element={
-            <ProtectedRoute allowedRoles={['interviewer', 'admin']}>
-              <AppLayout withParticle>
-                <InterviewerCandidatesPage />
-              </AppLayout>
-            </ProtectedRoute>
-          }
-        />
-
-        {/* Interviewer Applications */}
-        <Route
-          path="/interviewer/applications"
-          element={
-            <ProtectedRoute allowedRoles={['interviewer', 'admin']}>
-              <AppLayout withParticle>
-                <InterviewerApplicationsPage />
-              </AppLayout>
-            </ProtectedRoute>
-          }
-        />
-
-        {/* Candidate Jobs - view and apply */}
-        <Route
-          path="/jobs"
-          element={
-            <ProtectedRoute>
-              <AppLayout withParticle={false}>
-                <JobsPage />
-              </AppLayout>
-            </ProtectedRoute>
-          }
-        />
-
-        {/* Candidate Applications - track my applications */}
-        <Route
-          path="/applications"
-          element={
-            <ProtectedRoute>
-              <AppLayout withParticle={false}>
-                <ApplicationsPage />
-              </AppLayout>
-            </ProtectedRoute>
-          }
-        />
-
-        {/* Fallback - 404 */}
+        {/* Fallback */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
+    </AnimatePresence>
+  );
+}
+
+function App() {
+  return (
+    <Router>
+      <AuthProvider>
+        <AppRoutes />
+      </AuthProvider>
     </Router>
   );
 }

@@ -51,7 +51,7 @@ This project is configured for **Hostinger-only deployment** with **same-domain 
 
 ## Files Created
 
-### Backend (`/backend`)
+### Backend (`/api`)
 - `index.php` - API entry point with routing
 - `.htaccess` - Apache rewrite rules
 - `composer.json` - PHP dependencies
@@ -113,12 +113,12 @@ This project is configured for **Hostinger-only deployment** with **same-domain 
 ### 1. Backend (Hostinger)
 
 1. Create MySQL database via Hostinger hPanel
-2. Import `backend/install.sql` using phpMyAdmin
-3. Upload entire `backend/` folder to hosting (e.g., `public_html/api/`)
+2. Import `api/install.sql` using phpMyAdmin
+3. Upload entire `api/` folder to hosting (e.g., `public_html/api/`)
 4. Set permissions: `upload/` must be writable (755)
-5. If SSH available: run `composer install` in backend folder
+5. If SSH available: run `composer install` in api folder
    - If no SSH: run `composer install` locally and upload `vendor/` folder
-6. Copy `backend/.env.example` to `backend/.env`
+6. Copy `api/.env.example` to `api/.env`
 7. Edit `.env` with:
    ```env
    DB_HOST=localhost
@@ -137,7 +137,7 @@ Frontend is pre-built in `deploy/hostinger/` with static assets.
 **Option A: Upload via Hostinger File Manager (Recommended)**
 1. Go to hPanel → Files → File Manager
 2. Navigate to `public_html/`
-3. Upload all files from `deploy/hostinger/` **EXCEPT** the `backend/` folder
+3. Upload all files from `deploy/hostinger/` **EXCEPT** the `api/` folder
 4. These files go directly in `public_html/`:
    - `index.html`
    - `assets/` folder
@@ -204,7 +204,7 @@ npm run build
 Server-side PDF parsing uses `pdftotext` command. Ensure it's available on Hostinger. If not, install or use alternative PHP library. The fallback simple extraction may be limited.
 
 ### File Uploads
-Uploaded CV files are stored in `backend/upload/`. Ensure this directory exists and is writable. For security, consider storing outside web root.
+Uploaded CV files are stored in `api/upload/`. Ensure this directory exists and is writable. For security, consider storing outside web root.
 
 ### JWT
 Access tokens expire in 15 minutes (configurable). Refresh tokens last 7 days. Store tokens in localStorage on frontend.
@@ -233,7 +233,7 @@ A ready-to-deploy package is in `deploy/hostinger/`:
 **Deployment:**
 1. Upload `deploy/hostinger/` contents to Hostinger
 2. Frontend → `public_html/` (root files only)
-3. Backend → `public_html/api/` (complete `backend/` folder)
+3. Backend → `public_html/api/` (complete `api/` folder)
 4. Configure `public_html/api/.env` with DB credentials
 5. Import `public_html/api/install.sql` via phpMyAdmin
 

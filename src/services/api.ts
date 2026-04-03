@@ -1,129 +1,59 @@
-import axios, { AxiosInstance, AxiosResponse, AxiosRequestConfig } from 'axios';
+// API Configuration
+const API_BASE_URL = import.meta.env.VITE_API_URL || '/api';
 
-// Determine API URL based on environment
-const getApiBaseUrl = (): string => {
-  // In development, use localhost
-  if (import.meta.env.DEV) {
-    return 'http://localhost:8000/api'; // Local PHP backend
-  }
+// Axios instance with interceptors
+import axios from 'axios';
 
-  // Production: Use VITE_API_URL if set (different domain)
-  // Otherwise, use relative path (same domain deployment like Hostinger)
-  const configuredUrl = import.meta.env.VITE_API_URL;
-  if (configuredUrl && configuredUrl.trim() !== '') {
-    return configuredUrl;
-  }
+const api = axios.create({
+  baseURL: API_BASE_URL,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+  withCredentials: true,
+});
 
-  // Same-domain deployment: backend is at /api
-  return '/api';
-};
-
-class ApiClient {
-  private client: AxiosInstance;
-  private token: string | null = null;
-
-  constructor() {
-    this.client = axios.create({
-      baseURL: getApiBaseUrl(),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-
-    // Load token from localStorage
-    this.token = localStorage.getItem('access_token');
-
-    // Request interceptor to add auth header
-    this.client.interceptors.request.use(
-      (config) => {
-        if (this.token && !config.headers?.['Authorization']) {
-          config.headers.Authorization = `Bearer ${this.token}`;
-        }
-        return config;
-      },
-      (error) => Promise.reject(error)
-    );
-
-    // Response interceptor to handle token refresh
-    this.client.interceptors.response.use(
-      (response) => response,
-      async (error) => {
-        const originalRequest = error.config;
-
-        if (error.response?.status === 401 && !originalRequest._retry && this.token) {
-          originalRequest._retry = true;
-
-          try {
-            const refreshToken = localStorage.getItem('refresh_token');
-            if (refreshToken) {
-              const response = await axios.post(`${getApiBaseUrl()}/auth/refresh`, {
-                refresh_token: refreshToken,
-              });
-
-              const { access_token } = response.data;
-              this.setToken(access_token);
-              localStorage.setItem('access_token', access_token);
-
-              originalRequest.headers.Authorization = `Bearer ${access_token}`;
-              return this.client(originalRequest);
-            }
-          } catch (refreshError) {
-            // Refresh failed, redirect to login
-            this.clearTokens();
-            window.location.href = '/login';
-            return Promise.reject(refreshError);
-          }
-        }
-
-        return Promise.reject(error);
-      }
-    );
-  }
-
-  setToken(token: string | null): void {
-    this.token = token;
+// Request interceptor to add auth token
+api.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem('cardzey_token');
     if (token) {
-      this.client.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-    } else {
-      delete this.client.defaults.headers.common['Authorization'];
+      config.headers.Authorization = `Bearer ${token}`;
     }
-  }
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
 
-  clearTokens(): void {
-    this.token = null;
-    localStorage.removeItem('access_token');
-    localStorage.removeItem('refresh_token');
-    delete this.client.defaults.headers.common['Authorization'];
-  }
+// Response interceptor for token refresh
+api.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    const originalRequest = error.config;
 
-  // Generic methods
-  async get<T>(url: string, params?: Record<string, unknown>): Promise<AxiosResponse<{ success: boolean; data?: T }>> {
-    return this.client.get(url, { params });
-  }
+    if (error.response?.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true;
 
-  async post<T>(url: string, data?: unknown, config?: AxiosRequestConfig): Promise<AxiosResponse<{ success: boolean; data?: T }>> {
-    return this.client.post(url, data, config);
-  }
+      try {
+        const refreshToken = localStorage.getItem('cardzey_refresh_token');
+        if (refreshToken) {
+          const response = await axios.post(`${API_BASE_URL}/auth/refresh`, {
+            refresh_token: refreshToken,
+          });
+          const { token, refresh_token: newRefreshToken } = response.data;
+          localStorage.setItem('cardzey_token', token);
+          localStorage.setItem('cardzey_refresh_token', newRefreshToken);
+          originalRequest.headers.Authorization = `Bearer ${token}`;
+          return axios(originalRequest);
+        }
+      } catch (refreshError) {
+        localStorage.removeItem('cardzey_token');
+        localStorage.removeItem('cardzey_refresh_token');
+        window.location.href = '/login';
+      }
+    }
 
-  async put<T>(url: string, data?: unknown, config?: AxiosRequestConfig): Promise<AxiosResponse<{ success: boolean; data?: T }>> {
-    return this.client.put(url, data, config);
+    return Promise.reject(error);
   }
+);
 
-  async delete<T>(url: string): Promise<AxiosResponse<{ success: boolean; data?: T }>> {
-    return this.client.delete(url);
-  }
-
-  // File upload
-  async uploadFile(url: string, formData: FormData): Promise<AxiosResponse<{ success: boolean; analysis?: unknown }>> {
-    // Delete Content-Type header for multipart/form-data
-    const config = {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    };
-    return this.client.post(url, formData, config);
-  }
-}
-
-export const api = new ApiClient();
 export default api;

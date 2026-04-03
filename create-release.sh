@@ -21,14 +21,14 @@ mkdir -p release
 echo "  → Copying frontend..."
 cp -r dist/* release/
 
-# Copy backend (excluding sensitive files)
-echo "  → Copying backend..."
-cp -r backend release/
+# Copy api (excluding sensitive files)
+echo "  → Copying api..."
+cp -r api release/
 # Remove any .env files (security: never include actual credentials)
-rm -f release/backend/.env 2>/dev/null || true
+rm -f release/api/.env 2>/dev/null || true
 
-# Copy backend .htaccess
-cp backend/.htaccess release/backend/ 2>/dev/null || true
+# Copy api .htaccess
+cp api/.htaccess release/api/ 2>/dev/null || true
 
 # Copy documentation
 echo "  → Adding documentation..."
@@ -51,8 +51,8 @@ cat > release/README-DEPLOY.txt << 'EOF'
   ✓ .htaccess files - Apache routing rules
 
 🚀 QUICK DEPLOY (8 STEPS):
-1. Upload all files EXCEPT backend/ to public_html/
-2. Upload backend/ to public_html/api/
+1. Upload all files EXCEPT api/ to public_html/
+2. Upload api/ to public_html/api/
 3. Create database in Hostinger
 4. Edit public_html/api/.env with DB credentials
 5. Import install.sql via phpMyAdmin
