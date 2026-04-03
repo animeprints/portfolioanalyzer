@@ -10,6 +10,8 @@ class CorsMiddleware
         $defaultOrigins = [
             'http://localhost:5173',
             'https://portfolioanalyzer-three.vercel.app',
+            'https://portfolioanalyzer.cardzey.com',
+            'https://dizitrends.cardzey.com',
         ];
 
         // Try to get from .env first, fallback to hardcoded
@@ -24,7 +26,8 @@ class CorsMiddleware
         // error_log("CORS: Origin=$origin, Allowed=" . implode(',', $allowedOrigins));
 
         // Allow configured origins OR any vercel.app subdomain (for Vercel preview deployments)
-        if (in_array($origin, $allowedOrigins) || str_ends_with($origin, '.vercel.app')) {
+        // OR any cardzey.com subdomain (for production Hostinger deployment)
+        if (in_array($origin, $allowedOrigins) || str_ends_with($origin, '.vercel.app') || str_ends_with($origin, '.cardzey.com')) {
             header("Access-Control-Allow-Origin: $origin");
             header('Access-Control-Allow-Credentials: true');
         }
