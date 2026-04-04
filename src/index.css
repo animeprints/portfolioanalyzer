@@ -60,24 +60,34 @@
     color: inherit;
   }
 
-  /* Custom scrollbar */
+  /* Custom scrollbar - gradient style */
   ::-webkit-scrollbar {
-    width: 8px;
-    height: 8px;
+    width: 10px;
+    height: 10px;
   }
 
   ::-webkit-scrollbar-track {
-    background: rgba(255, 255, 255, 0.02);
-    border-radius: 4px;
+    background: rgba(18, 18, 18, 0.5);
+    backdrop-filter: blur(4px);
+    border-radius: 5px;
   }
 
   ::-webkit-scrollbar-thumb {
     background: linear-gradient(135deg, #d4a574 0%, #9333ea 100%);
-    border-radius: 4px;
+    border-radius: 5px;
+    border: 2px solid transparent;
+    background-clip: padding-box;
   }
 
   ::-webkit-scrollbar-thumb:hover {
     background: linear-gradient(135deg, #e0b57a 0%, #a855f7 100%);
+    border: 2px solid rgba(212, 165, 116, 0.3);
+  }
+
+  /* Smooth scroll behavior */
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 80px; /* Account for fixed navbar */
   }
 }
 
@@ -150,11 +160,19 @@
 
   /* Text gradients */
   .text-gold-gradient {
-    @apply bg-gradient-to-r from-gold-400 to-gold-600 bg-clip-text text-transparent;
+    @apply bg-gradient-to-r from-gold-400 via-amber-300 to-gold-500 bg-clip-text text-transparent bg-[300%];
+    animation: gradientFlow 8s ease infinite;
   }
 
   .text-violet-gradient {
-    @apply bg-gradient-to-r from-violet-400 to-violet-600 bg-clip-text text-transparent;
+    @apply bg-gradient-to-r from-violet-400 via-violet-300 to-violet-500 bg-clip-text text-transparent bg-[200%];
+    animation: gradientFlow 6s ease infinite;
+  }
+
+  /* Background gradient flow */
+  .bg-gradient-flow {
+    background-size: 200% 200% !important;
+    animation: gradientFlow 8s ease infinite;
   }
 
   /* Divider with gold accent */
@@ -259,6 +277,19 @@
   @keyframes shimmer {
     0% { background-position: -200% 0; }
     100% { background-position: 200% 0; }
+  }
+
+  @keyframes gradientFlow {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  @keyframes aurora {
+    0%, 100% { background-position: 0% 50%; filter: hue-rotate(0deg); }
+    25% { background-position: 100% 50%; filter: hue-rotate(10deg); }
+    50% { background-position: 0% 50%; filter: hue-rotate(20deg); }
+    75% { background-position: 100% 50%; filter: hue-rotate(10deg); }
   }
 }
 

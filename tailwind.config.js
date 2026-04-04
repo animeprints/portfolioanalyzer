@@ -83,11 +83,15 @@ export default {
         'glow': '0 0 40px rgba(212, 165, 116, 0.15)',
         'glow-strong': '0 0 60px rgba(212, 165, 116, 0.25)',
         'inner-glow': 'inset 0 0 20px rgba(212, 165, 116, 0.1)',
+        'glow-purple': '0 0 40px rgba(147, 51, 234, 0.2)',
+        'glow-cyan': '0 0 40px rgba(6, 182, 212, 0.2)',
+        'float': '0 20px 40px -5px rgba(0, 0, 0, 0.3)',
       },
       backdropBlur: {
         xs: '2px',
         'glass': '12px',
         'heavy': '24px',
+        'light': '4px',
       },
       animation: {
         'float': 'float 8s ease-in-out infinite',
@@ -96,6 +100,11 @@ export default {
         'reveal': 'reveal 1s ease-out forwards',
         'stagger-in': 'staggerIn 0.8s ease-out forwards',
         'parallax': 'parallax 20s ease-in-out infinite',
+        // Aurora mesh gradient animation
+        'aurora': 'aurora 15s ease-in-out infinite alternate',
+        'gradient-flow': 'gradientFlow 8s ease infinite',
+        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+        'spin-slow': 'spin 20s linear infinite',
       },
       keyframes: {
         float: {
@@ -118,10 +127,27 @@ export default {
           '0%, 100%': { backgroundPosition: '0% 50%' },
           '50%': { backgroundPosition: '100% 50%' },
         },
+        aurora: {
+          '0%': { backgroundPosition: '0% 50%', filter: 'hue-rotate(0deg)' },
+          '25%': { backgroundPosition: '100% 50%', filter: 'hue-rotate(10deg)' },
+          '50%': { backgroundPosition: '0% 50%', filter: 'hue-rotate(20deg)' },
+          '75%': { backgroundPosition: '100% 50%', filter: 'hue-rotate(10deg)' },
+          '100%': { backgroundPosition: '0% 50%', filter: 'hue-rotate(0deg)' },
+        },
+        gradientFlow: {
+          '0%, 100%': { backgroundPosition: '0% 50%' },
+          '50%': { backgroundPosition: '100% 50%' },
+        },
       },
       backgroundImage: {
         'mesh-gradient': 'radial-gradient(at 0% 0%, rgba(212, 165, 116, 0.08) 0px, transparent 50%), radial-gradient(at 100% 100%, rgba(147, 51, 234, 0.08) 0px, transparent 50%)',
         'mesh-gradient-alt': 'radial-gradient(at 20% 30%, rgba(212, 165, 116, 0.12) 0px, transparent 40%), radial-gradient(at 80% 70%, rgba(147, 51, 234, 0.12) 0px, transparent 40%)',
+        // Aurora gradient - flowing multi-color mesh
+        'aurora': 'radial-gradient(ellipse at 20% 30%, rgba(212, 165, 116, 0.15) 0%, transparent 50%), radial-gradient(ellipse at 80% 70%, rgba(147, 51, 234, 0.15) 0%, transparent 50%), radial-gradient(ellipse at 40% 80%, rgba(6, 182, 212, 0.1) 0%, transparent 50%), linear-gradient(135deg, rgba(212, 165, 116, 0.05) 0%, rgba(147, 51, 234, 0.05) 50%, rgba(6, 182, 212, 0.05) 100%)',
+        'aurora-2': 'radial-gradient(ellipse at 80% 20%, rgba(147, 51, 234, 0.2) 0%, transparent 40%), radial-gradient(ellipse at 20% 80%, rgba(212, 165, 116, 0.2) 0%, transparent 40%), radial-gradient(ellipse at 50% 50%, rgba(6, 182, 212, 0.1) 0%, transparent 60%)',
+        'gradient-blob-1': 'radial-gradient(circle at 30% 50%, rgba(212, 165, 116, 0.4) 0%, transparent 50%)',
+        'gradient-blob-2': 'radial-gradient(circle at 70% 50%, rgba(147, 51, 234, 0.4) 0%, transparent 50%)',
+        'gradient-blob-3': 'radial-gradient(circle at 50% 80%, rgba(6, 182, 212, 0.3) 0%, transparent 50%)',
       },
     },
   },

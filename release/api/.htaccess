@@ -1,0 +1,23 @@
+# Apache rewrite rules for Hostinger
+# Routes all /api/* requests to index.php
+
+RewriteEngine On
+
+# Allow OPTIONS method for API preflight
+RewriteCond %{REQUEST_METHOD} OPTIONS
+RewriteRule ^(.*)$ index.php [L,QSA]
+
+# Redirect to index.php if request starts with /api
+RewriteCond %{REQUEST_URI} ^/api
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_METHOD} !OPTIONS
+RewriteRule ^.*$ index.php [L,QSA]
+
+# Security headers
+Header always set X-Content-Type-Options nosniff
+Header always set X-Frame-Options DENY
+Header always set X-XSS-Protection "1; mode=block"
+Header always set Referrer-Policy "strict-origin-when-cross-origin"
+
+# CORS not needed - same-origin deployment (frontend and backend on same domain)

@@ -5,6 +5,10 @@ import { AuthProvider, useAuth } from './contexts/AuthContext';
 import Navbar from './components/Layout/Navbar';
 import ScrollProgress from './components/ScrollProgress';
 import CustomCursor from './components/CustomCursor';
+import { useSmoothScroll } from './hooks/useSmoothScroll';
+import { PageTransition } from './components/EnhancedUI/PageTransition';
+import { cn } from './utils/cn';
+import { GrainOverlay, GradientBackground } from './components/Effects';
 
 // Pages
 import HomePage from './pages/HomePage';
@@ -59,11 +63,12 @@ function AppLayout({
         {withNavbar && <Navbar />}
         {withParticle && isAuthenticated && <ParticleBackground count={800} color="#06b6d4" size={0.02} speed={0.3} />}
         {withParticle && !isAuthenticated && (
-          <div className="fixed inset-0 z-0">
-            <div className="absolute inset-0 bg-gradient-to-b from-dark-900 via-dark-950 to-black" />
-          </div>
+          <GradientBackground intensity="moderate" animated={true}>
+            <div className="absolute inset-0 bg-gradient-to-b from-background via-background/95 to-background" />
+          </GradientBackground>
         )}
         <ScrollProgress />
+        <GrainOverlay opacity={0.02} />
         <main className="relative z-10">{children}</main>
       </div>
     </>
@@ -82,14 +87,15 @@ function AppRoutes() {
   }
 
   return (
-    <AnimatePresence mode="wait">
-      <Routes>
-        {/* Public routes */}
+    <Routes>
+      {/* Public routes */}
         <Route
           path="/"
           element={
             <AppLayout withNavbar={true} withParticle={true}>
-              <HomePage />
+              <PageTransition>
+                <HomePage />
+              </PageTransition>
             </AppLayout>
           }
         />
@@ -97,7 +103,9 @@ function AppRoutes() {
           path="/about"
           element={
             <AppLayout withNavbar={true} withParticle={true}>
-              <AboutPage />
+              <PageTransition>
+                <AboutPage />
+              </PageTransition>
             </AppLayout>
           }
         />
@@ -105,7 +113,9 @@ function AppRoutes() {
           path="/work"
           element={
             <AppLayout withNavbar={true} withParticle={true}>
-              <WorkPage />
+              <PageTransition>
+                <WorkPage />
+              </PageTransition>
             </AppLayout>
           }
         />
@@ -113,7 +123,9 @@ function AppRoutes() {
           path="/contact"
           element={
             <AppLayout withNavbar={true} withParticle={false}>
-              <ContactPage />
+              <PageTransition>
+                <ContactPage />
+              </PageTransition>
             </AppLayout>
           }
         />
@@ -121,7 +133,9 @@ function AppRoutes() {
           path="/login"
           element={
             <AppLayout withNavbar={false} withParticle={false}>
-              <LoginPage />
+              <PageTransition>
+                <LoginPage />
+              </PageTransition>
             </AppLayout>
           }
         />
@@ -129,7 +143,9 @@ function AppRoutes() {
           path="/register"
           element={
             <AppLayout withNavbar={false} withParticle={false}>
-              <RegisterPage />
+              <PageTransition>
+                <RegisterPage />
+              </PageTransition>
             </AppLayout>
           }
         />
@@ -140,7 +156,9 @@ function AppRoutes() {
           element={
             <ProtectedRoute>
               <AppLayout withNavbar={true} withParticle={true} withCursor={true}>
-                <AnalyzePage />
+                <PageTransition>
+                  <AnalyzePage />
+                </PageTransition>
               </AppLayout>
             </ProtectedRoute>
           }
@@ -150,7 +168,9 @@ function AppRoutes() {
           element={
             <ProtectedRoute>
               <AppLayout withNavbar={true} withParticle={true} withCursor={true}>
-                <DashboardPage />
+                <PageTransition>
+                  <DashboardPage />
+                </PageTransition>
               </AppLayout>
             </ProtectedRoute>
           }
@@ -160,7 +180,9 @@ function AppRoutes() {
           element={
             <ProtectedRoute>
               <AppLayout withNavbar={true} withParticle={true} withCursor={true}>
-                <JobMatchPage />
+                <PageTransition>
+                  <JobMatchPage />
+                </PageTransition>
               </AppLayout>
             </ProtectedRoute>
           }
@@ -170,7 +192,9 @@ function AppRoutes() {
           element={
             <ProtectedRoute>
               <AppLayout withNavbar={true} withParticle={true} withCursor={true}>
-                <InterviewPage />
+                <PageTransition>
+                  <InterviewPage />
+                </PageTransition>
               </AppLayout>
             </ProtectedRoute>
           }
@@ -180,7 +204,9 @@ function AppRoutes() {
           element={
             <ProtectedRoute>
               <AppLayout withNavbar={true} withParticle={true} withCursor={true}>
-                <LinkedInPage />
+                <PageTransition>
+                  <LinkedInPage />
+                </PageTransition>
               </AppLayout>
             </ProtectedRoute>
           }
@@ -189,15 +215,147 @@ function AppRoutes() {
         {/* Fallback */}
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
-    </AnimatePresence>
   );
 }
 
 function App() {
+  useSmoothScroll({
+    duration: 1.2,
+  });
+
   return (
     <Router>
       <AuthProvider>
-        <AppRoutes />
+        <AnimatePresence mode="wait">
+          <Routes>
+            {/* Public routes */}
+            <Route
+              path="/"
+              element={
+                <AppLayout withNavbar={true} withParticle={true}>
+                  <PageTransition>
+                    <HomePage />
+                  </PageTransition>
+                </AppLayout>
+              }
+            />
+            <Route
+              path="/about"
+              element={
+                <AppLayout withNavbar={true} withParticle={true}>
+                  <PageTransition>
+                    <AboutPage />
+                  </PageTransition>
+                </AppLayout>
+              }
+            />
+            <Route
+              path="/work"
+              element={
+                <AppLayout withNavbar={true} withParticle={true}>
+                  <PageTransition>
+                    <WorkPage />
+                  </PageTransition>
+                </AppLayout>
+              }
+            />
+            <Route
+              path="/contact"
+              element={
+                <AppLayout withNavbar={true} withParticle={false}>
+                  <PageTransition>
+                    <ContactPage />
+                  </PageTransition>
+                </AppLayout>
+              }
+            />
+            <Route
+              path="/login"
+              element={
+                <AppLayout withNavbar={false} withParticle={false}>
+                  <PageTransition>
+                    <LoginPage />
+                  </PageTransition>
+                </AppLayout>
+              }
+            />
+            <Route
+              path="/register"
+              element={
+                <AppLayout withNavbar={false} withParticle={false}>
+                  <PageTransition>
+                    <RegisterPage />
+                  </PageTransition>
+                </AppLayout>
+              }
+            />
+
+            {/* Protected routes - full immersive experience */}
+            <Route
+              path="/analyze"
+              element={
+                <ProtectedRoute>
+                  <AppLayout withNavbar={true} withParticle={true} withCursor={true}>
+                    <PageTransition>
+                      <AnalyzePage />
+                    </PageTransition>
+                  </AppLayout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/dashboard"
+              element={
+                <ProtectedRoute>
+                  <AppLayout withNavbar={true} withParticle={true} withCursor={true}>
+                    <PageTransition>
+                      <DashboardPage />
+                    </PageTransition>
+                  </AppLayout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/jobs"
+              element={
+                <ProtectedRoute>
+                  <AppLayout withNavbar={true} withParticle={true} withCursor={true}>
+                    <PageTransition>
+                      <JobMatchPage />
+                    </PageTransition>
+                  </AppLayout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/interview"
+              element={
+                <ProtectedRoute>
+                  <AppLayout withNavbar={true} withParticle={true} withCursor={true}>
+                    <PageTransition>
+                      <InterviewPage />
+                    </PageTransition>
+                  </AppLayout>
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/linkedin"
+              element={
+                <ProtectedRoute>
+                  <AppLayout withNavbar={true} withParticle={true} withCursor={true}>
+                    <PageTransition>
+                      <LinkedInPage />
+                    </PageTransition>
+                  </AppLayout>
+                </ProtectedRoute>
+              }
+            />
+
+            {/* Fallback */}
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </AnimatePresence>
       </AuthProvider>
     </Router>
   );
