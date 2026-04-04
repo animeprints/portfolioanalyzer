@@ -8,27 +8,27 @@ export default {
   theme: {
     extend: {
       colors: {
-        // Premium Dark Palette - Cyber-Luxury
+        // Pure Black Dark Mode - Ultra Premium
         background: {
-          DEFAULT: '#050505',
+          DEFAULT: '#000000',
           elevated: '#0a0a0a',
-          surface: '#121212',
+          surface: '#0f0f0f',
           muted: '#1a1a1a',
         },
-        // Muted Gold - Primary accent
+        // Vibrant Gold - Primary accent (brightened for black)
         gold: {
-          50: '#fdf8f3',
-          100: '#f9eeda',
-          200: '#f4dcc0',
-          300: '#ecc99e',
-          400: '#e0b57a',
-          500: '#d4a574', // PRIMARY
-          600: '#c48a63',
-          700: '#a86e52',
-          800: '#8c5742',
-          900: '#724438',
+          50: '#fffdf9',
+          100: '#fff5e6',
+          200: '#ffedd0',
+          300: '#fee3af',
+          400: '#fcd78a',
+          500: '#e9c862', // PRIMARY - brighter
+          600: '#d9a840',
+          700: '#c2862c',
+          800: '#a46922',
+          900: '#8a571d',
         },
-        // Electric Violet - Interactive accent
+        // Electric Violet - Interactive accent (more vibrant)
         violet: {
           50: '#f3e8ff',
           100: '#e5d3ff',
@@ -41,10 +41,23 @@ export default {
           800: '#5b21b6',
           900: '#4c1d95',
         },
-        // Cool Silver - Secondary
+        // Bright Cyan - New accent for pop
+        cyan: {
+          50: '#ecfeff',
+          100: '#cffafe',
+          200: '#a5f3fc',
+          300: '#67e8f9',
+          400: '#06b6d4',
+          500: '#0891b2',
+          600: '#0e7490',
+          700: '#155e75',
+          800: '#164e63',
+          900: '#134e4a',
+        },
+        // Silver - Lifted for black background
         silver: {
-          50: '#f8fafc',
-          100: '#f1f5f9',
+          50: '#ffffff',
+          100: '#f8fafc',
           200: '#e2e8f0',
           300: '#cbd5e1',
           400: '#94a3b8',
@@ -54,12 +67,13 @@ export default {
           800: '#1e293b',
           900: '#0f172a',
         },
-        // Surface colors with blur
+        // Surface colors with blur - lifted for black
         surface: {
-          DEFAULT: 'rgba(18, 18, 18, 0.8)',
+          DEFAULT: 'rgba(15, 15, 15, 0.8)',
           elevated: 'rgba(26, 26, 26, 0.9)',
-          glass: 'rgba(255, 255, 255, 0.03)',
-          glassHover: 'rgba(255, 255, 255, 0.06)',
+          glass: 'rgba(255, 255, 255, 0.04)',
+          glassHover: 'rgba(255, 255, 255, 0.08)',
+          highlight: 'rgba(255, 255, 255, 0.02)',
         },
       },
       fontFamily: {
@@ -70,9 +84,9 @@ export default {
         mono: ['JetBrains Mono', 'monospace'],
       },
       fontSize: {
-        'display': ['3.75rem', { lineHeight: '1.1', letterSpacing: '-0.02em' }],
-        'hero': ['5rem', { lineHeight: '1.1', letterSpacing: '-0.03em' }],
-        'section': ['2.5rem', { lineHeight: '1.2', letterSpacing: '-0.02em' }],
+        'display': ['4rem', { lineHeight: '1.1', letterSpacing: '-0.03em' }],
+        'hero': ['6.5rem', { lineHeight: '1.05', letterSpacing: '-0.04em' }],
+        'section': ['3rem', { lineHeight: '1.15', letterSpacing: '-0.025em' }],
       },
       spacing: {
         '18': '4.5rem',
@@ -80,12 +94,14 @@ export default {
         '26': '6.5rem',
       },
       boxShadow: {
-        'glow': '0 0 40px rgba(212, 165, 116, 0.15)',
-        'glow-strong': '0 0 60px rgba(212, 165, 116, 0.25)',
-        'inner-glow': 'inset 0 0 20px rgba(212, 165, 116, 0.1)',
-        'glow-purple': '0 0 40px rgba(147, 51, 234, 0.2)',
-        'glow-cyan': '0 0 40px rgba(6, 182, 212, 0.2)',
-        'float': '0 20px 40px -5px rgba(0, 0, 0, 0.3)',
+        'glow': '0 0 40px rgba(233, 200, 98, 0.2)',
+        'glow-strong': '0 0 60px rgba(233, 200, 98, 0.35)',
+        'glow-ultra': '0 0 80px rgba(233, 200, 98, 0.5)',
+        'inner-glow': 'inset 0 0 20px rgba(233, 200, 98, 0.15)',
+        'glow-purple': '0 0 50px rgba(147, 51, 234, 0.3)',
+        'glow-cyan': '0 0 40px rgba(6, 182, 212, 0.25)',
+        'float': '0 20px 60px -10px rgba(0, 0, 0, 0.8)',
+        'card': '0 4px 24px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.05)',
       },
       backdropBlur: {
         xs: '2px',
@@ -140,14 +156,15 @@ export default {
         },
       },
       backgroundImage: {
-        'mesh-gradient': 'radial-gradient(at 0% 0%, rgba(212, 165, 116, 0.08) 0px, transparent 50%), radial-gradient(at 100% 100%, rgba(147, 51, 234, 0.08) 0px, transparent 50%)',
-        'mesh-gradient-alt': 'radial-gradient(at 20% 30%, rgba(212, 165, 116, 0.12) 0px, transparent 40%), radial-gradient(at 80% 70%, rgba(147, 51, 234, 0.12) 0px, transparent 40%)',
-        // Aurora gradient - flowing multi-color mesh
-        'aurora': 'radial-gradient(ellipse at 20% 30%, rgba(212, 165, 116, 0.15) 0%, transparent 50%), radial-gradient(ellipse at 80% 70%, rgba(147, 51, 234, 0.15) 0%, transparent 50%), radial-gradient(ellipse at 40% 80%, rgba(6, 182, 212, 0.1) 0%, transparent 50%), linear-gradient(135deg, rgba(212, 165, 116, 0.05) 0%, rgba(147, 51, 234, 0.05) 50%, rgba(6, 182, 212, 0.05) 100%)',
-        'aurora-2': 'radial-gradient(ellipse at 80% 20%, rgba(147, 51, 234, 0.2) 0%, transparent 40%), radial-gradient(ellipse at 20% 80%, rgba(212, 165, 116, 0.2) 0%, transparent 40%), radial-gradient(ellipse at 50% 50%, rgba(6, 182, 212, 0.1) 0%, transparent 60%)',
-        'gradient-blob-1': 'radial-gradient(circle at 30% 50%, rgba(212, 165, 116, 0.4) 0%, transparent 50%)',
-        'gradient-blob-2': 'radial-gradient(circle at 70% 50%, rgba(147, 51, 234, 0.4) 0%, transparent 50%)',
-        'gradient-blob-3': 'radial-gradient(circle at 50% 80%, rgba(6, 182, 212, 0.3) 0%, transparent 50%)',
+        // Intense aurora for pure black
+        'aurora': 'radial-gradient(ellipse at 20% 30%, rgba(233, 200, 98, 0.2) 0%, transparent 40%), radial-gradient(ellipse at 80% 70%, rgba(147, 51, 234, 0.25) 0%, transparent 40%), radial-gradient(ellipse at 40% 80%, rgba(6, 182, 212, 0.15) 0%, transparent 50%), linear-gradient(135deg, rgba(233, 200, 98, 0.08) 0%, rgba(147, 51, 234, 0.1) 50%, rgba(6, 182, 212, 0.08) 100%)',
+        'aurora-2': 'radial-gradient(ellipse at 80% 20%, rgba(147, 51, 234, 0.3) 0%, transparent 35%), radial-gradient(ellipse at 20% 80%, rgba(233, 200, 98, 0.25) 0%, transparent 35%), radial-gradient(ellipse at 50% 50%, rgba(6, 182, 212, 0.12) 0%, transparent 50%)',
+        'aurora-cta': 'radial-gradient(ellipse at 30% 20%, rgba(233, 200, 98, 0.3) 0%, transparent 45%), radial-gradient(ellipse at 70% 80%, rgba(147, 51, 234, 0.3) 0%, transparent 45%), radial-gradient(ellipse at 50% 50%, rgba(6, 182, 212, 0.15) 0%, transparent 55%)',
+        // Gradient blobs with higher intensity
+        'gradient-blob-1': 'radial-gradient(circle at 30% 50%, rgba(233, 200, 98, 0.5) 0%, transparent 60%)',
+        'gradient-blob-2': 'radial-gradient(circle at 70% 50%, rgba(147, 51, 234, 0.5) 0%, transparent 60%)',
+        'gradient-blob-3': 'radial-gradient(circle at 50% 80%, rgba(6, 182, 212, 0.4) 0%, transparent 60%)',
+        'gradient-blob-cyan': 'radial-gradient(circle at 80% 30%, rgba(6, 182, 212, 0.5) 0%, transparent 50%)',
       },
     },
   },
