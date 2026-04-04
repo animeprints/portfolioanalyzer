@@ -34,7 +34,18 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
     );
   }
 
+  // If not authenticated according to context, check localStorage as fallback
+  // This handles the brief moment after login when token is stored but state hasn't propagated
   if (!isAuthenticated) {
+    const localToken = localStorage.getItem('cardzey_token');
+    if (localToken) {
+      // Token exists in storage but context hasn't updated yet - show loading briefly
+      return (
+        <div className="min-h-screen flex items-center justify-center bg-dark-950">
+          <div className="w-16 h-16 rounded-full border-4 border-cyan-500/20 border-t-cyan-400 animate-spin" />
+        </div>
+      );
+    }
     return <Navigate to="/login" replace />;
   }
 
@@ -216,124 +227,7 @@ function App() {
     <Router>
       <AuthProvider>
         <AnimatePresence mode="wait">
-          <Routes>
-            {/* Public routes */}
-            <Route
-              path="/"
-              element={
-                <AppLayout withNavbar={true} withParticle={true}>
-                  <PageTransition>
-                    <HomePage />
-                  </PageTransition>
-                </AppLayout>
-              }
-            />
-            <Route
-              path="/about"
-              element={
-                <AppLayout withNavbar={true} withParticle={true}>
-                  <PageTransition>
-                    <AboutPage />
-                  </PageTransition>
-                </AppLayout>
-              }
-            />
-            <Route
-              path="/contact"
-              element={
-                <AppLayout withNavbar={true} withParticle={false}>
-                  <PageTransition>
-                    <ContactPage />
-                  </PageTransition>
-                </AppLayout>
-              }
-            />
-            <Route
-              path="/login"
-              element={
-                <AppLayout withNavbar={false} withParticle={false}>
-                  <PageTransition>
-                    <LoginPage />
-                  </PageTransition>
-                </AppLayout>
-              }
-            />
-            <Route
-              path="/register"
-              element={
-                <AppLayout withNavbar={false} withParticle={false}>
-                  <PageTransition>
-                    <RegisterPage />
-                  </PageTransition>
-                </AppLayout>
-              }
-            />
-
-            {/* Protected routes - full immersive experience */}
-            <Route
-              path="/analyze"
-              element={
-                <ProtectedRoute>
-                  <AppLayout withNavbar={true} withParticle={true} withCursor={true}>
-                    <PageTransition>
-                      <AnalyzePage />
-                    </PageTransition>
-                  </AppLayout>
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/dashboard"
-              element={
-                <ProtectedRoute>
-                  <AppLayout withNavbar={true} withParticle={true} withCursor={true}>
-                    <PageTransition>
-                      <DashboardPage />
-                    </PageTransition>
-                  </AppLayout>
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/jobs"
-              element={
-                <ProtectedRoute>
-                  <AppLayout withNavbar={true} withParticle={true} withCursor={true}>
-                    <PageTransition>
-                      <JobMatchPage />
-                    </PageTransition>
-                  </AppLayout>
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/interview"
-              element={
-                <ProtectedRoute>
-                  <AppLayout withNavbar={true} withParticle={true} withCursor={true}>
-                    <PageTransition>
-                      <InterviewPage />
-                    </PageTransition>
-                  </AppLayout>
-                </ProtectedRoute>
-              }
-            />
-            <Route
-              path="/linkedin"
-              element={
-                <ProtectedRoute>
-                  <AppLayout withNavbar={true} withParticle={true} withCursor={true}>
-                    <PageTransition>
-                      <LinkedInPage />
-                    </PageTransition>
-                  </AppLayout>
-                </ProtectedRoute>
-              }
-            />
-
-            {/* Fallback */}
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes>
+          <AppRoutes />
         </AnimatePresence>
       </AuthProvider>
     </Router>

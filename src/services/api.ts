@@ -36,14 +36,14 @@ api.interceptors.response.use(
       try {
         const refreshToken = localStorage.getItem('cardzey_refresh_token');
         if (refreshToken) {
-          const response = await axios.post(`${API_BASE_URL}/auth/refresh`, {
+          const response = await api.post('/auth/refresh', {
             refresh_token: refreshToken,
           });
           const { token, refresh_token: newRefreshToken } = response.data;
           localStorage.setItem('cardzey_token', token);
           localStorage.setItem('cardzey_refresh_token', newRefreshToken);
           originalRequest.headers.Authorization = `Bearer ${token}`;
-          return axios(originalRequest);
+          return api(originalRequest);
         }
       } catch (refreshError) {
         localStorage.removeItem('cardzey_token');
