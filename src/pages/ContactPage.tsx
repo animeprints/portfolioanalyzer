@@ -11,6 +11,8 @@ function FormField({
   placeholder,
   value,
   onChange,
+  onBlur,
+  error,
   required = false,
   rows
 }: {
@@ -20,10 +22,27 @@ function FormField({
   placeholder: string;
   value: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+  onBlur: (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+  error?: string;
   required?: boolean;
   rows?: number;
 }) {
   const [isFocused, setIsFocused] = useState(false);
+  const fieldId = `contact-${name}`;
+  const errorId = error ? `${fieldId}-error` : undefined;
+
+  const inputClasses = `
+    w-full px-6 py-4 rounded-xl
+    bg-black/40 border
+    ${error
+      ? 'border-red-500 focus:border-red-500 focus:ring-2 focus:ring-red-500/20'
+      : 'border-white/10 focus:border-gold-500/50 focus:ring-2 focus:ring-gold-500/20'
+    }
+    transition-all duration-300 outline-none resize-none
+    text-white placeholder-gray-600
+    touch-manipulation
+    min-h-[44px]
+  `;
 
   return (
     <motion.div
@@ -32,39 +51,67 @@ function FormField({
       transition={{ duration: 0.5 }}
       className="group"
     >
-      <label className="block text-sm font-medium text-gray-300 mb-3 ml-1">
+      <label
+        htmlFor={fieldId}
+        className="block text-sm font-medium text-gray-300 mb-3 ml-1"
+      >
         {label}
-        {required && <span className="text-gold-500 ml-1">*</span>}
+        {required && <span className="text-gold-500 ml-1" aria-hidden="true">*</span>}
+        {required && <span className="sr-only"> (required)</span>}
       </label>
       {type === 'textarea' ? (
         <textarea
+          id={fieldId}
           name={name}
           value={value}
           onChange={onChange}
           onFocus={() => setIsFocused(true)}
-          onBlur={() => setIsFocused(false)}
+          onBlur={(e) => {
+            setIsFocused(false);
+            onBlur(e);
+          }}
           required={required}
           rows={rows || 5}
           placeholder={placeholder}
-          className="w-full px-6 py-4 rounded-xl bg-black/40 border border-white/10 focus:border-gold-500/50 focus:ring-2 focus:ring-gold-500/20 transition-all duration-300 outline-none resize-none text-white placeholder-gray-600"
+          aria-describedby={errorId}
+          aria-invalid={!!error}
+          className={inputClasses}
         />
       ) : (
         <input
+          id={fieldId}
           type={type}
           name={name}
           value={value}
           onChange={onChange}
           onFocus={() => setIsFocused(true)}
-          onBlur={() => setIsFocused(false)}
+          onBlur={(e) => {
+            setIsFocused(false);
+            onBlur(e);
+          }}
           required={required}
           placeholder={placeholder}
-          className="w-full px-6 py-4 rounded-xl bg-black/40 border border-white/10 focus:border-gold-500/50 focus:ring-2 focus:ring-gold-500/20 transition-all duration-300 outline-none text-white placeholder-gray-600"
+          aria-describedby={errorId}
+          aria-invalid={!!error}
+          className={inputClasses}
         />
+      )}
+      {error && (
+        <motion.p
+          id={errorId}
+          role="alert"
+          aria-live="polite"
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mt-2 text-sm text-red-400 flex items-center gap-2"
+        >
+          {error}
+        </motion.p>
       )}
       <motion.div
         className="h-0.5 bg-gradient-to-r from-gold-500 to-violet-500 mt-0 rounded-full"
         initial={{ width: 0 }}
-        animate={{ width: isFocused ? '100%' : 0 }}
+        animate={{ width: isFocused && !error ? '100%' : 0 }}
         transition={{ duration: 0.3 }}
       />
     </motion.div>
@@ -99,10 +146,12 @@ function ContactInfoCard({
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.5, delay: index * 0.1 }}
-      className="card-glass p-6 border-white/10 hover:shadow-lg hover:shadow-gold-500/10 transition-all group cursor-pointer"
+      className="card-glass p-6 border-white/10 hover:shadow-lg hover:shadow-gold-500/10 transition-all group"
+      role="group"
+      aria-label={`${title}: ${value}`}
     >
       <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${colorClasses[color]} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform`}>
-        <Icon className="w-7 h-7" />
+        <Icon className="w-7 h-7" aria-hidden="true" />
       </div>
       <h3 className="text-lg font-semibold text-white mb-2">{title}</h3>
       <p className="text-gray-400 text-sm leading-relaxed">{value}</p>
@@ -111,7 +160,12 @@ function ContactInfoCard({
 
   if (href) {
     return (
-      <a href={href} target="_blank" rel="noopener noreferrer">
+      <a
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label={`${title}: ${value} (opens in new tab)`}
+      >
         {content}
       </a>
     );
@@ -128,20 +182,22 @@ function MapPlaceholder() {
       whileInView={{ opacity: 1 }}
       viewport={{ once: true }}
       className="card-glass h-full min-h-[400px] flex items-center justify-center relative overflow-hidden"
+      aria-label="Map showing our global presence with team members across India, USA, Europe, and Asia"
+      role="img"
     >
       <div className="absolute inset-0 bg-gradient-to-br from-gold-500/5 via-violet-500/5 to-pink-500/5" />
       <div className="relative z-10 text-center p-8">
         <div className="w-24 h-24 mx-auto mb-6 rounded-full bg-gradient-to-br from-gold-500/20 to-violet-500/20 flex items-center justify-center">
-          <Globe className="w-12 h-12 text-gold-400" />
+          <Globe className="w-12 h-12 text-gold-400" aria-hidden="true" />
         </div>
         <h3 className="text-2xl font-bold text-white mb-2">Global Presence</h3>
         <p className="text-gray-400 max-w-md mx-auto">
           Operating remotely with team members across 5 continents.
           Available for collaboration worldwide.
         </p>
-        <div className="mt-6 flex justify-center gap-4">
+        <div className="mt-6 flex justify-center gap-4" role="list" aria-label="Countries we operate in">
           {['🌍 India', '🌎 USA', '🌏 Europe', '🌏 Asia'].map((location) => (
-            <span key={location} className="text-2xl" title={location.replace(/[🌍🌎🌏] /, '')}>
+            <span key={location} className="text-2xl" role="listitem" title={location.replace(/[🌍🌎🌏] /, '')}>
               {location}
             </span>
           ))}
@@ -158,12 +214,94 @@ export default function ContactPage() {
     subject: '',
     message: '',
   });
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const [touched, setTouched] = useState<Record<string, boolean>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle');
   const formRef = useRef<HTMLFormElement>(null);
 
+  const validateField = (name: string, value: string): string => {
+    switch (name) {
+      case 'name':
+        if (!value.trim()) return 'Please enter your name';
+        if (value.trim().length < 2) return 'Name must be at least 2 characters';
+        return '';
+      case 'email':
+        if (!value.trim()) return 'Please enter your email';
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(value)) return 'Please enter a valid email address';
+        return '';
+      case 'subject':
+        if (!value.trim()) return 'Please enter a subject';
+        if (value.trim().length < 5) return 'Subject must be at least 5 characters';
+        return '';
+      case 'message':
+        if (!value.trim()) return 'Please enter your message';
+        if (value.trim().length < 10) return 'Message must be at least 10 characters';
+        return '';
+      default:
+        return '';
+    }
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+    // Clear error when user starts typing
+    if (errors[name]) {
+      setErrors((prev) => ({
+        ...prev,
+        [name]: '',
+      }));
+    }
+  };
+
+  const handleBlur = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setTouched((prev) => ({
+      ...prev,
+      [name]: true,
+    }));
+    const error = validateField(name, value);
+    if (error) {
+      setErrors((prev) => ({
+        ...prev,
+        [name]: error,
+      }));
+    } else {
+      setErrors((prev) => ({
+        ...prev,
+        [name]: '',
+      }));
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    // Validate all fields
+    const newErrors: Record<string, string> = {};
+    Object.keys(formData).forEach((key) => {
+      const error = validateField(key, formData[key as keyof typeof formData]);
+      if (error) {
+        newErrors[key] = error;
+      }
+    });
+
+    setErrors(newErrors);
+    setTouched(
+      Object.keys(formData).reduce((acc, key) => ({ ...acc, [key]: true }), {})
+    );
+
+    if (Object.keys(newErrors).length > 0) {
+      setSubmitStatus('error');
+      setTimeout(() => setSubmitStatus('idle'), 5000);
+      return;
+    }
+
     setIsSubmitting(true);
     setSubmitStatus('idle');
 
@@ -176,9 +314,11 @@ export default function ContactPage() {
       if (success) {
         setSubmitStatus('success');
         setFormData({ name: '', email: '', subject: '', message: '' });
+        setErrors({});
+        setTouched({});
         setTimeout(() => setSubmitStatus('idle'), 5000);
       } else {
-        throw new Error('Simulated error');
+        throw new Error('Failed to send message. Please try again.');
       }
     } catch (error) {
       setSubmitStatus('error');
@@ -188,19 +328,11 @@ export default function ContactPage() {
     }
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setFormData((prev) => ({
-      ...prev,
-      [e.target.name]: e.target.value,
-    }));
-    if (submitStatus !== 'idle') setSubmitStatus('idle');
-  };
-
   return (
     <div className="relative min-h-screen pt-24 pb-20">
       {/* Background */}
       <div className="absolute inset-0 bg-mesh-gradient opacity-20" />
-      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_right,var(--tw-gradient-stops))] from-violet-900/20 via-transparent to-transparent]" />
+      <div className="absolute inset-0 bg-mesh-gradient opacity-20" />
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
@@ -298,6 +430,7 @@ export default function ContactPage() {
                     transition={{ delay: 0.3 + index * 0.1 }}
                     whileHover={{ scale: 1.02, x: 5 }}
                     className="flex items-center gap-4 p-4 rounded-xl bg-white/5 border border-white/10 hover:border-gold-400/50 transition-all group"
+                    aria-label={`Follow us on ${social.label} (opens in new tab)`}
                   >
                     <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
                       social.color === 'gold' ? 'bg-gold-500/20 text-gold-400' :
@@ -305,10 +438,10 @@ export default function ContactPage() {
                       social.color === 'blue' ? 'bg-blue-500/20 text-blue-400' :
                       'bg-gray-500/20 text-gray-400'
                     }`}>
-                      <social.icon className="w-5 h-5" />
+                      <social.icon className="w-5 h-5" aria-hidden="true" />
                     </div>
                     <span className="text-gray-300 group-hover:text-white transition-colors">{social.label}</span>
-                    <ArrowUpRight className="w-4 h-4 text-gray-500 group-hover:text-gold-400 ml-auto transition-colors" />
+                    <ArrowUpRight className="w-4 h-4 text-gray-500 group-hover:text-gold-400 ml-auto transition-colors" aria-hidden="true" />
                   </motion.a>
                 ))}
               </div>
@@ -335,7 +468,18 @@ export default function ContactPage() {
                   </p>
                 </div>
 
-                <form ref={formRef} onSubmit={handleSubmit} className="space-y-6">
+                <form
+                  ref={formRef}
+                  onSubmit={handleSubmit}
+                  className="space-y-6"
+                  noValidate
+                  aria-label="Contact form"
+                >
+                  {/* Screen reader live region for status announcements */}
+                  <div aria-live="polite" aria-atomic="true" className="sr-only">
+                    {submitStatus === 'success' && 'Message sent successfully. We will respond within 24 hours.'}
+                    {submitStatus === 'error' && 'There was an issue sending your message. Please try again.'}
+                  </div>
                   <div className="grid md:grid-cols-2 gap-6">
                     <FormField
                       label="Your Name"
@@ -343,6 +487,8 @@ export default function ContactPage() {
                       placeholder="John Doe"
                       value={formData.name}
                       onChange={handleChange}
+                      onBlur={handleBlur}
+                      error={touched.name ? errors.name : undefined}
                       required
                     />
                     <FormField
@@ -352,6 +498,8 @@ export default function ContactPage() {
                       placeholder="john@example.com"
                       value={formData.email}
                       onChange={handleChange}
+                      onBlur={handleBlur}
+                      error={touched.email ? errors.email : undefined}
                       required
                     />
                   </div>
@@ -362,6 +510,8 @@ export default function ContactPage() {
                     placeholder="What's this about?"
                     value={formData.subject}
                     onChange={handleChange}
+                    onBlur={handleBlur}
+                    error={touched.subject ? errors.subject : undefined}
                     required
                   />
 
@@ -371,6 +521,8 @@ export default function ContactPage() {
                     placeholder="Tell us about your project, question, or just say hi..."
                     value={formData.message}
                     onChange={handleChange}
+                    onBlur={handleBlur}
+                    error={touched.message ? errors.message : undefined}
                     required
                     rows={6}
                   />
@@ -380,12 +532,14 @@ export default function ContactPage() {
                     <motion.button
                       type="submit"
                       disabled={isSubmitting}
+                      aria-busy={isSubmitting}
+                      aria-describedby={submitStatus === 'success' ? 'form-success' : submitStatus === 'error' ? 'form-error' : undefined}
                       whileHover={{ scale: isSubmitting ? 1 : 1.02 }}
                       whileTap={{ scale: isSubmitting ? 1 : 0.98 }}
                       className={`w-full py-5 rounded-xl font-semibold text-white transition-all duration-300 flex items-center justify-center gap-3 ${
                         isSubmitting
                           ? 'bg-gray-800 cursor-not-allowed'
-                          : 'bg-gradient-to-r from-gold-500 to-violet-600 hover:shadow-lg hover:shadow-gold-500/30'
+                          : 'bg-gradient-to-r from-gold-500 to-violet-600 hover:shadow-lg hover:shadow-gold-500/30 focus:outline-none focus:ring-2 focus:ring-gold-500 focus:ring-offset-2 focus:ring-offset-black'
                       }`}
                     >
                       <AnimatePresence mode="wait">
@@ -419,7 +573,10 @@ export default function ContactPage() {
                             exit={{ opacity: 0 }}
                             className="flex items-center gap-3 text-red-400"
                           >
-                            <span>Failed to send. Please try again.</span>
+                            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            <span>Failed to send. Please check your connection and try again.</span>
                           </motion.div>
                         ) : (
                           <motion.div
@@ -443,7 +600,8 @@ export default function ContactPage() {
                     Or email us directly at:{' '}
                     <a
                       href={`mailto:${portfolioData.social.email}`}
-                      className="text-gold-400 hover:text-gold-300 transition-colors font-medium"
+                      className="text-gold-400 hover:text-gold-300 focus:outline-none focus:ring-2 focus:ring-gold-500 focus:ring-offset-2 focus:ring-offset-black rounded transition-colors font-medium"
+                      aria-label="Email us directly"
                     >
                       {portfolioData.social.email}
                     </a>
@@ -454,8 +612,8 @@ export default function ContactPage() {
           </motion.div>
         </div>
 
-        {/* FAQ-like section */}
-        <section className="py-20">
+        {/* FAQ section */}
+        <section className="py-20" aria-label="Frequently asked questions">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -498,10 +656,10 @@ export default function ContactPage() {
                 className="card-glass p-6 border-white/5"
               >
                 <h3 className="text-lg font-bold text-white mb-3 flex items-start gap-3">
-                  <span className="w-8 h-8 rounded-full bg-gradient-to-r from-gold-500 to-violet-600 flex items-center justify-center text-sm font-bold text-white flex-shrink-0">
+                  <span className="w-8 h-8 rounded-full bg-gradient-to-r from-gold-500 to-violet-600 flex items-center justify-center text-sm font-bold text-white flex-shrink-0" aria-hidden="true">
                     {index + 1}
                   </span>
-                  {item.q}
+                  <span>{item.q}</span>
                 </h3>
                 <p className="text-gray-400 leading-relaxed pl-11">{item.a}</p>
               </motion.div>

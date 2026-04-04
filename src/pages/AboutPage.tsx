@@ -33,75 +33,6 @@ function AnimatedCounter({ value, suffix = '' }: { value: number; suffix?: strin
   );
 }
 
-// Team member card
-function TeamCard({
-  name,
-  role,
-  department,
-  image,
-  index
-}: {
-  name: string;
-  role: string;
-  department: string;
-  image?: string;
-  index: number;
-}) {
-  const [isHovered, setIsHovered] = useState(false);
-
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.6, delay: index * 0.1 }}
-      className="card-glass p-8 group cursor-pointer"
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-    >
-      <div className="relative mb-6 overflow-hidden rounded-xl">
-        <div className="aspect-square bg-gradient-to-br from-gold-900/30 to-violet-900/30 flex items-center justify-center">
-          {image ? (
-            <img src={image} alt={name} className="w-full h-full object-cover" />
-          ) : (
-            <div className="text-6xl font-display font-bold text-white/20">
-              {name.charAt(0)}
-            </div>
-          )}
-        </div>
-        <motion.div
-          className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent"
-          initial={false}
-          animate={{ opacity: isHovered ? 1 : 0 }}
-          transition={{ duration: 0.3 }}
-        >
-          <div className="absolute bottom-4 left-4 right-4">
-            <div className="flex gap-2">
-              <span className="px-3 py-1 rounded-full text-xs bg-gold-500/20 border border-gold-500/30 text-gold-300">
-                {department}
-              </span>
-            </div>
-          </div>
-        </motion.div>
-      </div>
-
-      <div>
-        <h3 className="text-xl font-bold text-white mb-1 group-hover:text-gold-400 transition-colors">
-          {name}
-        </h3>
-        <p className="text-violet-300 font-medium text-sm">{role}</p>
-      </div>
-
-      <motion.div
-        className="mt-4 h-0.5 bg-gradient-to-r from-gold-500/0 via-gold-500/30 to-gold-500/0"
-        initial={{ width: 0 }}
-        whileInView={{ width: '100%' }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.8, delay: index * 0.1 + 0.3 }}
-      />
-    </motion.div>
-  );
-}
 
 // Timeline item component
 function TimelineItem({
@@ -181,7 +112,6 @@ function ValueCard({
 export default function AboutPage() {
   const heroRef = useRef(null);
   const statsRef = useRef(null);
-  const teamRef = useRef(null);
   const valuesRef = useRef(null);
   const timelineRef = useRef(null);
 
@@ -369,68 +299,6 @@ export default function AboutPage() {
           </div>
         </section>
 
-        {/* Team Section */}
-        <section ref={teamRef} className="py-20">
-          <AnimatePresence>
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.6 }}
-              className="text-center mb-16"
-            >
-              <span className="text-gold-400 font-mono text-sm tracking-widest mb-4 block">
-                THE BRAINS
-              </span>
-              <h2 className="text-5xl md:text-6xl font-bold">
-                Meet Our <span className="text-violet-gradient">Team</span>
-              </h2>
-            </motion.div>
-          </AnimatePresence>
-
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {[
-              {
-                name: "Animeprints",
-                role: "Founder & CEO",
-                department: "Leadership",
-                image: undefined
-              },
-              {
-                name: "Sarah Chen",
-                role: "Head of AI Research",
-                department: "Technology",
-                image: undefined
-              },
-              {
-                name: "Marcus Johnson",
-                role: "Lead Designer",
-                department: "Design",
-                image: undefined
-              },
-              {
-                name: "Elena Rodriguez",
-                role: "Senior Engineer",
-                department: "Engineering",
-                image: undefined
-              },
-              {
-                name: "David Kim",
-                role: "Product Manager",
-                department: "Product",
-                image: undefined
-              },
-              {
-                name: "Amara Okafor",
-                role: "UX Researcher",
-                department: "Design",
-                image: undefined
-              },
-            ].map((member, index) => (
-              <TeamCard key={index} {...member} index={index} />
-            ))}
-          </div>
-        </section>
 
         {/* Timeline Section */}
         <section ref={timelineRef} className="py-20 relative">
