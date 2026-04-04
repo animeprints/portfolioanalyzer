@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 export default function CustomCursor() {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [isPointer, setIsPointer] = useState(false);
+  const [isHidden, setIsHidden] = useState(false);
 
   useEffect(() => {
     const updateMousePosition = (e: MouseEvent) => {
@@ -20,14 +21,21 @@ export default function CustomCursor() {
       setIsPointer(isClickable);
     };
 
+    const handleMouseEnter = () => setIsHidden(false);
+    const handleMouseLeave = () => setIsHidden(true);
+
     window.addEventListener('mousemove', updateMousePosition);
     window.addEventListener('mouseover', updatePointerState);
     window.addEventListener('mouseout', updatePointerState);
+    document.addEventListener('mouseenter', handleMouseEnter);
+    document.addEventListener('mouseleave', handleMouseLeave);
 
     return () => {
       window.removeEventListener('mousemove', updateMousePosition);
       window.removeEventListener('mouseover', updatePointerState);
       window.removeEventListener('mouseout', updatePointerState);
+      document.removeEventListener('mouseenter', handleMouseEnter);
+      document.removeEventListener('mouseleave', handleMouseLeave);
     };
   }, [mousePosition.x, mousePosition.y]);
 
@@ -38,28 +46,29 @@ export default function CustomCursor() {
     setIsTouch('ontouchstart' in window || navigator.maxTouchPoints > 0);
   }, []);
 
-  if (isTouch) return null;
+  if (isTouch || isHidden) return null;
 
   return (
     <>
-      {/* Outer glow */}
+      {/* Outer glow ring */}
       <motion.div
         className="fixed pointer-events-none z-[9999] mix-blend-difference"
         style={{
-          left: mousePosition.x - 20,
-          top: mousePosition.y - 20,
+          left: mousePosition.x - 24,
+          top: mousePosition.y - 24,
         }}
         animate={{
-          width: isPointer ? 50 : 40,
-          height: isPointer ? 50 : 40,
+          width: isPointer ? 56 : 40,
+          height: isPointer ? 56 : 40,
+          opacity: 1,
         }}
-        transition={{ duration: 0.2, ease: 'easeOut' }}
+        transition={{ duration: 0.3, ease: 'easeOut' }}
       >
         <div
-          className="w-full h-full rounded-full border-2"
+          className="w-full h-full rounded-full border-2 backdrop-blur-sm"
           style={{
-            borderColor: isPointer ? '#06b6d4' : '#8b5cf6',
-            boxShadow: `0 0 20px ${isPointer ? '#06b6d4' : '#8b5cf6'}40`,
+            borderColor: isPointer ? 'rgba(212, 165, 116, 0.8)' : 'rgba(255, 255, 255, 0.5)',
+            boxShadow: `0 0 20px ${isPointer ? 'rgba(212, 165, 116, 0.4)' : 'rgba(255, 255, 255, 0.2)'}`,
           }}
         />
       </motion.div>
@@ -68,19 +77,21 @@ export default function CustomCursor() {
       <motion.div
         className="fixed pointer-events-none z-[9999] mix-blend-difference"
         style={{
-          left: mousePosition.x - 4,
-          top: mousePosition.y - 4,
+          left: mousePosition.x - 3,
+          top: mousePosition.y - 3,
         }}
         animate={{
-          width: isPointer ? 10 : 8,
-          height: isPointer ? 10 : 8,
+          width: isPointer ? 12 : 6,
+          height: isPointer ? 12 : 6,
+          opacity: 1,
         }}
         transition={{ duration: 0.15, ease: 'easeOut' }}
       >
         <div
           className="w-full h-full rounded-full"
           style={{
-            backgroundColor: isPointer ? '#06b6d4' : '#ffffff',
+            backgroundColor: isPointer ? '#d4a574' : '#ffffff',
+            boxShadow: `0 0 8px ${isPointer ? 'rgba(212, 165, 116, 0.6)' : 'rgba(255, 255, 255, 0.4)'}`,
           }}
         />
       </motion.div>

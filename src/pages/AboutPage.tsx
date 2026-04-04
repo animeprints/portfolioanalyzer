@@ -1,11 +1,10 @@
 import { useState, useEffect, useRef } from 'react';
-import { motion, useInView } from 'framer-motion';
-import { AnimatedSection } from '../components/Animations/AnimatedSection';
-import { TextReveal } from '../components/Animations/TextReveal';
+import { motion, useInView, AnimatePresence } from 'framer-motion';
+import { Sparkles, Award, Target, Users, Zap, Code, Eye, Heart, Shield } from 'lucide-react';
 import { portfolioData } from '../data/portfolio';
 
-// Counting animation hook
-function useCountUp(end: number, duration: number = 2) {
+// Animated counter component
+function AnimatedCounter({ value, suffix = '' }: { value: number; suffix?: string }) {
   const [count, setCount] = useState(0);
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, amount: 0.5 });
@@ -14,274 +13,515 @@ function useCountUp(end: number, duration: number = 2) {
     if (!isInView) return;
 
     let startTime: number;
+    const duration = 2000;
     const animate = (timestamp: number) => {
       if (!startTime) startTime = timestamp;
-      const progress = Math.min((timestamp - startTime) / (duration * 1000), 1);
-      setCount(Math.floor(progress * end));
+      const progress = Math.min((timestamp - startTime) / duration, 1);
+      const easeOut = 1 - Math.pow(1 - progress, 3);
+      setCount(Math.floor(easeOut * value));
       if (progress < 1) {
         requestAnimationFrame(animate);
       }
     };
     requestAnimationFrame(animate);
-  }, [isInView, end, duration]);
+  }, [isInView, value]);
 
-  return { count, ref };
+  return (
+    <span ref={ref} className="font-mono text-gold-gradient">
+      {count}{suffix}
+    </span>
+  );
 }
 
-// Skill Bar Component
-function SkillBar({ skill, delay }: { skill: { name: string; level: number }; delay: number }) {
+// Team member card
+function TeamCard({
+  name,
+  role,
+  department,
+  image,
+  index
+}: {
+  name: string;
+  role: string;
+  department: string;
+  image?: string;
+  index: number;
+}) {
+  const [isHovered, setIsHovered] = useState(false);
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.6, delay: index * 0.1 }}
+      className="card-glass p-8 group cursor-pointer"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      <div className="relative mb-6 overflow-hidden rounded-xl">
+        <div className="aspect-square bg-gradient-to-br from-gold-900/30 to-violet-900/30 flex items-center justify-center">
+          {image ? (
+            <img src={image} alt={name} className="w-full h-full object-cover" />
+          ) : (
+            <div className="text-6xl font-display font-bold text-white/20">
+              {name.charAt(0)}
+            </div>
+          )}
+        </div>
+        <motion.div
+          className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent"
+          initial={false}
+          animate={{ opacity: isHovered ? 1 : 0 }}
+          transition={{ duration: 0.3 }}
+        >
+          <div className="absolute bottom-4 left-4 right-4">
+            <div className="flex gap-2">
+              <span className="px-3 py-1 rounded-full text-xs bg-gold-500/20 border border-gold-500/30 text-gold-300">
+                {department}
+              </span>
+            </div>
+          </div>
+        </motion.div>
+      </div>
+
+      <div>
+        <h3 className="text-xl font-bold text-white mb-1 group-hover:text-gold-400 transition-colors">
+          {name}
+        </h3>
+        <p className="text-violet-300 font-medium text-sm">{role}</p>
+      </div>
+
+      <motion.div
+        className="mt-4 h-0.5 bg-gradient-to-r from-gold-500/0 via-gold-500/30 to-gold-500/0"
+        initial={{ width: 0 }}
+        whileInView={{ width: '100%' }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.8, delay: index * 0.1 + 0.3 }}
+      />
+    </motion.div>
+  );
+}
+
+// Timeline item component
+function TimelineItem({
+  year,
+  title,
+  description,
+  side,
+  index
+}: {
+  year: string;
+  title: string;
+  description: string;
+  side: 'left' | 'right';
+  index: number;
+}) {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, amount: 0.5 });
 
   return (
-    <div ref={ref} className="mb-6">
-      <div className="flex justify-between mb-2">
-        <span className="text-gray-300 font-medium">{skill.name}</span>
-        <span className="text-cyan-400 font-mono">{isInView ? `${skill.level}%` : '0%'}</span>
-      </div>
-      <div className="h-2 bg-white/10 rounded-full overflow-hidden">
-        <motion.div
-          className="h-full bg-gradient-to-r from-cyan-500 to-purple-500"
-          initial={{ width: 0 }}
-          animate={isInView ? { width: `${skill.level}%` } : { width: 0 }}
-          transition={{ duration: 1.5, ease: 'easeOut', delay }}
-        />
-      </div>
-    </div>
-  );
-}
-
-// Timeline Item Component
-function TimelineItem({
-  item,
-  index,
-  align,
-}: {
-  item: typeof portfolioData.experience[0];
-  index: number;
-  align: 'left' | 'right';
-}) {
-  return (
     <motion.div
-      initial={{ opacity: 0, x: align === 'left' ? -50 : 50 }}
-      whileInView={{ opacity: 1, x: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.6, delay: index * 0.2 }}
-      className={`relative ${align === 'left' ? 'pl-8 md:pl-0 md:pr-8 md:text-left' : 'pr-8 md:pr-0 md:pl-8 md:text-right'} md:w-1/2 ${align === 'left' ? 'md:mr-auto' : 'md:ml-auto'}`}
+      ref={ref}
+      initial={{ opacity: 0, x: side === 'left' ? -50 : 50 }}
+      animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: side === 'left' ? -50 : 50 }}
+      transition={{ duration: 0.6, delay: index * 0.15 }}
+      className={`relative ${side === 'left' ? 'pl-8 md:pl-0 md:pr-8 md:text-left' : 'pr-8 md:pr-0 md:pl-8 md:text-right'} md:w-1/2 ${side === 'left' ? 'md:mr-auto' : 'md:ml-auto'}`}
     >
       {/* Timeline dot */}
-      <div className="absolute top-6 left-1/2 -translate-x-1/2 w-4 h-4 rounded-full bg-gradient-to-r from-cyan-400 to-purple-400 border-4 border-dark-950 z-10 hidden md:block" />
+      <div className="absolute top-6 left-1/2 -translate-x-1/2 w-4 h-4 rounded-full border-4 border-gold-500 bg-black z-10 hidden md:block">
+        <motion.div
+          className="absolute inset-0 rounded-full bg-gold-400"
+          initial={{ scale: 0 }}
+          animate={isInView ? { scale: 1 } : { scale: 0 }}
+          transition={{ duration: 0.3, delay: index * 0.15 + 0.3 }}
+        />
+      </div>
 
-      <div className="glass-card p-6 border-white/10">
-        <span className="text-cyan-400 font-mono text-sm mb-2 block">
-          {item.period}
+      <div className="card-glass p-6 border-gold-500/20">
+        <span className="text-gold-400 font-mono text-sm mb-2 block">
+          {year}
         </span>
-        <h3 className="text-xl font-bold text-white mb-2">{item.role}</h3>
-        <p className="text-purple-400 font-medium mb-3">{item.company}</p>
-        <p className="text-gray-400 leading-relaxed">{item.description}</p>
+        <h3 className="text-xl font-bold text-white mb-2">{title}</h3>
+        <p className="text-gray-400 leading-relaxed text-sm">{description}</p>
       </div>
     </motion.div>
   );
 }
 
+// Value card
+function ValueCard({
+  icon: Icon,
+  title,
+  description,
+  index
+}: {
+  icon: any;
+  title: string;
+  description: string;
+  index: number;
+}) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.6, delay: index * 0.1 }}
+      className="card-glass p-8 text-center group"
+    >
+      <div className="w-16 h-16 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-gold-500/20 to-violet-500/20 flex items-center justify-center border border-gold-500/20 group-hover:border-gold-500/40 transition-colors">
+        <Icon className="w-8 h-8 text-gold-400" />
+      </div>
+      <h3 className="text-xl font-bold text-white mb-3">{title}</h3>
+      <p className="text-gray-400 leading-relaxed text-sm">{description}</p>
+    </motion.div>
+  );
+}
+
 export default function AboutPage() {
-  const bioRef = useRef(null);
-  const skillsRef = useRef(null);
+  const heroRef = useRef(null);
+  const statsRef = useRef(null);
+  const teamRef = useRef(null);
+  const valuesRef = useRef(null);
   const timelineRef = useRef(null);
 
-  // Stats count-up animations
-  const stats = portfolioData.stats.map((stat) => ({
-    ...stat,
-    ...useCountUp(stat.value, 2),
-  }));
+  // Mission statement can be updated in portfolioData or here
+  const mission = "We're on a mission to democratize professional development through AI-powered tools that help individuals unlock their full potential and achieve career excellence.";
 
   return (
     <div className="relative min-h-screen pt-24 pb-20">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      {/* Background mesh gradient */}
+      <div className="absolute inset-0 bg-mesh-gradient opacity-30" />
+
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Hero Section */}
-        <section ref={bioRef} className="py-20">
+        <section ref={heroRef} className="py-20 md:py-32">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
-            <AnimatedSection fadeUp>
-              <div>
-                <span className="text-cyan-400 font-mono text-sm tracking-widest mb-4 block">
-                  ABOUT ME
+            <AnimatePresence>
+              <motion.div
+                initial={{ opacity: 0, x: -30 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.8 }}
+              >
+                <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gold-500/10 border border-gold-500/20 text-gold-400 text-sm font-mono tracking-wider mb-6">
+                  <Sparkles className="w-4 h-4" />
+                  ABOUT CARZEY
                 </span>
-                <h1 className="text-5xl md:text-7xl font-bold mb-8">
-                  <TextReveal type="word">{`I'm ${portfolioData.name}`}</TextReveal>
+
+                <h1 className="text-5xl md:text-7xl font-display font-bold mb-8 leading-tight">
+                  <span className="block text-white mb-2">Redefining</span>
+                  <span className="block text-gold-gradient">Professional Growth</span>
                 </h1>
-                <p className="text-xl text-gray-300 leading-relaxed mb-6">
-                  {portfolioData.bio}
-                </p>
-                <p className="text-gray-400 leading-relaxed">
-                  {`I specialize in building immersive web experiences using cutting-edge
-                   technologies like Three.js, Framer Motion, and modern React. My passion
-                   lies in creating interfaces that are not only functional but also
-                   delightful to interact with. I believe that great design and solid
-                   engineering should coexist harmoniously.`}
-                </p>
-              </div>
-            </AnimatedSection>
 
-            <AnimatedSection fadeUp delay={0.3}>
-              <div className="glass-card p-8 border-cyan-500/30 relative overflow-hidden">
-                {/* Decorative 3D-ish element */}
-                <div className="absolute top-0 right-0 w-48 h-48 bg-gradient-to-br from-cyan-500/30 to-purple-600/30 rounded-full blur-3xl -mr-24 -mt-24 animate-pulse" />
-                <div className="absolute bottom-0 left-0 w-32 h-32 bg-gradient-to-tr from-pink-500/30 to-purple-600/30 rounded-full blur-2xl -ml-16 -mb-16 animate-pulse-slow" />
+                <p className="text-xl text-gray-300 leading-relaxed mb-8 max-w-xl">
+                  {mission}
+                </p>
 
-                <div className="relative z-10 space-y-6">
-                  <div className="text-center pb-6 border-b border-white/10">
-                    <h3 className="text-2xl font-bold mb-2">Quick Facts</h3>
-                    <p className="text-gray-400">
-                      Based in India • Available for Freelance • Open to Opportunities
+                <div className="flex flex-wrap gap-4">
+                  <div className="flex items-center gap-3 px-5 py-3 rounded-xl bg-white/5 border border-white/10">
+                    <Users className="w-5 h-5 text-violet-400" />
+                    <span className="text-gray-300"><AnimatedCounter value={50000} suffix="+" /> Users</span>
+                  </div>
+                  <div className="flex items-center gap-3 px-5 py-3 rounded-xl bg-white/5 border border-white/10">
+                    <Award className="w-5 h-5 text-gold-400" />
+                    <span className="text-gray-300"><AnimatedCounter value={98} suffix="%" /> Satisfaction</span>
+                  </div>
+                </div>
+              </motion.div>
+            </AnimatePresence>
+
+            <motion.div
+              initial={{ opacity: 0, x: 30 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              className="relative"
+            >
+              <div className="card-glass p-10 border-gold-500/20 relative overflow-hidden">
+                {/* Decorative gradient orbs */}
+                <div className="absolute -right-20 -top-20 w-80 h-80 bg-gradient-to-br from-gold-500/20 to-violet-500/20 rounded-full blur-3xl opacity-50 animate-pulse" />
+                <div className="absolute -left-20 -bottom-20 w-80 h-80 bg-gradient-to-tr from-violet-500/20 to-gold-500/20 rounded-full blur-3xl opacity-50 animate-pulse" style={{ animationDelay: '2s' }} />
+
+                <div className="relative z-10">
+                  <h3 className="text-3xl font-bold text-white mb-6">
+                    Our <span className="text-gold-gradient">Story</span>
+                  </h3>
+                  <div className="space-y-6 text-gray-300 leading-relaxed">
+                    <p>
+                      Cardzey was born from a simple observation: most professionals struggle to showcase their true potential in a crowded job market.
+                    </p>
+                    <p>
+                      Founded in 2024, we've grown from a small startup to a platform serving thousands worldwide, always staying true to our core belief that every career journey deserves personalized, intelligent support.
+                    </p>
+                    <p>
+                      Today, we combine cutting-edge AI with elegant design to create tools that don't just analyze—they transform.
                     </p>
                   </div>
 
-                  {/* Contact snippet */}
-                  <div className="space-y-4">
-                    <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 rounded-full bg-cyan-500/20 flex items-center justify-center flex-shrink-0">
-                        <span className="text-cyan-400">📧</span>
+                  <div className="mt-8 pt-6 border-t border-white/10">
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <div className="text-3xl font-bold text-gold-gradient font-mono">
+                          <AnimatedCounter value={2024} />
+                        </div>
+                        <div className="text-sm text-gray-400">Founded</div>
                       </div>
                       <div>
-                        <p className="text-gray-400 text-sm">Email</p>
-                        <p className="text-white">{portfolioData.social.email}</p>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 rounded-full bg-purple-500/20 flex items-center justify-center flex-shrink-0">
-                        <span className="text-purple-400">📱</span>
-                      </div>
-                      <div>
-                        <p className="text-gray-400 text-sm">Phone</p>
-                        <p className="text-white">{portfolioData.social.phone}</p>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 rounded-full bg-pink-500/20 flex items-center justify-center flex-shrink-0">
-                        <span className="text-pink-400">💼</span>
-                      </div>
-                      <div>
-                        <p className="text-gray-400 text-sm">GitHub</p>
-                        <p className="text-white">@{portfolioData.social.github}</p>
+                        <div className="text-3xl font-bold text-violet-gradient font-mono">
+                          <AnimatedCounter value={30} suffix="+" />
+                        </div>
+                        <div className="text-sm text-gray-400">Team Members</div>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </AnimatedSection>
+            </motion.div>
           </div>
         </section>
 
         {/* Stats Section */}
-        <section className="py-20 relative overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-white/5 to-transparent" />
-          <div className="relative z-10">
-            <AnimatedSection>
-              <h2 className="text-4xl md:text-5xl font-bold text-center mb-16">
-                By The <span className="gradient-text">Numbers</span>
-              </h2>
-            </AnimatedSection>
-
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-              {stats.map((stat, index) => (
-                <AnimatedSection
-                  key={index}
-                  scale
-                  delay={index * 0.1}
-                  className="text-center"
-                >
-                  <div className="glass-card p-8 border-white/10">
-                    <div className="text-5xl md:text-6xl font-bold gradient-text mb-2 font-mono">
-                      {stat.count}
-                      {stat.suffix}
-                    </div>
-                    <p className="text-gray-400 font-medium">{stat.label}</p>
-                  </div>
-                </AnimatedSection>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* Skills Section */}
-        <section ref={skillsRef} className="py-20">
-          <AnimatedSection>
-            <div className="text-center mb-16">
-              <span className="text-cyan-400 font-mono text-sm tracking-widest mb-4 block">
-                EXPERTISE
+        <section ref={statsRef} className="py-20">
+          <AnimatePresence>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="text-center mb-16"
+            >
+              <span className="text-violet-400 font-mono text-sm tracking-widest mb-4 block">
+                IMPACT
               </span>
               <h2 className="text-5xl md:text-6xl font-bold">
-                Skills & <span className="gradient-text">Technologies</span>
+                Numbers That <span className="text-gold-gradient">Speak</span>
               </h2>
-            </div>
-          </AnimatedSection>
+            </motion.div>
+          </AnimatePresence>
 
-          <div className="grid md:grid-cols-2 gap-12">
-            {portfolioData.skills.map((skillGroup, groupIndex) => (
-              <AnimatedSection key={groupIndex} fadeUp delay={groupIndex * 0.2}>
-                <div className="glass-card p-8 border-white/10">
-                  <h3 className="text-2xl font-bold text-white mb-6 border-b border-white/10 pb-4">
-                    {skillGroup.category}
-                  </h3>
-                  <div className="space-y-4">
-                    {skillGroup.items.map((skill, skillIndex) => (
-                      <SkillBar
-                        key={skill.name}
-                        skill={skill}
-                        delay={skillIndex * 0.1}
-                      />
-                    ))}
-                  </div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+            {[
+              { value: 50000, label: 'Active Users', suffix: '+' },
+              { value: 150000, label: 'CVs Analyzed', suffix: '+' },
+              { value: 85, label: 'Match Rate %', suffix: '%' },
+              { value: 25, label: 'Countries Reached', suffix: '+' },
+            ].map((stat, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, scale: 0.8 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6, delay: index * 0.1 }}
+                className="card-glass p-8 text-center border-gold-500/10 hover:border-gold-500/30"
+              >
+                <div className="text-4xl md:text-5xl font-bold mb-2 font-mono">
+                  <AnimatedCounter value={stat.value} suffix={stat.suffix} />
                 </div>
-              </AnimatedSection>
+                <p className="text-gray-400 text-sm font-medium">{stat.label}</p>
+              </motion.div>
             ))}
           </div>
         </section>
 
-        {/* Experience Timeline */}
-        <section ref={timelineRef} className="py-20 relative">
-          <div className="absolute left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-cyan-500/50 via-purple-500/50 to-pink-500/50 hidden md:block" />
-
-          <AnimatedSection>
-            <div className="text-center mb-16">
-              <span className="text-cyan-400 font-mono text-sm tracking-widest mb-4 block">
-                JOURNEY
+        {/* Values Section */}
+        <section ref={valuesRef} className="py-20">
+          <AnimatePresence>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="text-center mb-16"
+            >
+              <span className="text-gold-400 font-mono text-sm tracking-widest mb-4 block">
+                WHAT DRIVES US
               </span>
               <h2 className="text-5xl md:text-6xl font-bold">
-                Experience & <span className="gradient-text">Education</span>
+                Core <span className="text-violet-gradient">Values</span>
               </h2>
-            </div>
-          </AnimatedSection>
+            </motion.div>
+          </AnimatePresence>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {[
+              {
+                icon: Zap,
+                title: 'Innovation',
+                description: 'We push boundaries with AI and design, constantly evolving to meet tomorrow\'s challenges.'
+              },
+              {
+                icon: Heart,
+                title: 'Empathy',
+                description: 'Every tool we build starts with understanding real user needs and genuine career aspirations.'
+              },
+              {
+                icon: Shield,
+                title: 'Integrity',
+                description: 'Transparency, privacy, and ethical AI guide every decision we make as a company.'
+              },
+              {
+                icon: Target,
+                title: 'Excellence',
+                description: 'We pursue premium quality in every pixel, every interaction, and every user experience.'
+              },
+            ].map((value, index) => (
+              <ValueCard key={index} {...value} index={index} />
+            ))}
+          </div>
+        </section>
+
+        {/* Team Section */}
+        <section ref={teamRef} className="py-20">
+          <AnimatePresence>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="text-center mb-16"
+            >
+              <span className="text-gold-400 font-mono text-sm tracking-widest mb-4 block">
+                THE BRAINS
+              </span>
+              <h2 className="text-5xl md:text-6xl font-bold">
+                Meet Our <span className="text-violet-gradient">Team</span>
+              </h2>
+            </motion.div>
+          </AnimatePresence>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {[
+              {
+                name: "Animeprints",
+                role: "Founder & CEO",
+                department: "Leadership",
+                image: undefined
+              },
+              {
+                name: "Sarah Chen",
+                role: "Head of AI Research",
+                department: "Technology",
+                image: undefined
+              },
+              {
+                name: "Marcus Johnson",
+                role: "Lead Designer",
+                department: "Design",
+                image: undefined
+              },
+              {
+                name: "Elena Rodriguez",
+                role: "Senior Engineer",
+                department: "Engineering",
+                image: undefined
+              },
+              {
+                name: "David Kim",
+                role: "Product Manager",
+                department: "Product",
+                image: undefined
+              },
+              {
+                name: "Amara Okafor",
+                role: "UX Researcher",
+                department: "Design",
+                image: undefined
+              },
+            ].map((member, index) => (
+              <TeamCard key={index} {...member} index={index} />
+            ))}
+          </div>
+        </section>
+
+        {/* Timeline Section */}
+        <section ref={timelineRef} className="py-20 relative">
+          {/* Timeline line */}
+          <div className="absolute left-1/2 top-0 bottom-0 w-px bg-gradient-to-b from-gold-500/30 via-violet-500/30 to-gold-500/30 hidden md:block" />
+
+          <AnimatePresence>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="text-center mb-16"
+            >
+              <span className="text-violet-400 font-mono text-sm tracking-widest mb-4 block">
+                OUR JOURNEY
+              </span>
+              <h2 className="text-5xl md:text-6xl font-bold">
+                Timeline & <span className="text-gold-gradient">Milestones</span>
+              </h2>
+            </motion.div>
+          </AnimatePresence>
 
           <div className="relative">
-            {/* Experience */}
-            <div className="space-y-8 mb-16">
-              {portfolioData.experience.map((exp, index) => (
-                <TimelineItem
-                  key={index}
-                  item={exp}
-                  index={index}
-                  align={index % 2 === 0 ? 'left' : 'right'}
-                />
-              ))}
-            </div>
-
-            {/* Education */}
-            {portfolioData.education.map((edu, index) => (
-              <TimelineItem
-                key={index}
-                item={{
-                  ...edu,
-                  role: edu.degree,
-                  company: edu.institution,
-                  period: edu.period,
-                  description: edu.description,
-                }}
-                index={portfolioData.experience.length + index}
-                align="left"
-              />
+            {[
+              {
+                year: '2024',
+                title: 'Cardzey Founded',
+                description: 'Started with a vision to revolutionize career development through AI.',
+                side: 'left' as const
+              },
+              {
+                year: '2024 Q2',
+                title: 'First 10,000 Users',
+                description: 'Reached significant milestone within months of launch.',
+                side: 'right' as const
+              },
+              {
+                year: '2024 Q3',
+                title: 'AI CV Analyzer Launch',
+                description: 'Introduced advanced AI-powered resume analysis and scoring.',
+                side: 'left' as const
+              },
+              {
+                year: '2024 Q4',
+                title: 'Global Expansion',
+                description: 'Expanded to serve users in 25+ countries worldwide.',
+                side: 'right' as const
+              },
+              {
+                year: '2025',
+                title: 'Premium Suite',
+                description: 'Launched comprehensive interview prep and job matching features.',
+                side: 'left' as const
+              },
+            ].map((item, index) => (
+              <TimelineItem key={index} {...item} index={index} />
             ))}
           </div>
+        </section>
+
+        {/* CTA Section */}
+        <section className="py-32">
+          <AnimatePresence>
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="card-glass p-16 text-center relative overflow-hidden"
+            >
+              <div className="absolute inset-0 bg-gradient-to-r from-gold-500/10 via-violet-500/10 to-gold-500/10" />
+              <div className="absolute inset-0 grain" />
+
+              <div className="relative z-10">
+                <h2 className="text-4xl md:text-5xl font-bold mb-6">
+                  Ready to Join the <span className="text-gold-gradient">Future</span>?
+                </h2>
+                <p className="text-xl text-gray-400 mb-10 max-w-2xl mx-auto">
+                  Be part of a community that's reshaping how professionals grow and succeed.
+                </p>
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  className="btn-gold text-lg"
+                >
+                  Get Started Today
+                </motion.button>
+              </div>
+            </motion.div>
+          </AnimatePresence>
         </section>
       </div>
     </div>

@@ -65,7 +65,7 @@ function Particles({ count = 2000, color = '#06b6d4', size = 0.02, speed = 1 }) 
   )
 }
 
-export default function ParticleBackground({ count = 2000, color = '#06b6d4', size = 0.03, speed = 1 }: ParticleBackgroundProps) {
+export default function ParticleBackground({ count = 2000, color = '#d4a574', size = 0.025, speed = 0.8 }: ParticleBackgroundProps) {
   return (
     <div className="fixed inset-0 z-0">
       <Canvas

@@ -4,38 +4,45 @@ export default {
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
+  darkMode: 'class',
   theme: {
     extend: {
       colors: {
-        // Design System palette - Professional flat design
-        primary: {
-          50: '#eff6ff',
-          100: '#dbeafe',
-          200: '#bfdbfe',
-          300: '#93c5fd',
-          400: '#60a5fa',
-          500: '#3b82f6', // Secondary blue
-          600: '#2563eb', // Primary navy
-          700: '#1d4ed8',
-          800: '#1e40af',
-          900: '#1e3a8a',
+        // Premium Dark Palette - Cyber-Luxury
+        background: {
+          DEFAULT: '#050505',
+          elevated: '#0a0a0a',
+          surface: '#121212',
+          muted: '#1a1a1a',
         },
-        secondary: {
-          50: '#eff6ff',
-          100: '#dbeafe',
-          200: '#bfdbfe',
-          300: '#93c5fd',
-          400: '#60a5fa',
-          500: '#3b82f6',
-          600: '#2563eb',
+        // Muted Gold - Primary accent
+        gold: {
+          50: '#fdf8f3',
+          100: '#f9eeda',
+          200: '#f4dcc0',
+          300: '#ecc99e',
+          400: '#e0b57a',
+          500: '#d4a574', // PRIMARY
+          600: '#c48a63',
+          700: '#a86e52',
+          800: '#8c5742',
+          900: '#724438',
         },
-        accent: {
-          orange: '#f97316', // CTA
-          green: '#10b981',
-          violet: '#8b5cf6',
+        // Electric Violet - Interactive accent
+        violet: {
+          50: '#f3e8ff',
+          100: '#e5d3ff',
+          200: '#d0b3ff',
+          300: '#b986ff',
+          400: '#a855f7',
+          500: '#9333ea', // ACCENT
+          600: '#7c3aed',
+          700: '#6d28d9',
+          800: '#5b21b6',
+          900: '#4c1d95',
         },
-        // Neutral grays (Slate)
-        slate: {
+        // Cool Silver - Secondary
+        silver: {
           50: '#f8fafc',
           100: '#f1f5f9',
           200: '#e2e8f0',
@@ -46,44 +53,76 @@ export default {
           700: '#334155',
           800: '#1e293b',
           900: '#0f172a',
-          950: '#020617',
         },
-        // Surface colors
+        // Surface colors with blur
         surface: {
-          DEFAULT: '#ffffff',
-          muted: '#f8fafc',
-          elevated: '#ffffff',
+          DEFAULT: 'rgba(18, 18, 18, 0.8)',
+          elevated: 'rgba(26, 26, 26, 0.9)',
+          glass: 'rgba(255, 255, 255, 0.03)',
+          glassHover: 'rgba(255, 255, 255, 0.06)',
         },
       },
       fontFamily: {
-        sans: ['Inter', 'system-ui', 'sans-serif'],
-        display: ['Space Grotesk', 'sans-serif'],
+        // Premium font pairing
+        display: ['Syne', 'sans-serif'], // Bold, artistic headings
+        body: ['Manrope', 'sans-serif'], // Clean, modern body
+        accent: ['Playfair Display', 'serif'], // Elegant accents
         mono: ['JetBrains Mono', 'monospace'],
       },
-      animation: {
-        'float': 'float 6s ease-in-out infinite',
-        'glow': 'glow 2s ease-in-out infinite',
-        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-        'spin-slow': 'spin 20s linear infinite',
-        'bounce-slow': 'bounce 3s infinite',
+      fontSize: {
+        'display': ['3.75rem', { lineHeight: '1.1', letterSpacing: '-0.02em' }],
+        'hero': ['5rem', { lineHeight: '1.1', letterSpacing: '-0.03em' }],
+        'section': ['2.5rem', { lineHeight: '1.2', letterSpacing: '-0.02em' }],
       },
-      keyframes: {
-        float: {
-          '0%, 100%': { transform: 'translateY(0px)' },
-          '50%': { transform: 'translateY(-20px)' },
-        },
-        glow: {
-          '0%, 100%': { opacity: 1 },
-          '50%': { opacity: 0.5 },
-        }
+      spacing: {
+        '18': '4.5rem',
+        '22': '5.5rem',
+        '26': '6.5rem',
       },
-      backgroundImage: {
-        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
-        'gradient-conic': 'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
+      boxShadow: {
+        'glow': '0 0 40px rgba(212, 165, 116, 0.15)',
+        'glow-strong': '0 0 60px rgba(212, 165, 116, 0.25)',
+        'inner-glow': 'inset 0 0 20px rgba(212, 165, 116, 0.1)',
       },
       backdropBlur: {
         xs: '2px',
-      }
+        'glass': '12px',
+        'heavy': '24px',
+      },
+      animation: {
+        'float': 'float 8s ease-in-out infinite',
+        'float-slow': 'float 12s ease-in-out infinite',
+        'glow-pulse': 'glowPulse 4s ease-in-out infinite',
+        'reveal': 'reveal 1s ease-out forwards',
+        'stagger-in': 'staggerIn 0.8s ease-out forwards',
+        'parallax': 'parallax 20s ease-in-out infinite',
+      },
+      keyframes: {
+        float: {
+          '0%, 100%': { transform: 'translateY(0px) translateZ(0)' },
+          '50%': { transform: 'translateY(-30px) translateZ(0)' },
+        },
+        glowPulse: {
+          '0%, 100%': { boxShadow: '0 0 20px rgba(212, 165, 116, 0.2)' },
+          '50%': { boxShadow: '0 0 40px rgba(212, 165, 116, 0.4)' },
+        },
+        reveal: {
+          '0%': { opacity: 0, transform: 'translateY(30px) translateZ(0)' },
+          '100%': { opacity: 1, transform: 'translateY(0px) translateZ(0)' },
+        },
+        staggerIn: {
+          '0%': { opacity: 0, transform: 'translateY(20px) translateZ(0)' },
+          '100%': { opacity: 1, transform: 'translateY(0px) translateZ(0)' },
+        },
+        parallax: {
+          '0%, 100%': { backgroundPosition: '0% 50%' },
+          '50%': { backgroundPosition: '100% 50%' },
+        },
+      },
+      backgroundImage: {
+        'mesh-gradient': 'radial-gradient(at 0% 0%, rgba(212, 165, 116, 0.08) 0px, transparent 50%), radial-gradient(at 100% 100%, rgba(147, 51, 234, 0.08) 0px, transparent 50%)',
+        'mesh-gradient-alt': 'radial-gradient(at 20% 30%, rgba(212, 165, 116, 0.12) 0px, transparent 40%), radial-gradient(at 80% 70%, rgba(147, 51, 234, 0.12) 0px, transparent 40%)',
+      },
     },
   },
   plugins: [],

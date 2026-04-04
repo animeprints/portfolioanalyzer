@@ -2,7 +2,10 @@ import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { useAuth } from '../contexts/AuthContext';
 import { analysisAPI, AnalysisResult } from '../services';
-import { FileText, Download, Trash2, Calendar, TrendingUp, Award, BarChart3, ExternalLink, Plus } from 'lucide-react';
+import {
+  FileText, Download, Trash2, Calendar, TrendingUp,
+  Award, BarChart3, ExternalLink, Plus, Sparkles, Target, Zap
+} from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 export default function DashboardPage() {
@@ -44,114 +47,204 @@ export default function DashboardPage() {
     ? Math.max(...analyses.map((a) => a.overall_score || 0))
     : 0;
 
-  return (
-    <div className="min-h-screen bg-slate-900 pt-24 pb-20">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-12"
-        >
-          <div>
-            <h1 className="text-4xl font-bold text-slate-100 mb-2">Dashboard</h1>
-            <p className="text-slate-400">
-              Welcome back, {user?.name || 'User'}! Here's your career analytics.
-            </p>
-          </div>
-          <div className="flex gap-4">
-            <button
-              onClick={() => navigate('/analyze')}
-              className="inline-flex items-center gap-2 px-6 py-3 bg-primary text-white rounded-xl font-semibold hover:bg-primary/90 transition-colors shadow-sm"
-            >
-              <Plus className="w-5 h-5" />
-              New Analysis
-            </button>
-            <button
-              onClick={logout}
-              className="px-6 py-3 bg-slate-800 border border-slate-600 text-slate-300 rounded-xl font-semibold hover:bg-slate-700 transition-colors"
-            >
-              Sign Out
-            </button>
-          </div>
-        </motion.div>
+  const stats = [
+    {
+      icon: FileText,
+      label: 'Analyses',
+      value: analyses.length,
+      color: 'gold',
+      gradient: 'from-gold-500/20 to-gold-500/5',
+      border: 'border-gold-500/20',
+    },
+    {
+      icon: TrendingUp,
+      label: 'Average Score',
+      value: `${averageScore}%`,
+      color: 'emerald',
+      gradient: 'from-emerald-500/20 to-emerald-500/5',
+      border: 'border-emerald-500/20',
+    },
+    {
+      icon: Award,
+      label: 'Best Score',
+      value: `${highestScore}%`,
+      color: 'violet',
+      gradient: 'from-violet-500/20 to-violet-500/5',
+      border: 'border-violet-500/20',
+    },
+  ];
 
-        {/* Stats */}
+  return (
+    <div className="min-h-screen bg-background pt-24 pb-20 px-6">
+      <div className="max-w-7xl mx-auto">
+        {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-          className="grid md:grid-cols-3 gap-6 mb-12"
+          transition={{ duration: 0.8 }}
+          className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-16"
         >
-          <div className="bg-slate-800 p-6 rounded-xl border border-slate-700 shadow-sm">
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center">
-                <FileText className="w-6 h-6 text-primary" />
-              </div>
-              <div>
-                <p className="text-sm text-slate-400">Total Analyses</p>
-                <p className="text-3xl font-bold text-slate-100">{analyses.length}</p>
-              </div>
+          <div>
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-gold-500/10 border border-gold-500/30 text-gold-400 text-xs font-semibold mb-4 uppercase tracking-wider">
+              <Sparkles className="w-3 h-3" />
+              Dashboard
             </div>
+            <h1 className="text-4xl md:text-5xl font-display font-bold text-white mb-3">
+              Welcome Back
+            </h1>
+            <p className="text-silver-400 text-lg">
+              {user?.name || 'User'}, here's your career analytics overview.
+            </p>
           </div>
 
-          <div className="bg-slate-800 p-6 rounded-xl border border-slate-700 shadow-sm">
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-xl bg-green-900/30 flex items-center justify-center">
-                <TrendingUp className="w-6 h-6 text-green-400" />
-              </div>
-              <div>
-                <p className="text-sm text-slate-400">Average Score</p>
-                <p className="text-3xl font-bold text-green-400">{averageScore}%</p>
-              </div>
-            </div>
+          <div className="flex gap-4">
+            <motion.div
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+            >
+              <button
+                onClick={() => navigate('/analyze')}
+                className="btn-gold inline-flex items-center gap-2"
+              >
+                <Plus className="w-5 h-5" />
+                New Analysis
+              </button>
+            </motion.div>
+            <motion.button
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={logout}
+              className="px-6 py-4 rounded-xl bg-surface/50 backdrop-blur-sm border border-white/10 text-silver-300 font-semibold hover:bg-surface/70 hover:text-white transition-all"
+            >
+              Sign Out
+            </motion.button>
           </div>
+        </motion.div>
 
-          <div className="bg-slate-800 p-6 rounded-xl border border-slate-700 shadow-sm">
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-xl bg-accent-orange/20 flex items-center justify-center">
-                <Award className="w-6 h-6 text-accent-orange" />
+        {/* Stats Grid */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1, duration: 0.8 }}
+          className="grid md:grid-cols-3 gap-8 mb-16"
+        >
+          {stats.map((stat, index) => {
+            const Icon = stat.icon;
+            return (
+              <motion.div
+                key={stat.label}
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.1 * index }}
+                className={`card-glass p-8 bg-gradient-to-br ${stat.gradient} border ${stat.border} relative overflow-hidden`}
+              >
+                <div className="relative z-10">
+                  <div className={`w-14 h-14 rounded-xl bg-${stat.color}-500/15 flex items-center justify-center mb-6`}>
+                    <Icon className={`w-7 h-7 text-${stat.color}-400`} />
+                  </div>
+                  <p className="text-sm text-silver-400 mb-2 uppercase tracking-wider">{stat.label}</p>
+                  <p className={`text-4xl font-display font-bold text-${stat.color}-400`}>{stat.value}</p>
+                </div>
+                <div className={`absolute -bottom-10 -right-10 w-32 h-32 bg-${stat.color}-500/10 rounded-full blur-2xl`} />
+              </motion.div>
+            );
+          })}
+        </motion.div>
+
+        {/* Quick Actions */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2, duration: 0.8 }}
+          className="mb-16"
+        >
+          <h2 className="text-2xl font-display font-bold text-white mb-8 flex items-center gap-3">
+            <Zap className="w-7 h-7 text-gold-400" />
+            Quick Actions
+          </h2>
+          <div className="grid md:grid-cols-3 gap-6">
+            {[
+              {
+                title: 'Analyze New CV',
+                desc: 'Upload a new resume for AI-powered insights',
+                icon: BarChart3,
+                color: 'gold',
+                action: () => navigate('/analyze'),
+              },
+            {
+              title: 'Find Job Matches',
+              desc: 'Compare your profile against job descriptions',
+              icon: Target,
+              color: 'violet',
+              action: () => navigate('/jobs'),
+            },
+            {
+              title: 'LinkedIn Optimization',
+              desc: 'Improve your LinkedIn profile visibility',
+              icon: Sparkles,
+              color: 'emerald',
+              action: () => navigate('/linkedin'),
+            },
+          ].map((action, index) => (
+            <motion.button
+              key={action.title}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 + index * 0.1 }}
+              whileHover={{ scale: 1.02, y: -4 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={action.action}
+              className={`p-8 rounded-2xl border border-${action.color}-500/20 bg-gradient-to-br from-${action.color}-500/5 to-transparent hover:from-${action.color}-500/10 transition-all text-left group`}
+            >
+              <div className={`w-14 h-14 rounded-xl bg-${action.color}-500/15 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform`}>
+                <action.icon className={`w-7 h-7 text-${action.color}-400`} />
               </div>
-              <div>
-                <p className="text-sm text-slate-400">Best Score</p>
-                <p className="text-3xl font-bold text-accent-orange">{highestScore}%</p>
-              </div>
-            </div>
-          </div>
+              <h3 className="text-lg font-display font-bold text-white mb-3">{action.title}</h3>
+              <p className="text-silver-400 text-sm leading-relaxed">{action.desc}</p>
+            </motion.button>
+          ))}
+        </div>
         </motion.div>
 
         {/* Analyses List */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
+          transition={{ delay: 0.3, duration: 0.8 }}
         >
-          <h2 className="text-2xl font-bold text-slate-100 mb-6 flex items-center gap-3">
-            <FileText className="w-6 h-6 text-primary" />
+          <h2 className="text-2xl font-display font-bold text-white mb-8 flex items-center gap-3">
+            <FileText className="w-7 h-7 text-gold-400" />
             Recent Analyses
           </h2>
 
           {isLoading ? (
-            <div className="text-center py-20 bg-slate-800 rounded-xl border border-slate-700">
-              <div className="w-16 h-16 mx-auto mb-4 rounded-full border-4 border-primary/20 border-t-primary animate-spin" />
-              <p className="text-slate-400">Loading your analyses...</p>
+            <div className="card-glass p-20 text-center">
+              <div className="w-16 h-16 mx-auto mb-6 rounded-full border-4 border-gold-500/20 border-t-gold-400 animate-spin" />
+              <p className="text-silver-400">Loading your analyses...</p>
             </div>
           ) : analyses.length === 0 ? (
-            <div className="bg-slate-800 p-16 rounded-xl border border-slate-700 text-center">
-              <div className="w-24 h-24 mx-auto mb-6 rounded-full bg-slate-700/50 flex items-center justify-center">
-                <BarChart3 className="w-12 h-12 text-slate-400" />
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="card-glass p-20 text-center"
+            >
+              <div className="w-24 h-24 mx-auto mb-8 rounded-full bg-surface/50 flex items-center justify-center">
+                <BarChart3 className="w-12 h-12 text-silver-500" />
               </div>
-              <h3 className="text-xl font-bold text-slate-100 mb-3">No analyses yet</h3>
-              <p className="text-slate-400 mb-6 max-w-md mx-auto">
-                Upload your CV to get detailed insights, skill extraction, and personalized recommendations.
+              <h3 className="text-2xl font-display font-bold text-white mb-4">No Analyses Yet</h3>
+              <p className="text-silver-400 mb-8 max-w-md mx-auto leading-relaxed">
+                Upload your CV to get detailed insights, skill extraction, and personalized recommendations powered by AI.
               </p>
-              <button
+              <motion.button
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
                 onClick={() => navigate('/analyze')}
-                className="px-8 py-4 bg-primary text-white rounded-xl font-semibold hover:bg-primary/90 transition-colors shadow-sm"
+                className="btn-gold inline-flex items-center gap-2"
               >
+                <Plus className="w-5 h-5" />
                 Upload Your First CV
-              </button>
-            </div>
+              </motion.button>
+            </motion.div>
           ) : (
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
               {analyses.map((analysis, index) => (
@@ -160,50 +253,44 @@ export default function DashboardPage() {
                   initial={{ opacity: 0, y: 30 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.1 * index }}
-                  className="bg-slate-800 p-6 rounded-xl border border-slate-700 shadow-sm hover:shadow-md hover:border-primary/30 transition-all group"
+                  whileHover={{ y: -6, transition: { duration: 0.2 } }}
+                  className="card-glass p-6 group"
                 >
-                  <div className="flex justify-between items-start mb-4">
-                    <div className="flex-1">
-                      <div className="text-sm font-mono text-slate-400 mb-2">
+                  <div className="flex justify-between items-start mb-5">
+                    <div className="flex-1 min-w-0">
+                      <div className="text-xs font-mono text-silver-500 mb-2 uppercase">
                         {new Date(analysis.created_at).toLocaleDateString('en-US', {
                           month: 'short',
                           day: 'numeric',
                           year: 'numeric',
                         })}
                       </div>
-                      <h3 className="text-lg font-semibold text-slate-100 group-hover:text-primary transition-colors line-clamp-1">
+                      <h3 className="text-lg font-semibold text-white group-hover:text-gold-400 transition-colors truncate">
                         {analysis.personal_info?.name || 'Untitled CV'}
                       </h3>
-                      <p className="text-sm text-slate-400">
+                      <p className="text-sm text-silver-500 truncate">
                         {(analysis as any).file_name || analysis.personal_info?.email || 'No email'}
                       </p>
                     </div>
-                    <div className="text-right">
-                      <div className="text-3xl font-bold text-primary font-mono">
-                        {analysis.overall_score}%
-                      </div>
-                      <div className="text-xs text-slate-400">Overall</div>
+                    <div className="text-right ml-4">
+                      <div className="text-3xl font-display font-bold text-gold-400">{analysis.overall_score}%</div>
+                      <div className="text-xs text-silver-500 uppercase tracking-wider">Overall</div>
                     </div>
                   </div>
 
                   {/* Mini score breakdown */}
-                  <div className="grid grid-cols-4 gap-2 mb-6 p-3 bg-slate-700/50 rounded-lg">
-                    <div className="text-center">
-                      <div className="text-xs text-green-600 mb-1">ATS</div>
-                      <div className="text-sm font-semibold">{analysis.ats_score}%</div>
-                    </div>
-                    <div className="text-center">
-                      <div className="text-xs text-primary mb-1">Read</div>
-                      <div className="text-sm font-semibold">{analysis.readability_score}%</div>
-                    </div>
-                    <div className="text-center">
-                      <div className="text-xs text-secondary mb-1">Impact</div>
-                      <div className="text-sm font-semibold">{analysis.impact_score}%</div>
-                    </div>
-                    <div className="text-center">
-                      <div className="text-xs text-accent-orange mb-1">Comp</div>
-                      <div className="text-sm font-semibold">{analysis.completeness_score}%</div>
-                    </div>
+                  <div className="grid grid-cols-4 gap-2 mb-6 p-3 rounded-xl bg-surface/50">
+                    {[
+                      { label: 'ATS', color: 'emerald', value: analysis.ats_score },
+                      { label: 'Read', color: 'violet', value: analysis.readability_score },
+                      { label: 'Impact', color: 'blue', value: analysis.impact_score },
+                      { label: 'Comp', color: 'amber', value: analysis.completeness_score },
+                    ].map(({ label, color, value }) => (
+                      <div key={label} className="text-center">
+                        <div className={`text-xs text-${color}-400 mb-1 uppercase font-bold`}>{label}</div>
+                        <div className="text-sm font-semibold text-white">{value}%</div>
+                      </div>
+                    ))}
                   </div>
 
                   {/* Skills preview */}
@@ -211,13 +298,13 @@ export default function DashboardPage() {
                     {analysis.extracted_skills?.technical?.slice(0, 3).map((skill: string) => (
                       <span
                         key={skill}
-                        className="px-2 py-1 rounded text-xs bg-primary/10 text-primary border border-primary/20"
+                        className="px-2 py-1 rounded text-xs bg-gold-500/10 text-gold-400 border border-gold-500/20 font-medium"
                       >
                         {skill}
                       </span>
                     )) || null}
-                    {analysis.extracted_skills?.technical?.length > 3 && (
-                      <span className="px-2 py-1 rounded text-xs bg-slate-700/50 text-slate-400 border border-slate-600">
+                    {(analysis.extracted_skills?.technical?.length || 0) > 3 && (
+                      <span className="px-2 py-1 rounded text-xs bg-surface/50 text-silver-500 border border-white/10">
                         +{(analysis.extracted_skills?.technical?.length || 0) - 3} more
                       </span>
                     )}
@@ -226,22 +313,15 @@ export default function DashboardPage() {
                   {/* Actions */}
                   <div className="flex gap-3">
                     <button
-                      onClick={() => navigate(`/analyze`)}
-                      className="flex-1 py-2 rounded-lg bg-primary text-white text-sm font-medium hover:bg-primary/90 transition-colors flex items-center justify-center gap-2"
+                      onClick={() => navigate('/analyze')}
+                      className="flex-1 py-3 rounded-xl bg-gold-500/10 border border-gold-500/30 text-gold-400 font-medium hover:bg-gold-500/20 transition-all flex items-center justify-center gap-2"
                     >
                       <ExternalLink className="w-4 h-4" />
-                      View
-                    </button>
-                    <button
-                      onClick={() => {/* TODO: Export */}}
-                      className="py-2 px-4 rounded-lg border border-slate-600 text-slate-400 hover:bg-slate-700 transition-colors"
-                      title="Download report"
-                    >
-                      <Download className="w-4 h-4" />
+                      View Details
                     </button>
                     <button
                       onClick={() => handleDelete(analysis.id)}
-                      className="py-2 px-4 rounded-lg border border-red-800/50 text-red-400 hover:bg-red-900/30 transition-colors"
+                      className="py-3 px-4 rounded-xl bg-red-500/10 border border-red-500/30 text-red-400 hover:bg-red-500/20 transition-colors"
                       title="Delete"
                     >
                       <Trash2 className="w-4 h-4" />
@@ -251,54 +331,6 @@ export default function DashboardPage() {
               ))}
             </div>
           )}
-        </motion.div>
-
-        {/* Quick Actions */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3 }}
-          className="mt-16 bg-slate-800 p-8 rounded-xl border border-slate-700 shadow-sm"
-        >
-          <h2 className="text-2xl font-bold text-slate-100 mb-6">Quick Actions</h2>
-          <div className="grid md:grid-cols-3 gap-6">
-            <button
-              onClick={() => navigate('/analyze')}
-              className="p-6 rounded-xl border-2 border-primary/20 hover:border-primary hover:bg-primary/5 transition-all text-left group"
-            >
-              <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                <BarChart3 className="w-6 h-6 text-primary" />
-              </div>
-              <h3 className="text-lg font-semibold text-slate-100 mb-2">Analyze New CV</h3>
-              <p className="text-sm text-slate-400">
-                Upload a resume to get AI-powered insights and recommendations.
-              </p>
-            </button>
-            <button
-              onClick={() => navigate('/jobs')}
-              className="p-6 rounded-xl border-2 border-secondary/20 hover:border-secondary hover:bg-secondary/5 transition-all text-left group"
-            >
-              <div className="w-12 h-12 rounded-xl bg-secondary/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                <TrendingUp className="w-6 h-6 text-secondary" />
-              </div>
-              <h3 className="text-lg font-semibold text-slate-100 mb-2">Find Job Matches</h3>
-              <p className="text-sm text-slate-400">
-                Compare your CV against job descriptions and find the best matches.
-              </p>
-            </button>
-            <button
-              onClick={() => navigate('/linkedin')}
-              className="p-6 rounded-xl border-2 border-accent-orange/20 hover:border-accent-orange hover:bg-accent-orange/5 transition-all text-left group"
-            >
-              <div className="w-12 h-12 rounded-xl bg-accent-orange/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
-                <Award className="w-6 h-6 text-accent-orange" />
-              </div>
-              <h3 className="text-lg font-semibold text-slate-100 mb-2">LinkedIn Optimization</h3>
-              <p className="text-sm text-slate-400">
-                Get suggestions to improve your LinkedIn profile visibility.
-              </p>
-            </button>
-          </div>
         </motion.div>
       </div>
     </div>
