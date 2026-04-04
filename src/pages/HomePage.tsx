@@ -1,253 +1,296 @@
-// @ts-nocheck
-import { useRef } from 'react';
-import { motion, useScroll, useTransform } from 'framer-motion';
-import { TextReveal } from '../components/Animations/TextReveal';
-import { MagneticButton } from '../components/Animations/MagneticButton';
-import { AnimatedSection } from '../components/Animations/AnimatedSection';
-import TechMarquee from '../components/Portfolio/TechMarquee';
-import { portfolioData } from '../data/portfolio';
-import { ArrowDown, Code, Mail, Users, Github, Link2 as Linkedin } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import { Upload, BarChart3, FileText, Users, Shield, Zap, CheckCircle, ArrowRight, Star } from 'lucide-react';
 
 export default function HomePage() {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll();
+  const features = [
+    {
+      icon: Upload,
+      title: 'Smart Upload',
+      description: 'Upload your CV in PDF, DOCX, or TXT format. Our AI parser extracts all relevant information instantly.',
+    },
+    {
+      icon: BarChart3,
+      title: 'Deep Analysis',
+      description: 'Get comprehensive scores on ATS compatibility, readability, impact, and completeness.',
+    },
+    {
+      icon: FileText,
+      title: 'Skill Extraction',
+      description: 'Automatically identify technical, soft, and business skills with proficiency levels.',
+    },
+    {
+      icon: Users,
+      title: 'Job Matching',
+      description: 'Match your CV against job descriptions and get personalized skill gap analysis.',
+    },
+    {
+      icon: Shield,
+      title: 'Privacy First',
+      description: 'Your data is processed securely. Client-side option ensures nothing leaves your browser.',
+    },
+    {
+      icon: Zap,
+      title: 'Instant Results',
+      description: 'AI-powered analysis delivers results in seconds, not minutes.',
+    },
+  ];
 
-  // Parallax for decorative elements
-  const y1 = useTransform(scrollYProgress, [0, 1], [0, 200]);
-  const y2 = useTransform(scrollYProgress, [0, 1], [0, -150]);
+  const stats = [
+    { value: '95%', label: 'Accuracy Rate' },
+    { value: '10K+', label: 'CVs Analyzed' },
+    { value: '4.8/5', label: 'User Rating' },
+    { value: '<5s', label: 'Analysis Time' },
+  ];
 
-  const scrollToNext = () => {
-    window.scrollTo({ top: window.innerHeight, behavior: 'smooth' });
-  };
+  const testimonials = [
+    {
+      name: 'Sarah Chen',
+      role: 'Software Engineer',
+      content: 'Cardzey helped me identify gaps in my resume. After implementing the suggestions, I landed 3 more interviews.',
+      rating: 5,
+    },
+    {
+      name: 'Marcus Johnson',
+      role: 'Product Manager',
+      content: 'The job matching feature is incredibly accurate. It helped me tailor my CV for specific roles and I got hired!',
+      rating: 5,
+    },
+    {
+      name: 'Emily Rodriguez',
+      role: 'Data Analyst',
+      content: 'Finally, a CV analyzer that actually understands modern resumes. The skill extraction was spot-on.',
+      rating: 5,
+    },
+  ];
 
   return (
-    <div ref={containerRef} className="relative min-h-screen">
-      {/* Hero Content */}
-      <section className="relative min-h-screen flex flex-col items-center justify-center px-4 overflow-hidden">
-        {/* Decorative parallax backgrounds */}
-        <motion.div
-          style={{ y: y1 }}
-          className="absolute top-32 left-10 w-64 h-64 rounded-full bg-gradient-to-br from-cyan-500/10 to-purple-600/10 blur-3xl"
-        />
-        <motion.div
-          style={{ y: y2 }}
-          className="absolute bottom-32 right-10 w-96 h-96 rounded-full bg-gradient-to-br from-pink-500/10 to-purple-600/10 blur-3xl"
-        />
-
-        {/* Main content */}
-        <div className="relative z-10 max-w-6xl mx-auto text-center space-y-12 pt-20">
-          {/* Greeting */}
-          <AnimatedSection fadeIn delay={0.2}>
-            <p className="text-cyan-400 font-mono text-lg md:text-xl tracking-wider">
-              Hello, I'm
-            </p>
-          </AnimatedSection>
-
-          {/* Name */}
-          <AnimatedSection>
-            <h1 className="text-6xl md:text-9xl font-bold tracking-tight mb-6">
-              <TextReveal type="char" delay={0.4}>
-                <span className="gradient-text">{portfolioData.name}</span>
-              </TextReveal>
-            </h1>
-          </AnimatedSection>
-
-          {/* Title */}
-          <AnimatedSection delay={0.8}>
-            <p className="text-2xl md:text-4xl text-gray-300 font-light mb-8">
-              {portfolioData.title}
-            </p>
-          </AnimatedSection>
-
-          {/* Tagline */}
-          <AnimatedSection delay={1}>
-            <p className="text-lg md:text-xl text-gray-400 max-w-2xl mx-auto leading-relaxed">
-              {portfolioData.tagline}
-            </p>
-          </AnimatedSection>
-
-          {/* CTA Buttons */}
-          <AnimatedSection delay={1.2} className="flex flex-col sm:flex-row gap-4 justify-center pt-8">
-            <Link to="/work">
-              <MagneticButton strength={40} size="lg" className="px-10 py-4">
-                View My Work
-              </MagneticButton>
-            </Link>
-            <Link to="/about">
-              <MagneticButton strength={40} size="lg" type="outline" className="px-10 py-4">
-                Learn More
-              </MagneticButton>
-            </Link>
-          </AnimatedSection>
-
-          {/* Social Links */}
-          <AnimatedSection delay={1.4} className="flex gap-6 justify-center pt-4">
-            <motion.a
-              href={`https://github.com/${portfolioData.social.github}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              whileHover={{ y: -5, scale: 1.1 }}
-              className="p-3 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 hover:border-cyan-400/50 transition-all group"
-            >
-              <Code2 className="w-6 h-6 text-gray-400 group-hover:text-cyan-400" />
-            </motion.a>
-            <motion.a
-              href={`mailto:${portfolioData.social.email}`}
-              whileHover={{ y: -5, scale: 1.1 }}
-              className="p-3 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 hover:border-purple-400/50 transition-all group"
-            >
-              <Mail className="w-6 h-6 text-gray-400 group-hover:text-purple-400" />
-            </motion.a>
-            <motion.a
-              href={`https://linkedin.com/in/${portfolioData.social.linkedin}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              whileHover={{ y: -5, scale: 1.1 }}
-              className="p-3 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 hover:border-pink-400/50 transition-all group"
-            >
-              <Linkedin className="w-6 h-6 text-gray-400 group-hover:text-pink-400" />
-            </motion.a>
-          </AnimatedSection>
-        </div>
-
-        {/* Scroll Indicator */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 2, duration: 0.5 }}
-          className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 cursor-pointer group"
-          onClick={scrollToNext}
-        >
-          <span className="text-gray-500 text-sm font-mono tracking-widest group-hover:text-cyan-400 transition-colors">
-            SCROLL
-          </span>
+    <div className="min-h-screen bg-white">
+      {/* Hero Section */}
+      <section className="pt-24 pb-20 px-4">
+        <div className="max-w-6xl mx-auto text-center">
           <motion.div
-            animate={{ y: [0, 12, 0] }}
-            transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
           >
-            <ArrowDown className="w-6 h-6 text-gray-500 group-hover:text-cyan-400 transition-colors" />
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-semibold mb-6">
+              <Zap className="w-4 h-4" />
+              AI-Powered CV Analysis
+            </div>
+
+            <h1 className="text-5xl md:text-6xl font-bold text-slate-900 mb-6 tracking-tight">
+              Unlock Your CV's
+              <span className="block text-primary">Full Potential</span>
+            </h1>
+
+            <p className="text-xl text-slate-600 max-w-3xl mx-auto mb-10 leading-relaxed">
+              Get detailed insights, skill analysis, and personalized recommendations to make your resume stand out.
+              Trusted by thousands of job seekers worldwide.
+            </p>
+
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link
+                to="/analyze"
+                className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-primary text-white rounded-xl font-semibold text-lg hover:bg-primary/90 transition-colors shadow-md hover:shadow-lg"
+              >
+                Analyze Your CV Now
+                <ArrowRight className="w-5 h-5" />
+              </Link>
+              <Link
+                to="/about"
+                className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-slate-100 text-slate-700 rounded-xl font-semibold text-lg hover:bg-slate-200 transition-colors"
+              >
+                Learn More
+              </Link>
+            </div>
           </motion.div>
+        </div>
+      </section>
+
+      {/* Stats Section */}
+      <section className="py-16 bg-slate-50 border-y border-slate-200">
+        <div className="max-w-6xl mx-auto px-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+            {stats.map((stat, index) => (
+              <motion.div
+                key={stat.label}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.1 }}
+                className="text-center"
+              >
+                <div className="text-4xl font-bold text-primary mb-2">{stat.value}</div>
+                <div className="text-slate-600 font-medium">{stat.label}</div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Features Grid */}
+      <section className="py-24 px-4">
+        <div className="max-w-6xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <h2 className="text-4xl font-bold text-slate-900 mb-4">
+              Everything You Need to Land Your Dream Job
+            </h2>
+            <p className="text-xl text-slate-600 max-w-2xl mx-auto">
+              Comprehensive CV analysis powered by advanced AI to give you the competitive edge.
+            </p>
+          </motion.div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {features.map((feature, index) => (
+              <motion.div
+                key={feature.title}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.1 }}
+                className="bg-white p-8 rounded-2xl border border-slate-200 hover:border-primary/50 hover:shadow-lg transition-all group"
+              >
+                <div className="w-14 h-14 rounded-xl bg-primary/10 flex items-center justify-center mb-6 group-hover:bg-primary group-hover:text-white transition-colors">
+                  <feature.icon className="w-7 h-7 text-primary group-hover:text-white" />
+                </div>
+                <h3 className="text-xl font-bold text-slate-900 mb-3">{feature.title}</h3>
+                <p className="text-slate-600 leading-relaxed">{feature.description}</p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* How It Works */}
+      <section className="py-24 px-4 bg-slate-50">
+        <div className="max-w-6xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <h2 className="text-4xl font-bold text-slate-900 mb-4">How It Works</h2>
+            <p className="text-xl text-slate-600">Get your CV analyzed in three simple steps</p>
+          </motion.div>
+
+          <div className="grid md:grid-cols-3 gap-12">
+            {[
+              { step: '1', title: 'Upload', desc: 'Select your CV file (PDF, DOCX, or TXT) and upload it securely.' },
+              { step: '2', title: 'Analyze', desc: 'Our AI processes your resume and generates detailed insights.' },
+              { step: '3', title: 'Improve', desc: 'Review recommendations and optimize your CV for success.' },
+            ].map((item, index) => (
+              <motion.div
+                key={item.step}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.2 }}
+                className="text-center"
+              >
+                <div className="w-16 h-16 rounded-full bg-primary text-white text-2xl font-bold flex items-center justify-center mx-auto mb-6">
+                  {item.step}
+                </div>
+                <h3 className="text-xl font-bold text-slate-900 mb-3">{item.title}</h3>
+                <p className="text-slate-600">{item.desc}</p>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Testimonials */}
+      <section className="py-24 px-4">
+        <div className="max-w-6xl mx-auto">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <h2 className="text-4xl font-bold text-slate-900 mb-4">Loved by Job Seekers</h2>
+            <div className="flex justify-center gap-1 mb-4">
+              {[1, 2, 3, 4, 5].map((i) => (
+                <Star key={i} className="w-6 h-6 fill-amber-400 text-amber-400" />
+              ))}
+            </div>
+            <p className="text-xl text-slate-600">Join thousands who landed better jobs</p>
+          </motion.div>
+
+          <div className="grid md:grid-cols-3 gap-8">
+            {testimonials.map((testimonial, index) => (
+              <motion.div
+                key={testimonial.name}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.1 }}
+                className="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm"
+              >
+                <div className="flex gap-1 mb-4">
+                  {Array.from({ length: testimonial.rating }).map((_, i) => (
+                    <Star key={i} className="w-4 h-4 fill-amber-400 text-amber-400" />
+                  ))}
+                </div>
+                <p className="text-slate-700 mb-6 leading-relaxed italic">"{testimonial.content}"</p>
+                <div>
+                  <p className="font-semibold text-slate-900">{testimonial.name}</p>
+                  <p className="text-sm text-slate-500">{testimonial.role}</p>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="py-24 px-4 bg-primary">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="max-w-4xl mx-auto text-center"
+        >
+          <h2 className="text-4xl font-bold text-white mb-6">
+            Ready to Transform Your Career?
+          </h2>
+          <p className="text-xl text-primary-100 mb-10 max-w-2xl mx-auto">
+            Join thousands of job seekers who have already improved their CVs and landed better interviews.
+          </p>
+          <Link
+            to="/analyze"
+            className="inline-flex items-center gap-2 px-10 py-5 bg-white text-primary rounded-xl font-bold text-lg hover:bg-slate-50 transition-colors shadow-lg"
+          >
+            Start Free Analysis
+            <ArrowRight className="w-6 h-6" />
+          </Link>
         </motion.div>
       </section>
 
-      {/* About Preview Section (teaser) */}
-      <section className="relative py-32 px-4">
-        <div className="max-w-6xl mx-auto">
-          <AnimatedSection fadeUp>
-            <div className="glass-card p-8 md:p-12 border-cyan-500/20 relative overflow-hidden">
-              {/* Background decoration */}
-              <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-cyan-500/20 to-purple-600/20 rounded-full blur-3xl -mr-32 -mt-32" />
-              <div className="absolute bottom-0 left-0 w-48 h-48 bg-gradient-to-tr from-pink-500/20 to-purple-600/20 rounded-full blur-2xl -ml-24 -mb-24" />
-
-              <div className="relative z-10">
-                <h2 className="text-3xl md:text-5xl font-bold mb-6 gradient-text">
-                  About Me
-                </h2>
-                <p className="text-gray-300 text-lg leading-relaxed max-w-3xl mb-8">
-                  {portfolioData.bio}
-                </p>
-                <Link to="/about">
-                  <MagneticButton size="lg" className="px-8 py-4">
-                    Discover My Story
-                  </MagneticButton>
-                </Link>
-              </div>
-            </div>
-          </AnimatedSection>
-        </div>
-      </section>
-
-      {/* Featured Projects Preview */}
-      <section className="relative py-32 px-4 bg-gradient-to-b from-transparent via-white/5 to-transparent">
-        <div className="max-w-6xl mx-auto">
-          <AnimatedSection fadeUp>
-            <div className="text-center mb-16">
-              <h2 className="text-4xl md:text-6xl font-bold mb-4">
-                Featured <span className="gradient-text">Work</span>
-              </h2>
-              <p className="text-gray-400 text-lg mt-4">
-                A selection of my recent projects
-              </p>
-            </div>
-          </AnimatedSection>
-
-          <div className="grid md:grid-cols-2 gap-8 mb-12">
-            {portfolioData.projects
-              .filter((p) => p.featured)
-              .slice(0, 2)
-              .map((project, index) => (
-                <AnimatedSection key={project.id} fadeUp delay={index * 0.2}>
-                  <div
-                    className={`glass-card p-8 border-2 group cursor-pointer hover:border-cyan-400/50 transition-all duration-500 h-full flex flex-col`}
-                  >
-                    <div
-                      className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${project.color} flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300`}
-                    >
-                      <span className="text-2xl font-bold text-white">
-                        {project.title.charAt(0)}
-                      </span>
-                    </div>
-                    <h3 className="text-2xl font-bold text-white mb-4">
-                      {project.title}
-                    </h3>
-                    <p className="text-gray-400 mb-6 flex-grow leading-relaxed">
-                      {project.description}
-                    </p>
-                    <div className="flex flex-wrap gap-2 mb-6">
-                      {project.tags.slice(0, 4).map((tag) => (
-                        <span
-                          key={tag}
-                          className="px-3 py-1 rounded-full text-xs font-medium bg-white/10 border border-white/20 text-cyan-300"
-                        >
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-                    <div className="flex gap-4">
-                      {project.github && (
-                        <a
-                          href={project.github}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-gray-400 hover:text-cyan-400 transition-colors text-sm flex items-center gap-2"
-                        >
-                          <Code2 className="w-4 h-4" />
-                          Code
-                        </a>
-                      )}
-                      {project.live && (
-                        <a
-                          href={project.live}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-gray-400 hover:text-cyan-400 transition-colors text-sm flex items-center gap-2"
-                        >
-                          Live Demo →
-                        </a>
-                      )}
-                    </div>
-                  </div>
-                </AnimatedSection>
-              ))}
+      {/* Footer */}
+      <footer className="py-12 px-4 bg-slate-900 text-slate-400 border-t border-slate-800">
+        <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
+          <div>
+            <h3 className="text-xl font-bold text-white mb-2">Cardzey</h3>
+            <p className="text-sm">AI-Powered CV Analysis for Modern Job Seekers</p>
           </div>
-
-          <AnimatedSection delay={0.4}>
-            <div className="text-center">
-              <Link to="/work">
-                <MagneticButton size="lg" className="px-10 py-4">
-                  View All Projects
-                </MagneticButton>
-              </Link>
-            </div>
-          </AnimatedSection>
+          <div className="flex gap-6">
+            <Link to="/login" className="hover:text-white transition-colors">Login</Link>
+            <Link to="/register" className="hover:text-white transition-colors">Sign Up</Link>
+            <Link to="/about" className="hover:text-white transition-colors">About</Link>
+            <Link to="/contact" className="hover:text-white transition-colors">Contact</Link>
+          </div>
         </div>
-      </section>
-
-      {/* Tech Stack Marquee */}
-      <section>
-        <TechMarquee />
-      </section>
+        <div className="max-w-6xl mx-auto mt-8 pt-8 border-t border-slate-800 text-center text-sm">
+          © 2024 Cardzey. All rights reserved.
+        </div>
+      </footer>
     </div>
   );
 }

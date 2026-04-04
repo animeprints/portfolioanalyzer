@@ -43,15 +43,37 @@ class AnalysisController
             // 3. Analyze CV
             $analysis = $this->engine->analyze($extractedText);
 
-            // 4. Save analysis
-            $result = $this->uploader->saveAnalysis($userId, $extractedText, $fileInfo, $analysis);
+            // 4. Transform analysis data to match frontend expectation
+            $transformed = [
+                'personal_info' => $analysis['personalInfo'] ?? [],
+                'summary' => $analysis['summary'] ?? null,
+                'extracted_skills' => $analysis['skills'] ?? [
+                    'technical' => [],
+                    'soft' => [],
+                    'business' => [],
+                    'languages' => [],
+                    'tools' => [],
+                ],
+                'experience' => $analysis['experience'] ?? ['years' => 0, 'level' => 'junior', 'positions' => []],
+                'education' => $analysis['education'] ?? [],
+                'overall_score' => $analysis['scores']['overall'] ?? 0,
+                'ats_score' => $analysis['scores']['ats'] ?? 0,
+                'readability_score' => $analysis['scores']['readability'] ?? 0,
+                'impact_score' => $analysis['scores']['impact'] ?? 0,
+                'completeness_score' => $analysis['scores']['completeness'] ?? 0,
+            ];
 
-            Response::success([
-                'analysis' => array_merge(
-                    ['id' => $result['id'], 'file_name' => $fileInfo['name']],
-                    $analysis
-                )
-            ], 'CV analyzed successfully');
+            // 5. Save analysis (store the raw analysis + transformed data)
+            $result = $this->uploader->saveAnalysis($userId, $extractedText, $fileInfo, array_merge($analysis, $transformed));
+
+            // 6. Return transformed data to frontend
+            $responseData = [
+                'id' => $result['id'],
+                'file_name' => $fileInfo['name'],
+                'created_at' => $result['created_at'] ?? date('c'),
+            ] + $transformed;
+
+            Response::success(['analysis' => $responseData], 'CV analyzed successfully');
 
         } catch (\Exception $e) {
             Response::error('Analysis failed: ' . $e->getMessage(), 500);

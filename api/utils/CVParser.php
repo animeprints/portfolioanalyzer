@@ -150,11 +150,10 @@ class CVParser
 
         foreach ($firstLines as $line) {
             $trimmed = trim($line);
-            if ($trimmed &&
-                !$trimmed ||
+            if (!$trimmed ||
                 strpos($trimmed, '@') !== false ||
                 preg_match('/^\d+/', $trimmed) ||
-                $trimmed.length < 2 || $trimmed.length >= 40
+                strlen($trimmed) < 2 || strlen($trimmed) >= 40
             ) {
                 continue;
             }

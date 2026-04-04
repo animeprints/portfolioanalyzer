@@ -1,50 +1,20 @@
-// @ts-nocheck
 import { useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useDropzone } from 'react-dropzone';
-import { Upload, FileText, X, Award, TrendingUp, Target, CheckCircle, Sparkles } from 'lucide-react';
+import { Upload, FileText, X, Award, TrendingUp, Target, CheckCircle, BarChart3, FileDown, RefreshCw } from 'lucide-react';
 import { analysisAPI } from '../services';
 import { AnalysisResult } from '../services/index';
 import SkillGlobe from '../components/3D/SkillGlobe';
 import { useNavigate } from 'react-router-dom';
-
-// Magnetic button hook
-function useMagneticButton(limit = 40) {
-  const x = useMotionValue(0);
-  const y = useMotionValue(0);
-
-  const onMove = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    const centerX = rect.left + rect.width / 2;
-    const centerY = rect.top + rect.height / 2;
-    const deltaX = (e.clientX - centerX) / (rect.width / 2);
-    const deltaY = (e.clientY - centerY) / (rect.height / 2);
-
-    x.set(Math.max(-limit, Math.min(limit, deltaX * limit)));
-    y.set(Math.max(-limit, Math.min(limit, deltaY * limit)));
-  }, [limit, x, y]);
-
-  const onLeave = useCallback(() => {
-    x.set(0);
-    y.set(0);
-  }, [x, y]);
-
-  const transform = useSpring({
-    x,
-    y,
-    rotateX: y,
-    rotateY: x,
-    scale: 1.02,
-  });
-
-  return { onMove, onLeave, transform };
-}
 
 export default function AnalyzePage() {
   const [file, setFile] = useState<File | null>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [result, setResult] = useState<AnalysisResult | null>(null);
   const [selectedSkill, setSelectedSkill] = useState<{ name: string; level: number; category: string } | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  const navigate = useNavigate();
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     accept: {
@@ -84,39 +54,41 @@ export default function AnalyzePage() {
     setSelectedSkill(null);
   };
 
-  // Get flattened skills for globe
+  const handleExport = async () => {
+    // TODO: Implement export
+    alert('Export feature coming soon!');
+  };
+
+  const handleMatchJobs = () => {
+    navigate('/jobs');
+  };
+
+  // Get flattened skills for globe - using result.extracted_skills structure
   const flattenedSkills = result ? [
-    ...result.extracted_skills.technical.map(name => ({ name, level: 85, category: 'Frontend' })),
-    ...result.extracted_skills.soft.map(name => ({ name, level: 75, category: 'Creative' })),
-    ...result.extracted_skills.business.map(name => ({ name, level: 70, category: 'Backend' })),
-    ...result.extracted_skills.languages.map(name => ({ name, level: 80, category: 'Frontend' })),
-    ...result.extracted_skills.tools.map(name => ({ name, level: 85, category: 'DevOps' })),
+    ...(result.extracted_skills?.technical?.map((name: string) => ({ name, level: 85, category: 'Technical' })) || []),
+    ...(result.extracted_skills?.soft?.map((name: string) => ({ name, level: 75, category: 'Soft Skills' })) || []),
+    ...(result.extracted_skills?.business?.map((name: string) => ({ name, level: 70, category: 'Business' })) || []),
+    ...(result.extracted_skills?.languages?.map((name: string) => ({ name, level: 80, category: 'Languages' })) || []),
+    ...(result.extracted_skills?.tools?.map((name: string) => ({ name, level: 85, category: 'Tools' })) || []),
   ] : [];
 
-  return (
-    <div className="relative min-h-screen pt-24 pb-20 overflow-hidden">
-      {/* Animated background */}
-      <div className="absolute inset-0 bg-gradient-to-b from-dark-900 via-dark-950 to-black">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-cyan-900/20 via-purple-900/10 to-transparent" />
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,_#000_1px,transparent_1px),_linear-gradient(to_bottom,_#000_1px,transparent_1px)] bg-[size:40px_40px] opacity-20" />
-      </div>
+  // Helper to get score value safely
+  const getScore = (value: number | undefined, fallback: number = 0) => value ?? fallback;
 
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+  return (
+    <div className="min-h-screen bg-slate-50 pt-24 pb-20">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="text-center py-16"
+          className="text-center mb-12"
         >
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-cyan-900/50 to-purple-900/50 border border-cyan-500/30 mb-6">
-            <Sparkles className="w-4 h-4 text-cyan-400" />
-            <span className="text-cyan-400 text-sm font-mono tracking-wider">AI-POWERED</span>
-          </div>
-          <h1 className="text-6xl md:text-8xl font-bold mb-6">
-            <span className="gradient-text">CV Analyzer</span>
+          <h1 className="text-4xl md:text-5xl font-bold text-slate-900 mb-4">
+            AI CV Analyzer
           </h1>
-          <p className="text-xl text-gray-400 max-w-2xl mx-auto">
-            Unlock the full potential of your resume. Get detailed insights, skill analysis, and personalized recommendations.
+          <p className="text-xl text-slate-600 max-w-2xl mx-auto">
+            Upload your resume and get instant feedback on strengths, improvements, and skill analysis.
           </p>
         </motion.div>
 
@@ -127,68 +99,64 @@ export default function AnalyzePage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
-              className="max-w-3xl mx-auto"
+              className="max-w-2xl mx-auto"
             >
+              {/* Upload Zone */}
               <div
                 {...getRootProps()}
+                data-testid="dropzone"
                 className={`
-                  relative glass-card p-16 border-2 border-dashed text-center cursor-pointer
-                  transition-all duration-500 overflow-hidden
+                  relative bg-white border-2 border-dashed rounded-2xl p-16 text-center cursor-pointer
+                  transition-all duration-200
                   ${isDragActive
-                    ? 'border-cyan-400 bg-cyan-950/20 scale-[1.02]'
-                    : 'border-white/20 hover:border-cyan-400/50 hover:bg-white/[0.02]'
+                    ? 'border-primary bg-primary/5 scale-[1.01]'
+                    : 'border-slate-300 hover:border-primary hover:bg-slate-50'
                   }
                 `}
               >
-                <input {...getInputProps()} />
+                <input {...getInputProps()} data-testid="file-input" />
 
                 {file ? (
-                  <div className="flex items-center justify-center gap-8">
-                    <div className="relative">
-                      <div className="w-24 h-24 rounded-2xl bg-gradient-to-br from-cyan-500 to-purple-600 flex items-center justify-center">
-                        <FileText className="w-12 h-12 text-white" />
-                      </div>
-                      <motion.div
-                        animate={{ scale: [1, 1.2, 1] }}
-                        transition={{ duration: 2, repeat: Infinity }}
-                        className="absolute -inset-2 rounded-2xl border border-cyan-400/50"
-                      />
+                  <div className="flex items-center justify-center gap-4">
+                    <div className="w-16 h-16 rounded-xl bg-primary/10 flex items-center justify-center">
+                      <FileText className="w-8 h-8 text-primary" />
                     </div>
-                    <div className="text-left">
-                      <p className="text-2xl font-bold text-white mb-2">{file.name}</p>
-                      <p className="text-gray-400">
-                        {(file.size / 1024 / 1024).toFixed(2)} MB • {file.type || 'Unknown type'}
+                    <div className="text-left flex-1">
+                      <p className="font-semibold text-slate-900 mb-1">{file.name}</p>
+                      <p className="text-sm text-slate-500">
+                        {(file.size / 1024 / 1024).toFixed(2)} MB
                       </p>
                     </div>
                     <button
                       onClick={(e) => { e.stopPropagation(); handleReset(); }}
-                      className="p-3 rounded-full bg-red-500/20 text-red-400 hover:bg-red-500/30 transition-colors"
+                      className="p-2 rounded-lg bg-slate-100 text-slate-500 hover:bg-slate-200 hover:text-red-500 transition-colors"
+                      aria-label="Remove file"
                     >
-                      <X className="w-6 h-6" />
+                      <X className="w-5 h-5" />
                     </button>
                   </div>
                 ) : (
                   <>
-                    <div className="w-32 h-32 rounded-full bg-gradient-to-br from-cyan-500/20 to-purple-600/20 flex items-center justify-center mx-auto mb-8">
-                      <Upload className="w-16 h-16 text-cyan-400" />
+                    <div className="w-24 h-24 rounded-2xl bg-primary/5 flex items-center justify-center mx-auto mb-6">
+                      <Upload className="w-12 h-12 text-primary" />
                     </div>
-                    <h3 className="text-2xl font-bold mb-4">
-                      {isDragActive ? 'Drop your CV here...' : 'Upload your CV'}
+                    <h3 className="text-2xl font-bold text-slate-900 mb-2">
+                      {isDragActive ? 'Drop your CV here' : 'Upload your CV'}
                     </h3>
-                    <p className="text-gray-400 mb-8">
-                      Supports PDF, DOCX, and TXT files. Your CV is analyzed securely in the cloud.
+                    <p className="text-slate-600 mb-6">
+                      Supports PDF, DOCX, and TXT files. Your data is processed securely.
                     </p>
-                    <div className="flex justify-center gap-6 text-sm text-gray-500">
+                    <div className="flex justify-center gap-6 text-sm text-slate-500">
                       <span className="flex items-center gap-2">
-                        <CheckCircle className="w-4 h-4 text-green-400" />
+                        <CheckCircle className="w-4 h-4 text-green-500" />
                         PDF
                       </span>
                       <span className="flex items-center gap-2">
-                        <CheckCircle className="w-4 h-4 text-green-400" />
+                        <CheckCircle className="w-4 h-4 text-green-500" />
                         DOCX
                       </span>
                       <span className="flex items-center gap-2">
-                        <CheckCircle className="w-4 h-4 text-green-400" />
+                        <CheckCircle className="w-4 h-4 text-green-500" />
                         TXT
                       </span>
                     </div>
@@ -196,86 +164,89 @@ export default function AnalyzePage() {
                 )}
               </div>
 
+              {/* Error Message */}
+              {error && (
+                <motion.div
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="mt-6 p-4 bg-red-50 border border-red-200 rounded-xl text-red-700 text-center"
+                  role="alert"
+                >
+                  {error}
+                </motion.div>
+              )}
+
+              {/* Analyze Button */}
               <motion.button
-                {...onButtonMove}
-                onMouseLeave={onButtonLeave}
-                style={magneticTransform}
                 onClick={handleAnalyze}
                 disabled={!file || isAnalyzing}
+                whileTap={{ scale: 0.98 }}
                 className={`
-                  w-full mt-8 relative overflow-hidden
+                  w-full mt-8 py-4 px-6 rounded-xl font-semibold text-lg
+                  flex items-center justify-center gap-3
+                  transition-colors duration-200
                   ${!file
-                    ? 'bg-gray-800 text-gray-500 cursor-not-allowed'
-                    : 'bg-gradient-to-r from-cyan-500 to-purple-600 text-white font-semibold py-6 text-xl rounded-2xl'
+                    ? 'bg-slate-300 text-slate-500 cursor-not-allowed'
+                    : 'bg-primary text-white hover:bg-primary/90 shadow-sm hover:shadow'
                   }
-                  transition-all duration-300
                 `}
               >
-                <AnimatePresence mode="wait">
-                  {isAnalyzing ? (
-                    <motion.div
-                      key="analyzing"
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      className="flex items-center justify-center gap-4"
-                    >
-                      <div className="w-8 h-8 border-4 border-white/30 border-t-white rounded-full animate-spin" />
-                      <span>Analyzing your CV...</span>
-                    </motion.div>
-                  ) : (
-                    <motion.div
-                      key="analyze"
-                      className="flex items-center justify-center gap-3"
-                    >
-                      <Sparkles className="w-6 h-6" />
-                      Start Analysis
-                    </motion.div>
-                  )}
-                </AnimatePresence>
+                {isAnalyzing ? (
+                  <>
+                    <RefreshCw className="w-5 h-5 animate-spin" />
+                    Analyzing...
+                  </>
+                ) : (
+                  <>
+                    <BarChart3 className="w-5 h-5" />
+                    Analyze CV
+                  </>
+                )}
               </motion.button>
             </motion.div>
           )}
 
           {isAnalyzing && (
             <motion.div
-              key="analyzing-full"
+              key="analyzing"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="max-w-4xl mx-auto"
+              className="max-w-2xl mx-auto"
             >
-              <div className="glass-card p-16 text-center relative overflow-hidden">
+              <div className="bg-white rounded-2xl p-12 shadow-sm border border-slate-200 text-center">
                 <motion.div
                   animate={{ rotate: 360 }}
                   transition={{ duration: 3, repeat: Infinity, ease: 'linear' }}
-                  className="w-48 h-48 mx-auto mb-8 relative"
+                  className="w-32 h-32 mx-auto mb-6 relative"
                 >
-                  <div className="absolute inset-0 rounded-full border-4 border-cyan-500/20" />
-                  <div className="absolute inset-0 rounded-full border-4 border-purple-500/20 animate-pulse" />
-                  <div className="absolute inset-4 rounded-full border-4 border-transparent border-t-cyan-400 animate-spin" />
+                  <div className="absolute inset-0 rounded-full border-4 border-primary/20" />
+                  <div className="absolute inset-2 rounded-full border-4 border-primary/30 animate-pulse" />
+                  <div className="absolute inset-4 rounded-full border-4 border-transparent border-t-primary animate-spin" />
                   <div className="absolute inset-0 flex items-center justify-center">
-                    <span className="text-cyan-400 font-mono text-2xl">
+                    <span className="text-primary font-mono text-xl font-bold">
                       {Math.floor(Math.random() * 30 + 70)}%
                     </span>
                   </div>
                 </motion.div>
 
-                <h2 className="text-3xl font-bold mb-4">Processing your CV</h2>
-                <p className="text-gray-400">
+                <h2 className="text-2xl font-bold text-slate-900 mb-2">
+                  Processing your CV
+                </h2>
+                <p className="text-slate-600">
                   Extracting skills, parsing experience, calculating scores...
                 </p>
 
-                {/* Progress steps */}
-                <div className="mt-12 space-y-4 max-w-md mx-auto">
-                  {['Parsing document', 'Extracting skills', 'Calculating scores', 'Generating insights'].map((step, i) => (
+                <div className="mt-8 space-y-3 max-w-sm mx-auto text-left">
+                  {['Parsing document', 'Extracting skills', 'Calculating scores', 'Generating report'].map((step, i) => (
                     <motion.div
                       key={step}
-                      initial={{ opacity: 0, x: -20 }}
+                      initial={{ opacity: 0, x: -10 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: i * 0.5 }}
-                      className="flex items-center gap-4"
+                      className="flex items-center gap-3 text-slate-600"
                     >
-                      <div className="w-6 h-6 rounded-full bg-cyan-500 animate-pulse" />
-                      <span className="text-gray-300">{step}</span>
+                      <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
+                      <span className="text-sm">{step}</span>
                     </motion.div>
                   ))}
                 </div>
@@ -288,266 +259,217 @@ export default function AnalyzePage() {
               key="result"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="space-y-16"
+              className="space-y-8"
             >
-              {/* Score Overview Section */}
-              <section className="grid lg:grid-cols-2 gap-12 items-start">
-                <div>
-                  <motion.div
-                    initial={{ opacity: 0, x: -50 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    className="glass-card p-8 border-cyan-500/30"
-                  >
-                    <h2 className="text-3xl font-bold mb-8 flex items-center gap-3">
-                      <Award className="w-8 h-8 text-cyan-400" />
-                      CV Score Overview
-                    </h2>
+              {/* Score Section */}
+              <section className="grid md:grid-cols-2 gap-8">
+                <div className="bg-white rounded-2xl p-8 shadow-sm border border-slate-200">
+                  <h2 className="text-2xl font-bold text-slate-900 mb-6 flex items-center gap-3">
+                    <Award className="w-6 h-6 text-primary" />
+                    CV Score Overview
+                  </h2>
 
-                    <div className="space-y-8">
-                      {/* Overall Score */}
-                      <div>
-                        <div className="flex justify-between mb-3">
-                          <span className="text-gray-300 font-medium">Overall Score</span>
-                          <span className="text-4xl font-bold gradient-text font-mono">
-                            {result.overall_score}%
-                          </span>
-                        </div>
-                        <div className="h-4 bg-white/10 rounded-full overflow-hidden">
-                          <motion.div
-                            initial={{ width: 0 }}
-                            animate={{ width: `${result.overall_score}%` }}
-                            transition={{ duration: 1.5, ease: 'easeOut' }}
-                            className="h-full bg-gradient-to-r from-cyan-500 to-purple-600"
-                          />
-                        </div>
+                  {/* Overall Score */}
+                  <div className="mb-8">
+                    <div className="flex justify-between items-end mb-3">
+                      <span className="text-slate-600 font-medium">Overall Score</span>
+                      <span className="text-5xl font-bold text-primary">
+                        {getScore(result.overall_score)}%
+                      </span>
+                    </div>
+                    <div className="h-3 bg-slate-200 rounded-full overflow-hidden">
+                      <motion.div
+                        initial={{ width: 0 }}
+                        animate={{ width: `${getScore(result.overall_score)}%` }}
+                        transition={{ duration: 1, ease: 'easeOut' }}
+                        className="h-full bg-primary rounded-full"
+                      />
+                    </div>
+                  </div>
+
+                  {/* Score Cards Grid */}
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="bg-slate-50 rounded-xl p-4 border border-slate-200">
+                      <div className="flex items-center gap-2 mb-2">
+                        <TrendingUp className="w-4 h-4 text-green-600" />
+                        <span className="text-sm text-slate-600">ATS Score</span>
                       </div>
-
-                      {/* Score cards */}
-                      <div className="grid grid-cols-2 gap-4">
-                        <div className="glass-card p-4 border-white/10">
-                          <div className="flex items-center gap-2 mb-2">
-                            <TrendingUp className="w-5 h-5 text-green-400" />
-                            <span className="text-gray-400 text-sm">ATS Score</span>
-                          </div>
-                          <div className="text-2xl font-bold text-green-400 font-mono">
-                            {result.ats_score}%
-                          </div>
-                        </div>
-                        <div className="glass-card p-4 border-white/10">
-                          <div className="flex items-center gap-2 mb-2">
-                            <Target className="w-5 h-5 text-cyan-400" />
-                            <span className="text-gray-400 text-sm">Readability</span>
-                          </div>
-                          <div className="text-2xl font-bold text-cyan-400 font-mono">
-                            {result.readability_score}%
-                          </div>
-                        </div>
-                        <div className="glass-card p-4 border-white/10">
-                          <div className="flex items-center gap-2 mb-2">
-                            <Sparkles className="w-5 h-5 text-purple-400" />
-                            <span className="text-gray-400 text-sm">Impact</span>
-                          </div>
-                          <div className="text-2xl font-bold text-purple-400 font-mono">
-                            {result.impact_score}%
-                          </div>
-                        </div>
-                        <div className="glass-card p-4 border-white/10">
-                          <div className="flex items-center gap-2 mb-2">
-                            <CheckCircle className="w-5 h-5 text-pink-400" />
-                            <span className="text-gray-400 text-sm">Completeness</span>
-                          </div>
-                          <div className="text-2xl font-bold text-pink-400 font-mono">
-                            {result.completeness_score}%
-                          </div>
-                        </div>
+                      <div className="text-2xl font-bold text-green-600">
+                        {getScore(result.ats_score)}%
                       </div>
                     </div>
-                  </motion.div>
-
-                  {/* Recommendations */}
-                  <motion.div
-                    initial={{ opacity: 0, y: 30 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.3 }}
-                    className="mt-8 glass-card p-8 border-purple-500/30"
-                  >
-                    <h3 className="text-xl font-bold mb-6 text-purple-400">
-                      ✨ Recommendations
-                    </h3>
-                    <ul className="space-y-3">
-                      {result.summary ? (
-                        <li className="text-gray-300 leading-relaxed">{result.summary}</li>
-                      ) : (
-                        <>
-                          <li className="flex items-start gap-3 text-gray-300">
-                            <span className="text-cyan-400 mt-1">•</span>
-                            Add quantifiable achievements to demonstrate impact
-                          </li>
-                          <li className="flex items-start gap-3 text-gray-300">
-                            <span className="text-cyan-400 mt-1">•</span>
-                            Include relevant keywords from job descriptions
-                          </li>
-                          <li className="flex items-start gap-3 text-gray-300">
-                            <span className="text-cyan-400 mt-1">•</span>
-                            Structure experience in reverse-chronological order
-                          </li>
-                        </>
-                      )}
-                    </ul>
-                  </motion.div>
+                    <div className="bg-slate-50 rounded-xl p-4 border border-slate-200">
+                      <div className="flex items-center gap-2 mb-2">
+                        <Target className="w-4 h-4 text-primary" />
+                        <span className="text-sm text-slate-600">Readability</span>
+                      </div>
+                      <div className="text-2xl font-bold text-primary">
+                        {getScore(result.readability_score)}%
+                      </div>
+                    </div>
+                    <div className="bg-slate-50 rounded-xl p-4 border border-slate-200">
+                      <div className="flex items-center gap-2 mb-2">
+                        <BarChart3 className="w-4 h-4 text-secondary" />
+                        <span className="text-sm text-slate-600">Impact</span>
+                      </div>
+                      <div className="text-2xl font-bold text-secondary">
+                        {getScore(result.impact_score)}%
+                      </div>
+                    </div>
+                    <div className="bg-slate-50 rounded-xl p-4 border border-slate-200">
+                      <div className="flex items-center gap-2 mb-2">
+                        <CheckCircle className="w-4 h-4 text-orange-500" />
+                        <span className="text-sm text-slate-600">Completeness</span>
+                      </div>
+                      <div className="text-2xl font-bold text-orange-500">
+                        {getScore(result.completeness_score)}%
+                      </div>
+                    </div>
+                  </div>
                 </div>
 
-                {/* 3D Skill Globe */}
-                <div className="lg:sticky lg:top-32 h-[500px]">
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: 0.2 }}
-                    className="glass-card h-full border-purple-500/30 relative overflow-hidden"
-                  >
-                    <div className="absolute top-6 left-6 z-10">
-                      <h3 className="text-xl font-bold text-purple-400">
-                        Skill Universe
-                      </h3>
-                      <p className="text-gray-400 text-sm">
-                        Click nodes to explore • Drag to rotate
-                      </p>
-                    </div>
-
-                    {selectedSkill && (
-                      <motion.div
-                        initial={{ opacity: 0, y: -20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        className="absolute top-6 right-6 z-10 glass-card p-4 border-cyan-500/50"
-                      >
-                        <h4 className="text-cyan-400 font-semibold mb-1">
-                          {selectedSkill.name}
-                        </h4>
-                        <div className="text-2xl font-bold text-white">
-                          {selectedSkill.level}%
-                        </div>
-                        <div className="text-gray-400 text-xs mt-1">
-                          {selectedSkill.category}
-                        </div>
-                      </motion.div>
+                {/* 2D Skill Visualization */}
+                <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
+                  <h3 className="text-lg font-bold text-slate-900 mb-4">
+                    Skill Distribution
+                  </h3>
+                  <div className="h-[300px] flex items-center justify-center">
+                    {flattenedSkills.length > 0 ? (
+                      <SkillGlobe
+                        skills={flattenedSkills}
+                        size={3}
+                        onSkillClick={(name, level) => {
+                          const category = Object.entries(result.extracted_skills).find(([, skills]: [string, string[]]) =>
+                            skills.includes(name)
+                          )?.[0] || 'Other';
+                          setSelectedSkill({ name, level, category });
+                        }}
+                      />
+                    ) : (
+                      <p className="text-slate-500">No skills detected</p>
                     )}
+                  </div>
 
-                    <SkillGlobe
-                      skills={[
-                        { category: 'Frontend', items: result.extracted_skills.technical.map(n => ({ name: n, level: 85 })) },
-                        { category: 'Soft Skills', items: result.extracted_skills.soft.map(n => ({ name: n, level: 75 })) },
-                        { category: 'Business', items: result.extracted_skills.business.map(n => ({ name: n, level: 70 })) },
-                        { category: 'Languages', items: result.extracted_skills.languages.map(n => ({ name: n, level: 80 })) },
-                        { category: 'Tools', items: result.extracted_skills.tools.map(n => ({ name: n, level: 85 })) },
-                      ]}
-                      size={4}
-                      onSkillClick={(name, level) => {
-                        const category = Object.entries(result.extracted_skills).find(([, skills]) => skills.includes(name))?.[0] || 'Other';
-                        setSelectedSkill({ name, level, category });
-                      }}
-                    />
-                  </motion.div>
+                  {selectedSkill && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="mt-4 p-4 bg-primary/5 rounded-xl border border-primary/20"
+                    >
+                      <h4 className="font-semibold text-primary">{selectedSkill.name}</h4>
+                      <p className="text-sm text-slate-600">
+                        Level: {selectedSkill.level}% • {selectedSkill.category}
+                      </p>
+                    </motion.div>
+                  )}
                 </div>
               </section>
 
-              {/* Skills Breakdown Section */}
-              <section className="grid lg:grid-cols-2 gap-8">
-                {Object.entries(result.extracted_skills).map(([category, skills], index) => (
-                  <motion.div
-                    key={category}
-                    initial={{ opacity: 0, y: 50 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.4 + index * 0.1 }}
-                    className="glass-card p-8 border-white/10"
-                  >
-                    <h3 className="text-2xl font-bold mb-6 capitalize text-cyan-400">
-                      {category} Skills
+              {/* Skills Breakdown */}
+              <section className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {Object.entries(result.extracted_skills || {}).map(([category, skills]: [string, string[]]) => (
+                  <div key={category} className="bg-white rounded-xl p-6 shadow-sm border border-slate-200">
+                    <h3 className="text-lg font-bold capitalize text-slate-900 mb-4">
+                      {category}
                     </h3>
-                    <div className="flex flex-wrap gap-3">
-                      {skills.length === 0 ? (
-                        <p className="text-gray-500 italic">No {category} skills detected</p>
-                      ) : (
-                        skills.map((skill) => (
+                    <div className="flex flex-wrap gap-2">
+                      {skills && skills.length > 0 ? (
+                        skills.map((skill: string) => (
                           <span
                             key={skill}
-                            className="px-4 py-2 rounded-xl bg-gradient-to-r from-cyan-900/50 to-purple-900/50 border border-cyan-500/30 text-cyan-200 font-medium hover:border-cyan-400 transition-colors cursor-pointer"
+                            className="px-3 py-1.5 bg-primary/10 text-primary rounded-lg text-sm font-medium"
                           >
                             {skill}
                           </span>
                         ))
+                      ) : (
+                        <p className="text-slate-500 text-sm italic">No {category} skills detected</p>
                       )}
                     </div>
-                  </motion.div>
+                  </div>
                 ))}
               </section>
 
-              {/* Personal Info Section */}
-              {(result.personal_info.name || result.personal_info.email || result.personal_info.linkedin) && (
-                <section className="glass-card p-8 border-white/10">
-                  <h3 className="text-2xl font-bold mb-6 text-cyan-400">
-                    Extracted Information
-                  </h3>
+              {/* Extracted Info */}
+              {(result.personal_info?.name || result.personal_info?.email || result.personal_info?.linkedin) && (
+                <section className="bg-white rounded-2xl p-8 shadow-sm border border-slate-200">
+                  <h3 className="text-xl font-bold text-slate-900 mb-6">Extracted Information</h3>
                   <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
-                    {result.personal_info.name && (
+                    {result.personal_info?.name && (
                       <div>
-                        <p className="text-gray-400 text-sm mb-1">Name</p>
-                        <p className="text-white font-medium">{result.personal_info.name}</p>
+                        <p className="text-sm text-slate-500 mb-1">Name</p>
+                        <p className="font-medium text-slate-900">{result.personal_info.name}</p>
                       </div>
                     )}
-                    {result.personal_info.email && (
+                    {result.personal_info?.email && (
                       <div>
-                        <p className="text-gray-400 text-sm mb-1">Email</p>
-                        <p className="text-white font-medium">{result.personal_info.email}</p>
+                        <p className="text-sm text-slate-500 mb-1">Email</p>
+                        <p className="font-medium text-slate-900">{result.personal_info.email}</p>
                       </div>
                     )}
-                    {result.personal_info.phone && (
+                    {result.personal_info?.phone && (
                       <div>
-                        <p className="text-gray-400 text-sm mb-1">Phone</p>
-                        <p className="text-white font-medium">{result.personal_info.phone}</p>
+                        <p className="text-sm text-slate-500 mb-1">Phone</p>
+                        <p className="font-medium text-slate-900">{result.personal_info.phone}</p>
                       </div>
                     )}
-                    {result.personal_info.linkedin && (
+                    {result.personal_info?.linkedin && (
                       <div>
-                        <p className="text-gray-400 text-sm mb-1">LinkedIn</p>
-                        <p className="text-white font-medium">{result.personal_info.linkedin}</p>
+                        <p className="text-sm text-slate-500 mb-1">LinkedIn</p>
+                        <p className="font-medium text-primary">{result.personal_info.linkedin}</p>
                       </div>
                     )}
                   </div>
                 </section>
               )}
 
+              {/* Recommendations */}
+              <section className="bg-white rounded-2xl p-8 shadow-sm border border-slate-200">
+                <h3 className="text-xl font-bold text-slate-900 mb-4">Recommendations</h3>
+                {result.summary ? (
+                  <p className="text-slate-700 leading-relaxed">{result.summary}</p>
+                ) : (
+                  <ul className="space-y-3 text-slate-700">
+                    <li className="flex items-start gap-3">
+                      <CheckCircle className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
+                      <span>Add quantifiable achievements to demonstrate impact</span>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <CheckCircle className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
+                      <span>Include relevant keywords from job descriptions</span>
+                    </li>
+                    <li className="flex items-start gap-3">
+                      <CheckCircle className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" />
+                      <span>Structure experience in reverse-chronological order</span>
+                    </li>
+                  </ul>
+                )}
+              </section>
+
               {/* Action Buttons */}
-              <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.6 }}
-                className="flex flex-col sm:flex-row gap-6 justify-center py-8"
-              >
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <button
-                  onClick={() => {
-                    /* TODO: Navigate to job matching */
-                  }}
-                  className="px-10 py-4 bg-gradient-to-r from-cyan-500 to-purple-600 rounded-2xl font-semibold text-white flex items-center justify-center gap-3 hover:shadow-lg hover:shadow-cyan-500/30 transition-all transform hover:scale-105"
+                  onClick={handleMatchJobs}
+                  className="px-8 py-4 bg-primary text-white rounded-xl font-semibold flex items-center justify-center gap-3 hover:bg-primary/90 transition-colors shadow-sm"
                 >
                   <Target className="w-5 h-5" />
                   Match with Jobs
                 </button>
                 <button
-                  onClick={() => {
-                    /* TODO: Download report */
-                  }}
-                  className="px-10 py-4 bg-white/10 border border-white/20 rounded-2xl font-semibold text-white hover:bg-white/20 transition-all flex items-center justify-center gap-3"
+                  onClick={handleExport}
+                  className="px-8 py-4 bg-white border border-slate-300 text-slate-700 rounded-xl font-semibold flex items-center justify-center gap-3 hover:bg-slate-50 transition-colors"
                 >
-                  <FileText className="w-5 h-5" />
+                  <FileDown className="w-5 h-5" />
                   Export Report
                 </button>
                 <button
                   onClick={handleReset}
-                  className="px-10 py-4 bg-white/5 border border-white/10 rounded-2xl font-semibold text-gray-300 hover:bg-white/10 transition-all"
+                  className="px-8 py-4 bg-slate-100 text-slate-700 rounded-xl font-semibold flex items-center justify-center gap-3 hover:bg-slate-200 transition-colors"
                 >
+                  <RefreshCw className="w-5 h-5" />
                   Analyze Another CV
                 </button>
-              </motion.div>
+              </div>
             </motion.div>
           )}
         </AnimatePresence>

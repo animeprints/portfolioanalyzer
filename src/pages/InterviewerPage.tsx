@@ -1,8 +1,7 @@
-// @ts-nocheck
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Plus, Search, Users, Briefcase, FileText, Eye, Calendar, CheckCircle, XCircle, Clock, Filter } from 'lucide-react';
-import { jobsAPI, candidatesAPI } from '../services';
+import { jobsAPI, candidatesAPI, AnalysisResult } from '../services';
 
 interface Job {
   id: string;
@@ -39,6 +38,13 @@ export default function InterviewerPage() {
   });
   const [newSkill, setNewSkill] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
+
+  const addSkill = () => {
+    if (newSkill.trim()) {
+      setNewJob({ ...newJob, skills: [...newJob.skills, newSkill.trim()] });
+      setNewSkill('');
+    }
+  };
 
   useEffect(() => {
     fetchJobs();
@@ -419,7 +425,7 @@ export default function InterviewerPage() {
                         {/* Top skills */}
                         {candidate.analysis && (
                           <div className="mt-4 flex flex-wrap gap-2">
-                            {candidate.analysis.extracted_skills.technical.slice(0, 5).map((skill) => (
+                            {candidate.analysis.extracted_skills.technical.slice(0, 5).map((skill: string) => (
                               <span
                                 key={skill}
                                 className="px-3 py-1 rounded-full text-xs bg-cyan-900/30 border border-cyan-500/30 text-cyan-300"

@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { useRef, useMemo } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { MeshDistortMaterial, Float, Sphere, Box, Torus } from '@react-three/drei';

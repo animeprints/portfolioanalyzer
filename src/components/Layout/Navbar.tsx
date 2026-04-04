@@ -20,27 +20,23 @@ export default function Navbar() {
 
   const protectedLinks = [
     { name: 'Dashboard', href: '/dashboard', icon: BarChart3 },
-    { name: 'Analyze CV', href: '/analyze', icon: Upload },
+    { name: 'Analyze', href: '/analyze', icon: Upload },
     { name: 'Job Match', href: '/jobs', icon: Target },
     { name: 'Interview', href: '/interview', icon: MessageSquare },
     { name: 'LinkedIn', href: '/linkedin', icon: LinkedIn },
   ];
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-dark-950/80 backdrop-blur-xl border-b border-white/10">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-slate-200 shadow-sm">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link to={isAuthenticated ? '/dashboard' : '/'} className="flex items-center gap-2 group">
-            <motion.div
-              whileHover={{ rotate: 360 }}
-              transition={{ duration: 0.6 }}
-              className="w-8 h-8 rounded-lg bg-gradient-to-br from-cyan-500 to-purple-600 flex items-center justify-center"
-            >
+            <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
               <span className="text-white font-bold text-sm">C</span>
-            </motion.div>
-            <span className="text-xl font-semibold text-white">
-              card<span className="gradient-text">zey</span>
+            </div>
+            <span className="text-xl font-bold text-slate-900">
+              Card<span className="text-primary">zey</span>
             </span>
           </Link>
 
@@ -50,30 +46,14 @@ export default function Navbar() {
               <Link
                 to="/"
                 className={`relative text-sm font-medium transition-colors ${
-                  isActive('/') ? 'text-white' : 'text-gray-400 hover:text-white'
+                  isActive('/') ? 'text-primary' : 'text-slate-600 hover:text-primary'
                 }`}
               >
                 Home
                 {isActive('/') && (
                   <motion.div
                     layoutId="navbar-indicator"
-                    className="absolute -bottom-1 left-0 right-0 h-0.5 bg-gradient-to-r from-cyan-400 to-purple-400"
-                    initial={false}
-                    transition={{ type: 'spring', stiffness: 500, damping: 30 }}
-                  />
-                )}
-              </Link>
-              <Link
-                to="/work"
-                className={`relative text-sm font-medium transition-colors ${
-                  isActive('/work') ? 'text-white' : 'text-gray-400 hover:text-white'
-                }`}
-              >
-                Work
-                {isActive('/work') && (
-                  <motion.div
-                    layoutId="navbar-indicator"
-                    className="absolute -bottom-1 left-0 right-0 h-0.5 bg-gradient-to-r from-cyan-400 to-purple-400"
+                    className="absolute -bottom-1 left-0 right-0 h-0.5 bg-primary"
                     initial={false}
                     transition={{ type: 'spring', stiffness: 500, damping: 30 }}
                   />
@@ -82,14 +62,14 @@ export default function Navbar() {
               <Link
                 to="/about"
                 className={`relative text-sm font-medium transition-colors ${
-                  isActive('/about') ? 'text-white' : 'text-gray-400 hover:text-white'
+                  isActive('/about') ? 'text-primary' : 'text-slate-600 hover:text-primary'
                 }`}
               >
                 About
                 {isActive('/about') && (
                   <motion.div
                     layoutId="navbar-indicator"
-                    className="absolute -bottom-1 left-0 right-0 h-0.5 bg-gradient-to-r from-cyan-400 to-purple-400"
+                    className="absolute -bottom-1 left-0 right-0 h-0.5 bg-primary"
                     initial={false}
                     transition={{ type: 'spring', stiffness: 500, damping: 30 }}
                   />
@@ -98,14 +78,14 @@ export default function Navbar() {
               <Link
                 to="/contact"
                 className={`relative text-sm font-medium transition-colors ${
-                  isActive('/contact') ? 'text-white' : 'text-gray-400 hover:text-white'
+                  isActive('/contact') ? 'text-primary' : 'text-slate-600 hover:text-primary'
                 }`}
               >
                 Contact
                 {isActive('/contact') && (
                   <motion.div
                     layoutId="navbar-indicator"
-                    className="absolute -bottom-1 left-0 right-0 h-0.5 bg-gradient-to-r from-cyan-400 to-purple-400"
+                    className="absolute -bottom-1 left-0 right-0 h-0.5 bg-primary"
                     initial={false}
                     transition={{ type: 'spring', stiffness: 500, damping: 30 }}
                   />
@@ -123,7 +103,7 @@ export default function Navbar() {
                       key={link.href}
                       to={link.href}
                       className={`relative flex items-center gap-2 text-sm font-medium transition-colors ${
-                        isActive(link.href) ? 'text-white' : 'text-gray-400 hover:text-white'
+                        isActive(link.href) ? 'text-primary' : 'text-slate-600 hover:text-primary'
                       }`}
                       title={link.name}
                     >
@@ -132,7 +112,7 @@ export default function Navbar() {
                       {isActive(link.href) && (
                         <motion.div
                           layoutId="navbar-indicator"
-                          className="absolute -bottom-1 left-0 right-0 h-0.5 bg-gradient-to-r from-cyan-400 to-purple-400"
+                          className="absolute -bottom-1 left-0 right-0 h-0.5 bg-primary"
                           initial={false}
                           transition={{ type: 'spring', stiffness: 500, damping: 30 }}
                         />
@@ -149,28 +129,28 @@ export default function Navbar() {
             {isAuthenticated ? (
               <div className="flex items-center gap-4">
                 <div className="text-right mr-2">
-                  <p className="text-sm font-medium text-white">{user?.name}</p>
-                  <p className="text-xs text-gray-400 capitalize">{user?.role}</p>
+                  <p className="text-sm font-medium text-slate-900">{user?.name}</p>
+                  <p className="text-xs text-slate-500 capitalize">{user?.role}</p>
                 </div>
                 <button
                   onClick={handleLogout}
-                  className="p-2 rounded-lg bg-white/10 hover:bg-red-500/20 transition-colors group"
+                  className="p-2 rounded-lg text-slate-500 hover:text-red-600 hover:bg-red-50 transition-colors"
                   title="Sign out"
                 >
-                  <LogOut className="w-5 h-5 text-gray-400 group-hover:text-red-400" />
+                  <LogOut className="w-5 h-5" />
                 </button>
               </div>
             ) : (
               <div className="flex items-center gap-3">
                 <Link
                   to="/login"
-                  className="px-4 py-2 text-sm font-medium text-gray-300 hover:text-white transition-colors"
+                  className="px-4 py-2 text-sm font-medium text-slate-600 hover:text-primary transition-colors"
                 >
                   Sign In
                 </Link>
                 <Link
                   to="/register"
-                  className="px-6 py-2 rounded-lg bg-gradient-to-r from-cyan-500 to-purple-600 text-white text-sm font-medium hover:shadow-lg hover:shadow-cyan-500/30 transition-all"
+                  className="px-6 py-2 rounded-lg bg-primary text-white text-sm font-medium hover:bg-primary/90 transition-colors"
                 >
                   Get Started
                 </Link>
@@ -180,7 +160,7 @@ export default function Navbar() {
 
           {/* Mobile menu button */}
           <button
-            className="md:hidden p-2 text-gray-300 hover:text-white transition-colors"
+            className="md:hidden p-2 text-slate-600 hover:text-primary transition-colors"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             aria-label="Toggle menu"
           >
@@ -195,7 +175,7 @@ export default function Navbar() {
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0 }}
-              className="md:hidden py-4 border-t border-white/10"
+              className="md:hidden py-4 border-t border-slate-200"
             >
               <div className="flex flex-col gap-2">
                 {/* Public links */}
@@ -203,30 +183,19 @@ export default function Navbar() {
                   to="/"
                   className={`px-4 py-3 rounded-lg transition-colors flex items-center gap-3 ${
                     isActive('/')
-                      ? 'bg-white/10 text-white'
-                      : 'text-gray-300 hover:bg-white/5 hover:text-white'
+                      ? 'bg-primary/10 text-primary'
+                      : 'text-slate-600 hover:bg-slate-50 hover:text-primary'
                   }`}
                   onClick={() => setMobileMenuOpen(false)}
                 >
                   Home
                 </Link>
                 <Link
-                  to="/work"
-                  className={`px-4 py-3 rounded-lg transition-colors flex items-center gap-3 ${
-                    isActive('/work')
-                      ? 'bg-white/10 text-white'
-                      : 'text-gray-300 hover:bg-white/5 hover:text-white'
-                  }`}
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  Work
-                </Link>
-                <Link
                   to="/about"
                   className={`px-4 py-3 rounded-lg transition-colors flex items-center gap-3 ${
                     isActive('/about')
-                      ? 'bg-white/10 text-white'
-                      : 'text-gray-300 hover:bg-white/5 hover:text-white'
+                      ? 'bg-primary/10 text-primary'
+                      : 'text-slate-600 hover:bg-slate-50 hover:text-primary'
                   }`}
                   onClick={() => setMobileMenuOpen(false)}
                 >
@@ -236,8 +205,8 @@ export default function Navbar() {
                   to="/contact"
                   className={`px-4 py-3 rounded-lg transition-colors flex items-center gap-3 ${
                     isActive('/contact')
-                      ? 'bg-white/10 text-white'
-                      : 'text-gray-300 hover:bg-white/5 hover:text-white'
+                      ? 'bg-primary/10 text-primary'
+                      : 'text-slate-600 hover:bg-slate-50 hover:text-primary'
                   }`}
                   onClick={() => setMobileMenuOpen(false)}
                 >
@@ -245,14 +214,14 @@ export default function Navbar() {
                 </Link>
 
                 {/* Divider */}
-                <div className="border-t border-white/10 my-2" />
+                <div className="border-t border-slate-200 my-2" />
 
                 {/* Auth or protected pages */}
                 {isAuthenticated ? (
                   <>
                     <div className="px-4 py-3">
-                      <p className="text-sm font-medium text-white mb-1">{user?.name}</p>
-                      <p className="text-xs text-gray-400 capitalize">{user?.role}</p>
+                      <p className="text-sm font-medium text-slate-900 mb-1">{user?.name}</p>
+                      <p className="text-xs text-slate-500 capitalize">{user?.role}</p>
                     </div>
                     {protectedLinks.map((link) => {
                       const Icon = link.icon;
@@ -262,8 +231,8 @@ export default function Navbar() {
                           to={link.href}
                           className={`px-4 py-3 rounded-lg transition-colors flex items-center gap-3 ${
                             isActive(link.href)
-                              ? 'bg-white/10 text-white'
-                              : 'text-gray-300 hover:bg-white/5 hover:text-white'
+                              ? 'bg-primary/10 text-primary'
+                              : 'text-slate-600 hover:bg-slate-50 hover:text-primary'
                           }`}
                           onClick={() => setMobileMenuOpen(false)}
                         >
@@ -274,7 +243,7 @@ export default function Navbar() {
                     })}
                     <button
                       onClick={handleLogout}
-                      className="mt-4 w-full px-4 py-3 rounded-lg bg-red-500/10 text-red-400 hover:bg-red-500/20 transition-colors flex items-center gap-3"
+                      className="mt-4 w-full px-4 py-3 rounded-lg bg-red-50 text-red-600 hover:bg-red-100 transition-colors flex items-center gap-3"
                     >
                       <LogOut className="w-5 h-5" />
                       Sign Out
@@ -284,14 +253,14 @@ export default function Navbar() {
                   <>
                     <Link
                       to="/login"
-                      className="px-4 py-3 rounded-lg text-gray-300 hover:bg-white/5 hover:text-white transition-colors"
+                      className="px-4 py-3 rounded-lg text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors"
                       onClick={() => setMobileMenuOpen(false)}
                     >
                       Sign In
                     </Link>
                     <Link
                       to="/register"
-                      className="px-4 py-3 rounded-lg bg-gradient-to-r from-cyan-500 to-purple-600 text-white text-center font-medium"
+                      className="px-4 py-3 rounded-lg bg-primary text-white text-center font-medium hover:bg-primary/90 transition-colors"
                       onClick={() => setMobileMenuOpen(false)}
                     >
                       Create Account

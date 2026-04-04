@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { useState, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { AnimatedSection } from '../components/Animations/AnimatedSection';
@@ -105,7 +104,7 @@ export default function WorkPage() {
                             whileHover={{ y: 0 }}
                             className="p-3 rounded-full bg-white/10 hover:bg-white/20 transition-colors"
                           >
-                            <GitHub className="w-6 h-6 text-white" />
+                            <Code2 className="w-6 h-6 text-white" />
                           </motion.a>
                         )}
                         {project.live && (

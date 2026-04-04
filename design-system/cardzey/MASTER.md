@@ -7,8 +7,8 @@
 ---
 
 **Project:** Cardzey
-**Generated:** 2026-04-03 19:41:15
-**Category:** Cybersecurity Platform
+**Generated:** 2026-04-04 08:06:01
+**Category:** Freelancer Platform
 
 ---
 
@@ -24,18 +24,18 @@
 | Background | `#F8FAFC` | `--color-background` |
 | Text | `#1E293B` | `--color-text` |
 
-**Color Notes:** Blue data + amber highlights [Accent adjusted from #F59E0B for WCAG 3:1]
+**Color Notes:** Navy professional + paid green
 
 ### Typography
 
-- **Heading Font:** Roboto
-- **Body Font:** Roboto
-- **Mood:** material design 3, md3, android, google, tonal, friendly, rounded, accessible, adaptive
-- **Google Fonts:** [Roboto + Roboto](https://fonts.google.com/share?selection.family=Roboto:ital,wght@0,300;0,400;0,500;0,700;1,400)
+- **Heading Font:** Inter
+- **Body Font:** Inter
+- **Mood:** flat, clean, system, bold, geometric, cross-platform, icon, poster, minimal, functional, responsive
+- **Google Fonts:** [Inter + Inter](https://fonts.google.com/share?selection.family=Inter:wght@400;600;700;800)
 
 **CSS Import:**
 ```css
-@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
 ```
 
 ### Spacing Variables
@@ -153,13 +153,13 @@
 
 ## Style Guidelines
 
-**Style:** Cyberpunk UI
+**Style:** Flat Design Mobile (Touch-First)
 
-**Keywords:** Neon, dark mode, terminal, HUD, sci-fi, glitch, dystopian, futuristic, matrix, tech noir
+**Keywords:** flat, 2D, no shadow, color blocking, geometric, bold, poster, icon, touch-first, minimal, clean, tailored, cross-platform
 
-**Best For:** Gaming platforms, tech products, crypto apps, sci-fi applications, developer tools, entertainment
+**Best For:** Cross-platform apps (iOS+Android parity), information-dense dashboards, system UI, brand illustration, onboarding flows, marketing pages, icon design
 
-**Key Effects:** Neon glow (text-shadow), glitch animations (skew/offset), scanlines (::before overlay), terminal fonts
+**Key Effects:** Immediate press feedback (scale 0.97, no delay), color section blocking (full-width contrasting View), zero elevation/shadow, solid icon containers (colored squares/circles), geometric low-opacity shape overlays, bottom tabs solid fill (no floating)
 
 ### Page Pattern
 
@@ -173,8 +173,8 @@
 
 ## Anti-Patterns (Do NOT Use)
 
-- ❌ Light mode
-- ❌ Poor data viz
+- ❌ Poor profiles
+- ❌ No reviews
 
 ### Additional Forbidden Patterns
 

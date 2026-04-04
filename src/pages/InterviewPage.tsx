@@ -1,4 +1,3 @@
-// @ts-nocheck
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Clock, Play, CheckCircle, ChevronRight, Award, Calendar, Timer, MessageSquare, Sparkles } from 'lucide-react';
@@ -77,7 +76,7 @@ export default function InterviewPage() {
   const [isPracticing, setIsPracticing] = useState(false);
   const [timeElapsed, setTimeElapsed] = useState(0);
   const [practices, setPractices] = useState<any[]>([]);
-  const timerRef = useRef<NodeJS.Timeout | null>(null);
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useEffect(() => {
     if (isPracticing) {

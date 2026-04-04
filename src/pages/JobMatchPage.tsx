@@ -1,7 +1,8 @@
-// @ts-nocheck
-import { useState } from 'react';
-import { motion } from 'framer-motion';
+import { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Target, Upload, Plus, X, TrendingUp, AlertCircle, CheckCircle } from 'lucide-react';
+import { analysisAPI, AnalysisResult } from '../services';
+import { useAuth } from '../contexts/AuthContext';
 
 interface JobDescription {
   title: string;
@@ -10,6 +11,7 @@ interface JobDescription {
 }
 
 export default function JobMatchPage() {
+  const { user } = useAuth();
   const [job, setJob] = useState<JobDescription>({
     title: '',
     requirements: [],
@@ -24,6 +26,27 @@ export default function JobMatchPage() {
     recommendations: string[];
   } | null>(null);
   const [isMatching, setIsMatching] = useState(false);
+  const [analyses, setAnalyses] = useState<AnalysisResult[]>([]);
+  const [selectedAnalysisId, setSelectedAnalysisId] = useState<string>('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    fetchAnalyses();
+  }, []);
+
+  const fetchAnalyses = async () => {
+    try {
+      const response = await analysisAPI.list();
+      setAnalyses(response.data.analyses);
+      if (response.data.analyses.length > 0) {
+        setSelectedAnalysisId(response.data.analyses[0].id);
+      }
+    } catch (err) {
+      console.error('Failed to fetch analyses:', err);
+      setError('Could not load your CV analyses. Please try again.');
+    }
+  };
 
   const addRequirement = () => {
     if (newRequirement.trim()) {
@@ -48,22 +71,23 @@ export default function JobMatchPage() {
   };
 
   const handleMatch = async () => {
-    // Simulate matching (in a real app, you'd fetch analysis from backend)
-    setIsMatching(true);
-    await new Promise((resolve) => setTimeout(resolve, 2000));
+    if (!selectedAnalysisId || job.skills.length === 0) {
+      setError('Please select an analysis and add at least one skill.');
+      return;
+    }
 
-    // Mock result - replace with actual API call
-    setMatchResult({
-      match_percentage: 78,
-      matched_skills: job.skills.slice(0, Math.floor(job.skills.length * 0.78)),
-      missing_skills: job.skills.slice(Math.floor(job.skills.length * 0.78)),
-      recommendations: [
-        'Add Python to your skills list to improve match rate by 12%',
-        'Include Docker experience if you have it',
-        'Highlight any React project work',
-      ],
-    });
-    setIsMatching(false);
+    setIsMatching(true);
+    setError(null);
+    setMatchResult(null);
+
+    try {
+      const response = await analysisAPI.matchJob(selectedAnalysisId, job);
+      setMatchResult(response.data);
+    } catch (err: any) {
+      setError(err.response?.data?.message || 'Failed to match job. Please try again.');
+    } finally {
+      setIsMatching(false);
+    }
   };
 
   return (
@@ -106,6 +130,33 @@ export default function JobMatchPage() {
               </h2>
 
               <div className="space-y-6">
+                {/* CV Analysis Selector */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-2">
+                    Your CV Analysis
+                  </label>
+                  <select
+                    value={selectedAnalysisId}
+                    onChange={(e) => setSelectedAnalysisId(e.target.value)}
+                    className="w-full px-6 py-4 rounded-xl bg-white/5 border border-white/10 focus:border-cyan-400 focus:ring-2 focus:ring-cyan-400/50 transition-all outline-none text-white"
+                  >
+                    {analyses.length === 0 ? (
+                      <option value="">No analyses found. Upload a CV first.</option>
+                    ) : (
+                      analyses.map((analysis) => (
+                        <option key={analysis.id} value={analysis.id}>
+                          {analysis.created_at.substring(0, 10)} - {analysis.overall_score}%
+                        </option>
+                      ))
+                    )}
+                  </select>
+                  {analyses.length === 0 && (
+                    <p className="text-amber-400 text-sm mt-2">
+                      You need to upload and analyze a CV first. Go to Analyze page.
+                    </p>
+                  )}
+                </div>
+
                 {/* Title */}
                 <div>
                   <label className="block text-sm font-medium text-gray-300 mb-2">
@@ -194,8 +245,19 @@ export default function JobMatchPage() {
                     ))}
                   </div>
                 </div>
+                {error && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="p-4 rounded-xl bg-red-900/30 border border-red-500/50 text-red-300 text-sm mb-6"
+                  >
+                    {error}
+                  </motion.div>
+                )}
+
 
                 <button
+
                   onClick={handleMatch}
                   disabled={!job.title || job.skills.length === 0 || isMatching}
                   className={`w-full py-5 rounded-xl font-semibold text-white transition-all duration-300 flex items-center justify-center gap-3 ${

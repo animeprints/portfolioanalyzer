@@ -1,6 +1,5 @@
-// @ts-nocheck
 import { useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Link2 as LinkedinIcon, ArrowRight, Sparkles, CheckCircle, AlertCircle, TrendingUp, Users, Eye, Target } from 'lucide-react';
 
 interface LinkedInAnalysis {
