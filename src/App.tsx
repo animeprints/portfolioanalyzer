@@ -12,7 +12,6 @@ import { GrainOverlay, GradientBackground } from './components/Effects';
 
 // Pages
 import HomePage from './pages/HomePage';
-import WorkPage from './pages/WorkPage';
 import AboutPage from './pages/AboutPage';
 import ContactPage from './pages/ContactPage';
 import LoginPage from './pages/LoginPage';
@@ -105,16 +104,6 @@ function AppRoutes() {
             <AppLayout withNavbar={true} withParticle={true}>
               <PageTransition>
                 <AboutPage />
-              </PageTransition>
-            </AppLayout>
-          }
-        />
-        <Route
-          path="/work"
-          element={
-            <AppLayout withNavbar={true} withParticle={true}>
-              <PageTransition>
-                <WorkPage />
               </PageTransition>
             </AppLayout>
           }
@@ -245,16 +234,6 @@ function App() {
                 <AppLayout withNavbar={true} withParticle={true}>
                   <PageTransition>
                     <AboutPage />
-                  </PageTransition>
-                </AppLayout>
-              }
-            />
-            <Route
-              path="/work"
-              element={
-                <AppLayout withNavbar={true} withParticle={true}>
-                  <PageTransition>
-                    <WorkPage />
                   </PageTransition>
                 </AppLayout>
               }

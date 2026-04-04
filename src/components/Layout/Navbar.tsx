@@ -101,22 +101,6 @@ export default function Navbar() {
                 )}
               </Link>
               <Link
-                to="/work"
-                className={`relative text-sm font-medium transition-all duration-300 ${
-                  isActive('/work') ? 'text-gold-500' : 'text-silver-400 hover:text-white'
-                }`}
-              >
-                Work
-                {isActive('/work') && (
-                  <motion.div
-                    layoutId="navbar-indicator"
-                    className="absolute -bottom-1 left-0 right-0 h-0.5 bg-gradient-to-r from-gold-500 to-gold-400"
-                    initial={false}
-                    transition={{ type: 'spring', stiffness: 500, damping: 30 }}
-                  />
-                )}
-              </Link>
-              <Link
                 to="/contact"
                 className={`relative text-sm font-medium transition-all duration-300 ${
                   isActive('/contact') ? 'text-gold-500' : 'text-silver-400 hover:text-white'
@@ -253,17 +237,6 @@ export default function Navbar() {
                 onClick={() => setMobileMenuOpen(false)}
               >
                 About
-              </Link>
-              <Link
-                to="/work"
-                className={`px-4 py-3 rounded-xl transition-all flex items-center gap-3 ${
-                  isActive('/work')
-                    ? 'bg-gold-500/10 text-gold-500 border border-gold-500/20'
-                    : 'text-silver-300 hover:bg-white/5 hover:text-white'
-                }`}
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                Work
               </Link>
               <Link
                 to="/contact"
