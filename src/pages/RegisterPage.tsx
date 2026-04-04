@@ -39,7 +39,7 @@ export default function RegisterPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-slate-50 flex items-center justify-center px-4 pt-8">
+    <div className="min-h-screen bg-slate-900 flex items-center justify-center px-4 pt-8">
       <div className="w-full max-w-6xl mx-auto">
         <div className="grid lg:grid-cols-2 gap-12 items-center">
           {/* Left - Marketing */}
@@ -48,17 +48,17 @@ export default function RegisterPage() {
             animate={{ opacity: 1, x: 0 }}
             className="hidden lg:block"
           >
-            <h1 className="text-4xl font-bold text-slate-900 mb-6">
+            <h1 className="text-4xl font-bold text-slate-100 mb-6">
               Join Thousands Advancing Their Careers
             </h1>
-            <p className="text-xl text-slate-600 mb-8">
+            <p className="text-xl text-slate-400 mb-8">
               Create your account and get instant access to AI-powered CV analysis, job matching, and personalized recommendations.
             </p>
             <div className="grid grid-cols-2 gap-4">
               {features.map((feature) => (
                 <div key={feature} className="flex items-center gap-3">
                   <CheckCircle className="w-5 h-5 text-green-500 flex-shrink-0" />
-                  <span className="text-slate-700">{feature}</span>
+                  <span className="text-slate-300">{feature}</span>
                 </div>
               ))}
             </div>
@@ -69,15 +69,15 @@ export default function RegisterPage() {
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
           >
-            <div className="bg-white rounded-2xl p-8 shadow-sm border border-slate-200">
+            <div className="bg-slate-800 rounded-2xl p-8 shadow-sm border border-slate-700">
               <div className="text-center mb-8 lg:hidden">
-                <h1 className="text-2xl font-bold text-slate-900 mb-2">Create Account</h1>
-                <p className="text-slate-600">Start your career journey today</p>
+                <h1 className="text-2xl font-bold text-slate-100 mb-2">Create Account</h1>
+                <p className="text-slate-400">Start your career journey today</p>
               </div>
 
               <div className="space-y-6">
                 <div>
-                  <label htmlFor="name" className="block text-sm font-medium text-slate-700 mb-2">
+                  <label htmlFor="name" className="block text-sm font-medium text-slate-300 mb-2">
                     Full Name
                   </label>
                   <div className="relative">
@@ -88,14 +88,14 @@ export default function RegisterPage() {
                       value={name}
                       onChange={(e) => setName(e.target.value)}
                       required
-                      className="w-full pl-12 pr-4 py-3 border border-slate-300 rounded-xl focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-colors"
+                      className="w-full pl-12 pr-4 py-3 border border-slate-600 rounded-xl focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-colors bg-slate-900/50 text-slate-100 placeholder-slate-500"
                       placeholder="John Doe"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label htmlFor="email" className="block text-sm font-medium text-slate-700 mb-2">
+                  <label htmlFor="email" className="block text-sm font-medium text-slate-300 mb-2">
                     Email Address
                   </label>
                   <div className="relative">
@@ -107,14 +107,14 @@ export default function RegisterPage() {
                       onChange={(e) => setEmail(e.target.value)}
                       required
                       autoComplete="email"
-                      className="w-full pl-12 pr-4 py-3 border border-slate-300 rounded-xl focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-colors"
+                      className="w-full pl-12 pr-4 py-3 border border-slate-600 rounded-xl focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-colors bg-slate-900/50 text-slate-100 placeholder-slate-500"
                       placeholder="you@example.com"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label htmlFor="password" className="block text-sm font-medium text-slate-700 mb-2">
+                  <label htmlFor="password" className="block text-sm font-medium text-slate-300 mb-2">
                     Password
                   </label>
                   <div className="relative">
@@ -127,14 +127,14 @@ export default function RegisterPage() {
                       required
                       minLength={8}
                       autoComplete="new-password"
-                      className="w-full pl-12 pr-4 py-3 border border-slate-300 rounded-xl focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-colors"
+                      className="w-full pl-12 pr-4 py-3 border border-slate-600 rounded-xl focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-colors bg-slate-900/50 text-slate-100 placeholder-slate-500"
                       placeholder="At least 8 characters"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-2">
+                  <label className="block text-sm font-medium text-slate-300 mb-2">
                     I am a...
                   </label>
                   <div className="grid grid-cols-2 gap-4">
@@ -143,8 +143,8 @@ export default function RegisterPage() {
                       onClick={() => setRole('candidate')}
                       className={`p-4 rounded-xl border-2 transition-colors ${
                         role === 'candidate'
-                          ? 'border-primary bg-primary/5 text-primary font-semibold'
-                          : 'border-slate-200 text-slate-600 hover:border-slate-300'
+                          ? 'border-primary bg-primary/10 text-primary font-semibold'
+                          : 'border-slate-700 text-slate-400 hover:border-slate-600'
                       }`}
                     >
                       Job Seeker
@@ -154,8 +154,8 @@ export default function RegisterPage() {
                       onClick={() => setRole('interviewer')}
                       className={`p-4 rounded-xl border-2 transition-colors ${
                         role === 'interviewer'
-                          ? 'border-primary bg-primary/5 text-primary font-semibold'
-                          : 'border-slate-200 text-slate-600 hover:border-slate-300'
+                          ? 'border-primary bg-primary/10 text-primary font-semibold'
+                          : 'border-slate-700 text-slate-400 hover:border-slate-600'
                       }`}
                     >
                       Interviewer
@@ -167,7 +167,7 @@ export default function RegisterPage() {
                   <motion.div
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="p-4 bg-red-50 border border-red-200 rounded-xl text-red-700 text-sm"
+                    className="p-4 bg-red-900/30 border border-red-800 rounded-xl text-red-400 text-sm"
                   >
                     {error}
                   </motion.div>
@@ -189,7 +189,7 @@ export default function RegisterPage() {
                 </button>
               </div>
 
-              <p className="mt-6 text-center text-sm text-slate-600">
+              <p className="mt-6 text-center text-sm text-slate-400">
                 Already have an account?{' '}
                 <Link to="/login" className="text-primary font-semibold hover:underline">
                   Sign in

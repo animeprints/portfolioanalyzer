@@ -65,7 +65,7 @@ export default function HomePage() {
   ];
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-slate-900">
       {/* Hero Section */}
       <section className="pt-24 pb-20 px-4">
         <div className="max-w-6xl mx-auto text-center">
@@ -74,17 +74,17 @@ export default function HomePage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-semibold mb-6">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/20 text-primary text-sm font-semibold mb-6 border border-primary/30">
               <Zap className="w-4 h-4" />
               AI-Powered CV Analysis
             </div>
 
-            <h1 className="text-5xl md:text-6xl font-bold text-slate-900 mb-6 tracking-tight">
+            <h1 className="text-5xl md:text-6xl font-bold text-slate-100 mb-6 tracking-tight">
               Unlock Your CV's
               <span className="block text-primary">Full Potential</span>
             </h1>
 
-            <p className="text-xl text-slate-600 max-w-3xl mx-auto mb-10 leading-relaxed">
+            <p className="text-xl text-slate-400 max-w-3xl mx-auto mb-10 leading-relaxed">
               Get detailed insights, skill analysis, and personalized recommendations to make your resume stand out.
               Trusted by thousands of job seekers worldwide.
             </p>
@@ -99,7 +99,7 @@ export default function HomePage() {
               </Link>
               <Link
                 to="/about"
-                className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-slate-100 text-slate-700 rounded-xl font-semibold text-lg hover:bg-slate-200 transition-colors"
+                className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-slate-800 text-slate-100 border border-slate-700 rounded-xl font-semibold text-lg hover:bg-slate-700 transition-colors shadow-md"
               >
                 Learn More
               </Link>
@@ -109,7 +109,7 @@ export default function HomePage() {
       </section>
 
       {/* Stats Section */}
-      <section className="py-16 bg-slate-50 border-y border-slate-200">
+      <section className="py-16 bg-slate-800/50 border-y border-slate-700">
         <div className="max-w-6xl mx-auto px-4">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {stats.map((stat, index) => (
@@ -122,7 +122,7 @@ export default function HomePage() {
                 className="text-center"
               >
                 <div className="text-4xl font-bold text-primary mb-2">{stat.value}</div>
-                <div className="text-slate-600 font-medium">{stat.label}</div>
+                <div className="text-slate-400 font-medium">{stat.label}</div>
               </motion.div>
             ))}
           </div>
@@ -138,10 +138,10 @@ export default function HomePage() {
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <h2 className="text-4xl font-bold text-slate-900 mb-4">
+            <h2 className="text-4xl font-bold text-slate-100 mb-4">
               Everything You Need to Land Your Dream Job
             </h2>
-            <p className="text-xl text-slate-600 max-w-2xl mx-auto">
+            <p className="text-xl text-slate-400 max-w-2xl mx-auto">
               Comprehensive CV analysis powered by advanced AI to give you the competitive edge.
             </p>
           </motion.div>
@@ -154,13 +154,13 @@ export default function HomePage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.1 }}
-                className="bg-white p-8 rounded-2xl border border-slate-200 hover:border-primary/50 hover:shadow-lg transition-all group"
+                className="bg-slate-800 p-8 rounded-2xl border border-slate-700 hover:border-primary/50 hover:shadow-lg transition-all group"
               >
                 <div className="w-14 h-14 rounded-xl bg-primary/10 flex items-center justify-center mb-6 group-hover:bg-primary group-hover:text-white transition-colors">
                   <feature.icon className="w-7 h-7 text-primary group-hover:text-white" />
                 </div>
-                <h3 className="text-xl font-bold text-slate-900 mb-3">{feature.title}</h3>
-                <p className="text-slate-600 leading-relaxed">{feature.description}</p>
+                <h3 className="text-xl font-bold text-slate-100 mb-3">{feature.title}</h3>
+                <p className="text-slate-400 leading-relaxed">{feature.description}</p>
               </motion.div>
             ))}
           </div>
@@ -168,7 +168,7 @@ export default function HomePage() {
       </section>
 
       {/* How It Works */}
-      <section className="py-24 px-4 bg-slate-50">
+      <section className="py-24 px-4 bg-slate-800/30">
         <div className="max-w-6xl mx-auto">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -176,8 +176,8 @@ export default function HomePage() {
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <h2 className="text-4xl font-bold text-slate-900 mb-4">How It Works</h2>
-            <p className="text-xl text-slate-600">Get your CV analyzed in three simple steps</p>
+            <h2 className="text-4xl font-bold text-slate-100 mb-4">How It Works</h2>
+            <p className="text-xl text-slate-400">Get your CV analyzed in three simple steps</p>
           </motion.div>
 
           <div className="grid md:grid-cols-3 gap-12">
@@ -197,8 +197,8 @@ export default function HomePage() {
                 <div className="w-16 h-16 rounded-full bg-primary text-white text-2xl font-bold flex items-center justify-center mx-auto mb-6">
                   {item.step}
                 </div>
-                <h3 className="text-xl font-bold text-slate-900 mb-3">{item.title}</h3>
-                <p className="text-slate-600">{item.desc}</p>
+                <h3 className="text-xl font-bold text-slate-100 mb-3">{item.title}</h3>
+                <p className="text-slate-400">{item.desc}</p>
               </motion.div>
             ))}
           </div>
@@ -214,13 +214,13 @@ export default function HomePage() {
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <h2 className="text-4xl font-bold text-slate-900 mb-4">Loved by Job Seekers</h2>
+            <h2 className="text-4xl font-bold text-slate-100 mb-4">Loved by Job Seekers</h2>
             <div className="flex justify-center gap-1 mb-4">
               {[1, 2, 3, 4, 5].map((i) => (
                 <Star key={i} className="w-6 h-6 fill-amber-400 text-amber-400" />
               ))}
             </div>
-            <p className="text-xl text-slate-600">Join thousands who landed better jobs</p>
+            <p className="text-xl text-slate-400">Join thousands who landed better jobs</p>
           </motion.div>
 
           <div className="grid md:grid-cols-3 gap-8">
@@ -231,17 +231,17 @@ export default function HomePage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.1 }}
-                className="bg-white p-8 rounded-2xl border border-slate-200 shadow-sm"
+                className="bg-slate-800 p-8 rounded-2xl border border-slate-700 shadow-sm"
               >
                 <div className="flex gap-1 mb-4">
                   {Array.from({ length: testimonial.rating }).map((_, i) => (
                     <Star key={i} className="w-4 h-4 fill-amber-400 text-amber-400" />
                   ))}
                 </div>
-                <p className="text-slate-700 mb-6 leading-relaxed italic">"{testimonial.content}"</p>
+                <p className="text-slate-300 mb-6 leading-relaxed italic">"{testimonial.content}"</p>
                 <div>
-                  <p className="font-semibold text-slate-900">{testimonial.name}</p>
-                  <p className="text-sm text-slate-500">{testimonial.role}</p>
+                  <p className="font-semibold text-slate-100">{testimonial.name}</p>
+                  <p className="text-sm text-slate-400">{testimonial.role}</p>
                 </div>
               </motion.div>
             ))}

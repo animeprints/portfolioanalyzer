@@ -45,7 +45,7 @@ export default function DashboardPage() {
     : 0;
 
   return (
-    <div className="min-h-screen bg-slate-50 pt-24 pb-20">
+    <div className="min-h-screen bg-slate-900 pt-24 pb-20">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <motion.div
@@ -54,8 +54,8 @@ export default function DashboardPage() {
           className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-12"
         >
           <div>
-            <h1 className="text-4xl font-bold text-slate-900 mb-2">Dashboard</h1>
-            <p className="text-slate-600">
+            <h1 className="text-4xl font-bold text-slate-100 mb-2">Dashboard</h1>
+            <p className="text-slate-400">
               Welcome back, {user?.name || 'User'}! Here's your career analytics.
             </p>
           </div>
@@ -69,7 +69,7 @@ export default function DashboardPage() {
             </button>
             <button
               onClick={logout}
-              className="px-6 py-3 bg-white border border-slate-300 text-slate-700 rounded-xl font-semibold hover:bg-slate-50 transition-colors"
+              className="px-6 py-3 bg-slate-800 border border-slate-600 text-slate-300 rounded-xl font-semibold hover:bg-slate-700 transition-colors"
             >
               Sign Out
             </button>
@@ -83,37 +83,37 @@ export default function DashboardPage() {
           transition={{ delay: 0.1 }}
           className="grid md:grid-cols-3 gap-6 mb-12"
         >
-          <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+          <div className="bg-slate-800 p-6 rounded-xl border border-slate-700 shadow-sm">
             <div className="flex items-center gap-4">
               <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center">
                 <FileText className="w-6 h-6 text-primary" />
               </div>
               <div>
-                <p className="text-sm text-slate-500">Total Analyses</p>
-                <p className="text-3xl font-bold text-slate-900">{analyses.length}</p>
+                <p className="text-sm text-slate-400">Total Analyses</p>
+                <p className="text-3xl font-bold text-slate-100">{analyses.length}</p>
               </div>
             </div>
           </div>
 
-          <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+          <div className="bg-slate-800 p-6 rounded-xl border border-slate-700 shadow-sm">
             <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-xl bg-green-50 flex items-center justify-center">
-                <TrendingUp className="w-6 h-6 text-green-600" />
+              <div className="w-12 h-12 rounded-xl bg-green-900/30 flex items-center justify-center">
+                <TrendingUp className="w-6 h-6 text-green-400" />
               </div>
               <div>
-                <p className="text-sm text-slate-500">Average Score</p>
-                <p className="text-3xl font-bold text-green-600">{averageScore}%</p>
+                <p className="text-sm text-slate-400">Average Score</p>
+                <p className="text-3xl font-bold text-green-400">{averageScore}%</p>
               </div>
             </div>
           </div>
 
-          <div className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
+          <div className="bg-slate-800 p-6 rounded-xl border border-slate-700 shadow-sm">
             <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-xl bg-accent-orange/10 flex items-center justify-center">
+              <div className="w-12 h-12 rounded-xl bg-accent-orange/20 flex items-center justify-center">
                 <Award className="w-6 h-6 text-accent-orange" />
               </div>
               <div>
-                <p className="text-sm text-slate-500">Best Score</p>
+                <p className="text-sm text-slate-400">Best Score</p>
                 <p className="text-3xl font-bold text-accent-orange">{highestScore}%</p>
               </div>
             </div>
@@ -126,23 +126,23 @@ export default function DashboardPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
         >
-          <h2 className="text-2xl font-bold text-slate-900 mb-6 flex items-center gap-3">
+          <h2 className="text-2xl font-bold text-slate-100 mb-6 flex items-center gap-3">
             <FileText className="w-6 h-6 text-primary" />
             Recent Analyses
           </h2>
 
           {isLoading ? (
-            <div className="text-center py-20 bg-white rounded-xl border border-slate-200">
+            <div className="text-center py-20 bg-slate-800 rounded-xl border border-slate-700">
               <div className="w-16 h-16 mx-auto mb-4 rounded-full border-4 border-primary/20 border-t-primary animate-spin" />
-              <p className="text-slate-500">Loading your analyses...</p>
+              <p className="text-slate-400">Loading your analyses...</p>
             </div>
           ) : analyses.length === 0 ? (
-            <div className="bg-white p-16 rounded-xl border border-slate-200 text-center">
-              <div className="w-24 h-24 mx-auto mb-6 rounded-full bg-slate-100 flex items-center justify-center">
+            <div className="bg-slate-800 p-16 rounded-xl border border-slate-700 text-center">
+              <div className="w-24 h-24 mx-auto mb-6 rounded-full bg-slate-700/50 flex items-center justify-center">
                 <BarChart3 className="w-12 h-12 text-slate-400" />
               </div>
-              <h3 className="text-xl font-bold text-slate-900 mb-3">No analyses yet</h3>
-              <p className="text-slate-600 mb-6 max-w-md mx-auto">
+              <h3 className="text-xl font-bold text-slate-100 mb-3">No analyses yet</h3>
+              <p className="text-slate-400 mb-6 max-w-md mx-auto">
                 Upload your CV to get detailed insights, skill extraction, and personalized recommendations.
               </p>
               <button
@@ -160,7 +160,7 @@ export default function DashboardPage() {
                   initial={{ opacity: 0, y: 30 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.1 * index }}
-                  className="bg-white p-6 rounded-xl border border-slate-200 shadow-sm hover:shadow-md hover:border-primary/30 transition-all group"
+                  className="bg-slate-800 p-6 rounded-xl border border-slate-700 shadow-sm hover:shadow-md hover:border-primary/30 transition-all group"
                 >
                   <div className="flex justify-between items-start mb-4">
                     <div className="flex-1">
@@ -171,10 +171,10 @@ export default function DashboardPage() {
                           year: 'numeric',
                         })}
                       </div>
-                      <h3 className="text-lg font-semibold text-slate-900 group-hover:text-primary transition-colors line-clamp-1">
+                      <h3 className="text-lg font-semibold text-slate-100 group-hover:text-primary transition-colors line-clamp-1">
                         {analysis.personal_info?.name || 'Untitled CV'}
                       </h3>
-                      <p className="text-sm text-slate-500">
+                      <p className="text-sm text-slate-400">
                         {(analysis as any).file_name || analysis.personal_info?.email || 'No email'}
                       </p>
                     </div>
@@ -187,7 +187,7 @@ export default function DashboardPage() {
                   </div>
 
                   {/* Mini score breakdown */}
-                  <div className="grid grid-cols-4 gap-2 mb-6 p-3 bg-slate-50 rounded-lg">
+                  <div className="grid grid-cols-4 gap-2 mb-6 p-3 bg-slate-700/50 rounded-lg">
                     <div className="text-center">
                       <div className="text-xs text-green-600 mb-1">ATS</div>
                       <div className="text-sm font-semibold">{analysis.ats_score}%</div>
@@ -217,7 +217,7 @@ export default function DashboardPage() {
                       </span>
                     )) || null}
                     {analysis.extracted_skills?.technical?.length > 3 && (
-                      <span className="px-2 py-1 rounded text-xs bg-slate-100 text-slate-500 border border-slate-200">
+                      <span className="px-2 py-1 rounded text-xs bg-slate-700/50 text-slate-400 border border-slate-600">
                         +{(analysis.extracted_skills?.technical?.length || 0) - 3} more
                       </span>
                     )}
@@ -234,14 +234,14 @@ export default function DashboardPage() {
                     </button>
                     <button
                       onClick={() => {/* TODO: Export */}}
-                      className="py-2 px-4 rounded-lg border border-slate-300 text-slate-600 hover:bg-slate-50 transition-colors"
+                      className="py-2 px-4 rounded-lg border border-slate-600 text-slate-400 hover:bg-slate-700 transition-colors"
                       title="Download report"
                     >
                       <Download className="w-4 h-4" />
                     </button>
                     <button
                       onClick={() => handleDelete(analysis.id)}
-                      className="py-2 px-4 rounded-lg border border-red-200 text-red-600 hover:bg-red-50 transition-colors"
+                      className="py-2 px-4 rounded-lg border border-red-800/50 text-red-400 hover:bg-red-900/30 transition-colors"
                       title="Delete"
                     >
                       <Trash2 className="w-4 h-4" />
@@ -258,9 +258,9 @@ export default function DashboardPage() {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
-          className="mt-16 bg-white p-8 rounded-xl border border-slate-200 shadow-sm"
+          className="mt-16 bg-slate-800 p-8 rounded-xl border border-slate-700 shadow-sm"
         >
-          <h2 className="text-2xl font-bold text-slate-900 mb-6">Quick Actions</h2>
+          <h2 className="text-2xl font-bold text-slate-100 mb-6">Quick Actions</h2>
           <div className="grid md:grid-cols-3 gap-6">
             <button
               onClick={() => navigate('/analyze')}
@@ -269,8 +269,8 @@ export default function DashboardPage() {
               <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
                 <BarChart3 className="w-6 h-6 text-primary" />
               </div>
-              <h3 className="text-lg font-semibold text-slate-900 mb-2">Analyze New CV</h3>
-              <p className="text-sm text-slate-600">
+              <h3 className="text-lg font-semibold text-slate-100 mb-2">Analyze New CV</h3>
+              <p className="text-sm text-slate-400">
                 Upload a resume to get AI-powered insights and recommendations.
               </p>
             </button>
@@ -281,8 +281,8 @@ export default function DashboardPage() {
               <div className="w-12 h-12 rounded-xl bg-secondary/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
                 <TrendingUp className="w-6 h-6 text-secondary" />
               </div>
-              <h3 className="text-lg font-semibold text-slate-900 mb-2">Find Job Matches</h3>
-              <p className="text-sm text-slate-600">
+              <h3 className="text-lg font-semibold text-slate-100 mb-2">Find Job Matches</h3>
+              <p className="text-sm text-slate-400">
                 Compare your CV against job descriptions and find the best matches.
               </p>
             </button>
@@ -293,8 +293,8 @@ export default function DashboardPage() {
               <div className="w-12 h-12 rounded-xl bg-accent-orange/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
                 <Award className="w-6 h-6 text-accent-orange" />
               </div>
-              <h3 className="text-lg font-semibold text-slate-900 mb-2">LinkedIn Optimization</h3>
-              <p className="text-sm text-slate-600">
+              <h3 className="text-lg font-semibold text-slate-100 mb-2">LinkedIn Optimization</h3>
+              <p className="text-sm text-slate-400">
                 Get suggestions to improve your LinkedIn profile visibility.
               </p>
             </button>

@@ -29,28 +29,28 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 flex items-center justify-center px-4 pt-8">
+    <div className="min-h-screen bg-slate-900 flex items-center justify-center px-4 pt-8">
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         className="w-full max-w-md"
       >
-        <div className="bg-white rounded-2xl p-8 shadow-sm border border-slate-200">
+        <div className="bg-slate-800 rounded-2xl p-8 shadow-sm border border-slate-700">
           <div className="text-center mb-8">
             <Link to="/" className="inline-flex items-center gap-2 group mb-4">
               <div className="w-12 h-12 rounded-xl bg-primary flex items-center justify-center">
                 <span className="text-white font-bold text-xl">C</span>
               </div>
             </Link>
-            <h1 className="text-2xl font-bold text-slate-900 mb-2">Welcome Back</h1>
-            <p className="text-slate-600">Sign in to access your account</p>
+            <h1 className="text-2xl font-bold text-slate-100 mb-2">Welcome Back</h1>
+            <p className="text-slate-400">Sign in to access your account</p>
           </div>
 
           {error && (
             <motion.div
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
-              className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl text-red-700 text-sm"
+              className="mb-6 p-4 bg-red-900/30 border border-red-800 rounded-xl text-red-400 text-sm"
             >
               {error}
             </motion.div>
@@ -58,7 +58,7 @@ export default function LoginPage() {
 
           <form onSubmit={handleSubmit} className="space-y-5">
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-slate-700 mb-2">
+              <label htmlFor="email" className="block text-sm font-medium text-slate-300 mb-2">
                 Email
               </label>
               <div className="relative">
@@ -70,14 +70,14 @@ export default function LoginPage() {
                   onChange={(e) => setEmail(e.target.value)}
                   required
                   autoComplete="email"
-                  className="w-full pl-12 pr-4 py-3 border border-slate-300 rounded-xl focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-colors"
+                  className="w-full pl-12 pr-4 py-3 border border-slate-600 rounded-xl focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-colors bg-slate-900/50 text-slate-100 placeholder-slate-500"
                   placeholder="you@example.com"
                 />
               </div>
             </div>
 
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-slate-700 mb-2">
+              <label htmlFor="password" className="block text-sm font-medium text-slate-300 mb-2">
                 Password
               </label>
               <div className="relative">
@@ -89,7 +89,7 @@ export default function LoginPage() {
                   onChange={(e) => setPassword(e.target.value)}
                   required
                   autoComplete="current-password"
-                  className="w-full pl-12 pr-4 py-3 border border-slate-300 rounded-xl focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-colors"
+                  className="w-full pl-12 pr-4 py-3 border border-slate-600 rounded-xl focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-colors bg-slate-900/50 text-slate-100 placeholder-slate-500"
                   placeholder="Enter your password"
                 />
               </div>
@@ -111,7 +111,7 @@ export default function LoginPage() {
             </button>
           </form>
 
-          <div className="mt-6 text-center text-sm text-slate-600">
+          <div className="mt-6 text-center text-sm text-slate-400">
             Don't have an account?{' '}
             <Link to="/register" className="text-primary font-semibold hover:underline">
               Sign up

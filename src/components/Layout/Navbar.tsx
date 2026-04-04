@@ -27,7 +27,7 @@ export default function Navbar() {
   ];
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-slate-200 shadow-sm">
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-slate-900/95 backdrop-blur-sm border-b border-slate-700 shadow-lg">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
@@ -35,7 +35,7 @@ export default function Navbar() {
             <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
               <span className="text-white font-bold text-sm">C</span>
             </div>
-            <span className="text-xl font-bold text-slate-900">
+            <span className="text-xl font-bold text-slate-100">
               Card<span className="text-primary">zey</span>
             </span>
           </Link>
@@ -46,7 +46,7 @@ export default function Navbar() {
               <Link
                 to="/"
                 className={`relative text-sm font-medium transition-colors ${
-                  isActive('/') ? 'text-primary' : 'text-slate-600 hover:text-primary'
+                  isActive('/') ? 'text-primary' : 'text-slate-300 hover:text-primary'
                 }`}
               >
                 Home
@@ -62,7 +62,7 @@ export default function Navbar() {
               <Link
                 to="/about"
                 className={`relative text-sm font-medium transition-colors ${
-                  isActive('/about') ? 'text-primary' : 'text-slate-600 hover:text-primary'
+                  isActive('/about') ? 'text-primary' : 'text-slate-300 hover:text-primary'
                 }`}
               >
                 About
@@ -78,7 +78,7 @@ export default function Navbar() {
               <Link
                 to="/contact"
                 className={`relative text-sm font-medium transition-colors ${
-                  isActive('/contact') ? 'text-primary' : 'text-slate-600 hover:text-primary'
+                  isActive('/contact') ? 'text-primary' : 'text-slate-300 hover:text-primary'
                 }`}
               >
                 Contact
@@ -103,7 +103,7 @@ export default function Navbar() {
                       key={link.href}
                       to={link.href}
                       className={`relative flex items-center gap-2 text-sm font-medium transition-colors ${
-                        isActive(link.href) ? 'text-primary' : 'text-slate-600 hover:text-primary'
+                        isActive(link.href) ? 'text-primary' : 'text-slate-300 hover:text-primary'
                       }`}
                       title={link.name}
                     >
@@ -129,8 +129,8 @@ export default function Navbar() {
             {isAuthenticated ? (
               <div className="flex items-center gap-4">
                 <div className="text-right mr-2">
-                  <p className="text-sm font-medium text-slate-900">{user?.name}</p>
-                  <p className="text-xs text-slate-500 capitalize">{user?.role}</p>
+                  <p className="text-sm font-medium text-slate-100">{user?.name}</p>
+                  <p className="text-xs text-slate-400 capitalize">{user?.role}</p>
                 </div>
                 <button
                   onClick={handleLogout}
@@ -144,7 +144,7 @@ export default function Navbar() {
               <div className="flex items-center gap-3">
                 <Link
                   to="/login"
-                  className="px-4 py-2 text-sm font-medium text-slate-600 hover:text-primary transition-colors"
+                  className="px-4 py-2 text-sm font-medium text-slate-300 hover:text-primary transition-colors"
                 >
                   Sign In
                 </Link>
@@ -160,7 +160,7 @@ export default function Navbar() {
 
           {/* Mobile menu button */}
           <button
-            className="md:hidden p-2 text-slate-600 hover:text-primary transition-colors"
+            className="md:hidden p-2 text-slate-300 hover:text-primary transition-colors"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             aria-label="Toggle menu"
           >
@@ -175,7 +175,7 @@ export default function Navbar() {
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0 }}
-              className="md:hidden py-4 border-t border-slate-200"
+              className="md:hidden py-4 border-t border-slate-700 bg-slate-900/95"
             >
               <div className="flex flex-col gap-2">
                 {/* Public links */}
@@ -184,7 +184,7 @@ export default function Navbar() {
                   className={`px-4 py-3 rounded-lg transition-colors flex items-center gap-3 ${
                     isActive('/')
                       ? 'bg-primary/10 text-primary'
-                      : 'text-slate-600 hover:bg-slate-50 hover:text-primary'
+                      : 'text-slate-300 hover:bg-slate-800 hover:text-primary'
                   }`}
                   onClick={() => setMobileMenuOpen(false)}
                 >
@@ -195,7 +195,7 @@ export default function Navbar() {
                   className={`px-4 py-3 rounded-lg transition-colors flex items-center gap-3 ${
                     isActive('/about')
                       ? 'bg-primary/10 text-primary'
-                      : 'text-slate-600 hover:bg-slate-50 hover:text-primary'
+                      : 'text-slate-300 hover:bg-slate-800 hover:text-primary'
                   }`}
                   onClick={() => setMobileMenuOpen(false)}
                 >
@@ -206,7 +206,7 @@ export default function Navbar() {
                   className={`px-4 py-3 rounded-lg transition-colors flex items-center gap-3 ${
                     isActive('/contact')
                       ? 'bg-primary/10 text-primary'
-                      : 'text-slate-600 hover:bg-slate-50 hover:text-primary'
+                      : 'text-slate-300 hover:bg-slate-800 hover:text-primary'
                   }`}
                   onClick={() => setMobileMenuOpen(false)}
                 >
@@ -220,8 +220,8 @@ export default function Navbar() {
                 {isAuthenticated ? (
                   <>
                     <div className="px-4 py-3">
-                      <p className="text-sm font-medium text-slate-900 mb-1">{user?.name}</p>
-                      <p className="text-xs text-slate-500 capitalize">{user?.role}</p>
+                      <p className="text-sm font-medium text-slate-100 mb-1">{user?.name}</p>
+                      <p className="text-xs text-slate-400 capitalize">{user?.role}</p>
                     </div>
                     {protectedLinks.map((link) => {
                       const Icon = link.icon;
@@ -232,7 +232,7 @@ export default function Navbar() {
                           className={`px-4 py-3 rounded-lg transition-colors flex items-center gap-3 ${
                             isActive(link.href)
                               ? 'bg-primary/10 text-primary'
-                              : 'text-slate-600 hover:bg-slate-50 hover:text-primary'
+                              : 'text-slate-300 hover:bg-slate-800 hover:text-primary'
                           }`}
                           onClick={() => setMobileMenuOpen(false)}
                         >
@@ -243,7 +243,7 @@ export default function Navbar() {
                     })}
                     <button
                       onClick={handleLogout}
-                      className="mt-4 w-full px-4 py-3 rounded-lg bg-red-50 text-red-600 hover:bg-red-100 transition-colors flex items-center gap-3"
+                      className="mt-4 w-full px-4 py-3 rounded-lg bg-red-900/30 text-red-400 hover:bg-red-900/50 transition-colors flex items-center gap-3"
                     >
                       <LogOut className="w-5 h-5" />
                       Sign Out
@@ -253,7 +253,7 @@ export default function Navbar() {
                   <>
                     <Link
                       to="/login"
-                      className="px-4 py-3 rounded-lg text-slate-600 hover:bg-slate-50 hover:text-primary transition-colors"
+                      className="px-4 py-3 rounded-lg text-slate-300 hover:bg-slate-800 hover:text-primary transition-colors"
                       onClick={() => setMobileMenuOpen(false)}
                     >
                       Sign In
