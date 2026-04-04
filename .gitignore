@@ -15,8 +15,8 @@ dist-ssr/
 *.local
 deploy/
 
-# Note: release/ contains the official deployment package (tracked in Git)
-# Use create-release.sh to generate fresh release packages
+# Note: Use deploy-hosting.sh to generate fresh deployment packages in deploy/hostinger/
+# The deploy/ folder is ignored and should not be committed.
 
 # IDE
 .vscode/*

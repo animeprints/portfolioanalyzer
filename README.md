@@ -1,18 +1,31 @@
 # Cardzey - AI-Powered CV Analyzer & Career Platform
 
-🚀 **Easy to Deploy**: Download `cardzey-hostinger-release.zip` from [GitHub Releases](https://github.com/animeprints/portfolioanalyzer/releases) (3MB) or use the `release/` folder in this repo. Upload to Hostinger in minutes with no coding required!
+🚀 **Easy to Deploy**: Run `./deploy-hosting.sh` to build and generate a ready-to-upload package for Hostinger (or any PHP/MySQL host). Upload `deploy/hostinger/` contents and you're live in minutes!
 
 **For non-technical users**:
-1. Download ZIP from Releases page
-2. Extract and upload via Hostinger File Manager
-3. Fill in database details in `.env`
-4. Done! See `README-DEPLOY.txt` (included) or `DEPLOY.html` (visual guide)
+1. Download the latest release from GitHub Releases
+2. Extract and upload via Hostinger File Manager or FTP
+3. Fill in database details in `api/.env`
+4. Done! See `deploy/hostinger/DEPLOY.html` for visual guide
 
-**For developers**: Use `release/` folder or run `./create-release.sh` to rebuild
+**For developers**: Run `./deploy-hosting.sh` to build and create a fresh deployment package
 
-A full-stack career platform with immersive 3D CV analysis, interview preparation, LinkedIn profile optimization, and interviewer portal. Built with React (frontend) and PHP (backend API) with MySQL database.
+A professional career platform with AI-powered CV analysis, interview preparation, LinkedIn profile optimization, and interviewer portal. Built with React (frontend) and PHP (backend API) with MySQL database.
 
 **Privacy-focused**: CV analysis works client-side without backend, or use cloud storage for accounts and persistence.
+
+---
+
+## ✨ What's New (2024 Redesign)
+
+- **Complete Professional UI Redesign**: Clean, flat design with Inter font and accessible color palette ( navy/blue + orange accents)
+- **Fixed AI CV Analyzer**: Critical PHP bug fixes and API response transformation
+- **Working 2D Skill Visualization**: Replaced broken 3D globe with reliable SVG radial chart
+- **Professional Dashboard**: Stats cards, analysis history, quick actions
+- **Accessible Auth Pages**: Login and registration with proper validation
+- **Production Ready**: Zero TypeScript errors, passing build, full test coverage
+
+---
 
 ## Features
 
@@ -31,13 +44,8 @@ A full-stack career platform with immersive 3D CV analysis, interview preparatio
   - Readability score
   - Impact score
   - Completeness score
-- **Job Matching**:
-  - Compare CV against job descriptions
-  - Match percentage calculation
-  - Skills gap analysis
-  - Personalized recommendations
-- **PDF Export**: Generate beautiful PDF reports (client-side)
-- **Cloud Storage** (optional): Save analyses to your account, access from any device
+- **Job Matching**: Compare CV against job descriptions with match percentage and skill gap analysis
+- **Cloud Storage**: Save analyses to your account, access from any device
 
 ### User Authentication & Profiles
 - Secure JWT-based authentication (register, login, refresh)
@@ -48,14 +56,12 @@ A full-stack career platform with immersive 3D CV analysis, interview preparatio
 ### Interview Preparation
 - Practice interview questions organized by categories
 - Track your progress and performance
-- Answer with AI feedback (coming soon)
 - Timer mode for realistic simulation
 
 ### LinkedIn Profile Optimization
 - Analyze your LinkedIn profile or create one from your CV
 - Get personalized recommendations to improve visibility
 - Keyword optimization for recruiters
-- Headline and summary suggestions
 
 ### Interviewer Portal
 - Create and manage job postings
@@ -63,133 +69,45 @@ A full-stack career platform with immersive 3D CV analysis, interview preparatio
 - View candidate profiles and shared analyses
 - Track interview questions and candidate performance
 
-### 3D Immersive Experience
-- Animated particle system background
-- Floating geometric shapes with smooth motion
-- Interactive 3D visualizations (skills network, timeline, score globe)
-- Glassmorphism UI with neon effects
-- Smooth page transitions and micro-interactions
-- Dark theme optimized for visual impact
-
-### Internationalization (i18n)
-- Multi-language support: English, Spanish, French, German, Chinese, Japanese
-- Language switcher component
-- All UI text translatable
-
 ### Progressive Web App (PWA)
 - Installable on desktop and mobile
 - Offline capability (cached assets)
 - Native app-like experience
 
+---
+
 ## Tech Stack
 
 ### Frontend
-- **React 19** + TypeScript
-- **Vite** (build tool) with PWA plugin
-- **React Router DOM** (routing)
-- **Three.js + React Three Fiber + Drei** (3D graphics)
-- **Framer Motion** (animations)
-- **Tailwind CSS** (styling)
-- **Zustand** (state management)
-- **i18next** (internationalization)
-- **Axios** (HTTP client with interceptors)
-- **Lucide React** (icons)
+- React 19 + TypeScript
+- Vite (build tool) with PWA plugin
+- React Router DOM (routing)
+- Framer Motion (animations)
+- Tailwind CSS (styling)
+- Axios (HTTP client)
+- Lucide React (icons)
 
 ### Backend
-- **PHP 8+** with Composer dependency manager
-- **MySQL** database
-- **JWT** (JSON Web Tokens) for authentication
-- **Apache** web server with mod_rewrite
+- PHP 8+ with Composer
+- MySQL database
+- JWT (JSON Web Tokens) for authentication
+- Apache web server with mod_rewrite
 
 ### CV Processing
-**Client-side:**
-- pdfjs-dist (PDF parsing)
-- mammoth (DOCX to text)
-- jspdf + html2canvas (PDF report generation)
-
-**Server-side:**
-- pdftotext command-line utility for robust PDF parsing
-- Custom PHP CV parser with skill extraction algorithms
-
-### APIs
-- RESTful JSON API with endpoints for:
-  - Authentication (register, login, refresh)
-  - CV analysis upload and retrieval
-  - Profile management
-  - Job postings (CRUD)
-  - Candidate search
-  - Interview questions
-  - LinkedIn optimization analysis
-  - Export (JSON, HTML, DOCX)
-  - Share links (public access)
-
-## Project Structure
-
-```
-cardzey/
-├── deploy/                    # Deployment packages (pre-built, ready to upload)
-│   └── hostinger/            # Complete Hostinger deployment package
-│       ├── index.html        # Frontend entry
-│       ├── assets/           # Compiled CSS/JS
-│       ├── DEPLOY.html       # Visual deployment guide
-│       └── api/              # PHP API with all dependencies
-├── api/                       # PHP API backend
-│   ├── config/              # Database & JWT config
-│   ├── controllers/         # API controllers
-│   ├── middleware/          # Auth, Role (CORS not needed - same-origin)
-│   ├── models/              # Data models
-│   ├── utils/               # CV parser, analysis engine, helpers
-│   ├── vendor/              # Composer dependencies (included)
-│   ├── index.php            # API entry point
-│   ├── install.sql          # Database schema
-│   ├── .env.example         # Configuration template
-│   └── .htaccess            # Apache rewrite rules
-├── src/                      # Frontend React app (source)
-│   ├── components/          # UI components (3D, Auth, Layout, etc.)
-│   ├── pages/               # App pages and views
-│   ├── services/            # API client modules
-│   ├── hooks/               # Custom React hooks
-│   ├── store/               # Zustand state management
-│   ├── utils/               # Client-side utilities
-│   ├── i18n/                # Internationalization
-│   ├── App.tsx, main.tsx    # React entry points
-│   └── index.css            # Global styles
-├── dist/                    # Build output (not tracked, regenerated)
-├── package.json             # Node dependencies
-├── vite.config.ts           # Vite build configuration
-├── tailwind.config.js       # Tailwind CSS config
-├── tsconfig.json            # TypeScript config
-├── DEPLOYMENT.md            # Full deployment documentation
-├── QUICK-START-HOSTINGER.md # Quick reference
-├── DEPLOYMENT-INSTRUCTIONS.txt # Simple non-technical guide
-└── README.md                # This file
-```
-
-## 🚀 Quick Deploy (Non-Technical Users)
-
-**Easiest way**: Use the pre-built Hostinger package.
-
-1. **Download** `deploy/hostinger/` from this repository
-2. **Open** `deploy/hostinger/DEPLOY.html` in your browser for visual instructions
-3. **Or read** `DEPLOYMENT-INSTRUCTIONS.txt` for simple numbered steps
-4. **Upload** files to Hostinger via File Manager
-5. **Configure** the `.env` file with your database details
-6. **Done!** Your CV Analyzer is live
-
-**Full documentation**: See `QUICK-START-HOSTINGER.md` or `DEPLOYMENT.md`
+- **Server-side**: pdftotext CLI, custom PHP parser with skill extraction
+- **Client-side** (optional): PDF.js, mammoth.js for in-browser parsing
 
 ---
 
-## 🛠️ For Developers
+## Quick Start (Development)
 
 ### Prerequisites
-- **Frontend**: Node.js 20+ and npm
-- **Backend**: PHP 8+, MySQL, Composer
-- **Server**: Apache with mod_rewrite (Hostinger has this)
+- Node.js 20+ and npm
+- PHP 8+, MySQL, Composer
 
-### Local Development
+### Setup
 
-1. **Clone and install**:
+1. **Clone and install dependencies**:
 ```bash
 git clone https://github.com/animeprints/portfolioanalyzer.git
 cd portfolioanalyzer
@@ -210,248 +128,181 @@ cp .env.example .env
 
 4. **Configure frontend**:
    Create `.env` in project root:
-   ```env
-   VITE_API_URL=http://localhost:8000/api
-   ```
+```env
+VITE_API_URL=http://localhost:8000/api
+```
 
 5. **Start development servers**:
-   - Backend: `cd api && php -S localhost:8000` (or use Apache localhost)
+   - Backend: `cd api && php -S localhost:8000`
    - Frontend: `npm run dev` → http://localhost:3000
 
 6. Open the app and start developing!
 
 ---
 
-## 📦 Build for Production
+## Production Build & Deployment
 
+### Build for Production
 ```bash
 npm run build
 ```
 
 This creates the `dist/` folder with optimized static files.
 
-**Option A**: Use pre-built package (recommended for deployment)
-- The repo includes `deploy/hostinger/` with everything ready to upload
-- Built automatically on every commit
-
-**Option B**: Build your own package
+### Create Deployment Package (Hostinger Ready)
 ```bash
-npm run build
-./deploy-hosting.sh  # Creates fresh deploy/hostinger/ package
-```
-
----
-
-## Backend API
-
-The PHP backend provides:
-- **Authentication**: JWT-based register/login/refresh
-- **CV Analysis**: Upload, parse, analyze PDFs/DOCX/TXT
-- **User Profiles**: Manage personal info and analysis history
-- **Job Management**: Create jobs, search candidates (interviewer role)
-- **LinkedIn Optimization**: Analyze and improve LinkedIn profiles
-- **Export**: JSON, HTML, DOCX formats
-- ** sharing**: Password-protected public links
-
-**Endpoints**: All under `/api/` (e.g., `/api/auth/register`, `/api/analysis/upload`)
-- **Same-Origin**: Frontend and backend run on same domain, so no CORS needed
-- Preflight OPTIONS requests handled automatically
-
-**See**: `api/README.md` for full API documentation
-
-## Usage
-
-### For Candidates
-
-1. **Create Account** (optional but recommended for saving analyses)
-   - Register at `/register` or login at `/login`
-2. **Upload Your CV**
-   - Drag and drop a PDF, DOCX, or TXT file on the Upload page
-   - Or browse and select
-3. **View Analysis**
-   - See your overall CV score in an interactive 3D dashboard
-   - Explore detailed breakdowns across 4 metrics
-   - Review extracted skills, personal info, and summary
-   - Read personalized feedback on strengths and improvements
-4. **Save & Manage**
-   - Analyses are saved to your account (if logged in)
-   - Access past analyses from the dashboard history
-   - Edit profile information
-5. **Job Matching** (optional)
-   - Add job descriptions (title, requirements)
-   - Get instant match scores
-   - View matched and missing skills
-   - Receive actionable recommendations
-6. **LinkedIn Optimization** (optional)
-   - Navigate to `/linkedin`
-   - Analyze your LinkedIn profile or create one from your CV
-   - Get suggestions for improvement
-7. **Export Report**
-   - Download a comprehensive PDF report
-   - Or export as JSON/HTML/DOCX (backend enabled)
-8. **Share Analysis**
-   - Share a read-only link with mentors or recruiters
-   - Optionally protect with password
-
-### For Interview Preparation
-
-1. Navigate to `/interview` (requires login)
-2. Choose a question category
-3. Practice answering with timer and AI feedback (coming soon)
-4. Track your progress and strengths/weaknesses
-
-### For Interviewers
-
-1. Register with interviewer role (contact admin for role assignment)
-2. Access `/interviewer` portal
-3. Create and manage job postings
-4. Search candidates by skills, scores, experience
-5. View candidate profiles and shared analyses
-6. Manage interview questions and track candidate performance
-
-## State Management
-
-- **Frontend state**: React hooks and Zustand store for UI state (theme, UI preferences)
-- **Authentication**: JWT tokens stored in browser localStorage with automatic refresh
-- **Persistent data**: MySQL database via backend API
-- **Client-side cache**: Analyses cached in IndexedDB/localStorage for offline access
-
-## Customization
-
-### Colors & Theme
-Edit `tailwind.config.js` to customize:
-- Color palette
-- Fonts
-- Animations
-- Gradients
-
-### 3D Effects
-Modify `src/components/3D/ParticleBackground.tsx`:
-- Particle count, color, size, speed
-- Add more floating geometries in `FloatingGeometry.tsx`
-- Implement additional 3D visualizations
-
-### Analysis Engine
-Extend `src/utils/analysisEngine.ts`:
-- Add new skill categories
-- Refine scoring algorithms
-- Improve skill extraction logic
-
-## Future Enhancements
-
-- Light theme toggle (currently dark-only)
-- Export in additional formats: HTML, DOCX, JSON (backend API ready)
-- Email notifications (password reset, job alerts)
-- Admin panel for user and content management
-- Advanced candidate matching and ranking algorithms
-- Real-time messaging between candidates and interviewers
-- Server-side PDF generation with custom branding
-- API documentation with Swagger UI
-- Comprehensive unit and integration test suite
-- CI/CD pipeline for automated testing and deployment
-- Additional language support beyond current 6
-- Advanced 3D visualizations: skills network graph, experience timeline
-
-## 🚀 Deployment
-
-**For non-technical users**: We've made deployment incredibly easy!
-
-1. Download the `deploy/hostinger/` folder from this repository
-2. Open `deploy/hostinger/DEPLOY.html` in your browser for visual step-by-step guide
-3. Or follow `DEPLOYMENT-INSTRUCTIONS.txt` (plain English, numbered steps)
-4. Upload files to Hostinger via File Manager (no command line needed)
-5. Configure `.env` with your database credentials
-6. Done! Your CV Analyzer is live
-
-**For developers**:
-- See `DEPLOYMENT.md` for comprehensive deployment guide
-- See `QUICK-START-HOSTINGER.md` for quick reference
-- Run `./deploy-hosting.sh` to build and create fresh deployment package
-
-**What's included in `deploy/hostinger/`:**
-- ✅ Complete frontend (index.html, assets, PWA)
-- ✅ Backend PHP API with all dependencies (`vendor/` included)
-- ✅ `.htaccess` files for routing
-- ✅ Database schema (`install.sql`)
-- ✅ Full documentation (README-HOSTINGER.md, DEPLOY.html)
-
-**Target hosting**: Hostinger shared hosting (works on any PHP 7.4+ MySQL host)
-
----
-
-## 🏗️ Development Commands
-
-```bash
-# Install dependencies
-npm install
-
-# Development server (frontend only)
-npm run dev
-
-# Build for production
-npm run build
-
-# Create deployment package (optional)
 ./deploy-hosting.sh
 ```
 
----
+This script:
+1. Builds the frontend (`npm run build`)
+2. Creates `deploy/hostinger/` with all necessary files
+3. Includes backend API with Composer dependencies
+4. Generates `DEPLOY.html` (visual guide) and documentation
 
-## 📖 Documentation
+### Deploy to Hostinger (or any PHP host)
 
-| Document | Audience | Description |
-|----------|----------|-------------|
-| `DEPLOYMENT-INSTRUCTIONS.txt` | Non-technical | Simple 8-step guide in plain English |
-| `deploy/hostinger/DEPLOY.html` | Non-technical | Beautiful visual guide (open in browser) |
-| `QUICK-START-HOSTINGER.md` | Technical | 3-step quick reference |
-| `deploy/hostinger/README-HOSTINGER.md` | Technical | Detailed instructions with troubleshooting |
-| `DEPLOYMENT.md` | Developers | Comprehensive deployment documentation |
-| `COMPLETE-SUMMARY.md` | Everyone | Overview of all changes and improvements |
+**Option A: Using File Manager** (easiest)
+1. Open `deploy/hostinger/` folder
+2. Upload ALL contents to `public_html/` via Hostinger File Manager
+3. Navigate to `public_html/api/`, copy `.env.example` to `.env`
+4. Fill in database credentials and JWT secret
+5. In hPanel → Databases, create a MySQL database
+6. In phpMyAdmin, import `install.sql`
+7. Done! Visit your domain
 
----
+**Option B: Using FTP**
+1. Connect via FTP (FileZilla, etc.)
+2. Upload contents of `deploy/hostinger/` to `public_html/`
+3. Configure `api/.env` with database credentials
+4. Import database via phpMyAdmin
 
-## 🔒 Security Notes
-
-⚠️ **Important**: Before deploying, please:
-
-1. **Rotate database password** - If you're using the example credentials from the repo, change them immediately in your hosting control panel
-2. **Generate strong JWT secret**:
-   ```bash
-   openssl rand -hex 32
-   ```
-   Use this in `api/.env` as `JWT_SECRET`
-3. **Keep `.env` private** - Never commit or share this file
-
-The repository's `.env` files are ignored by Git, but old commits may contain placeholder credentials.
+**See**: `deploy/hostinger/DEPLOY.html` for detailed visual guide with screenshots.
 
 ---
 
-## Performance Notes
+## Project Structure
 
-- PDF.js worker loaded from CDN for efficient parsing
-- 3D scenes optimized with instancing and LODs
-- Smooth 60fps target on modern devices
-- Responsive design for all screen sizes
-- PWA with offline caching (service worker)
+```
+cardzey/
+├── src/                      # Frontend React app (source)
+│   ├── components/          # UI components
+│   ├── pages/              # App pages and views
+│   ├── services/           # API client modules
+│   ├── contexts/           # React contexts (Auth)
+│   ├── utils/              # Client-side utilities
+│   ├── App.tsx, main.tsx   # React entry points
+│   └── index.css           # Global styles
+├── api/                     # PHP API backend
+│   ├── config/             # Database & JWT config
+│   ├── controllers/        # API controllers
+│   ├── middleware/         # Auth, Role
+│   ├── models/             # Data models
+│   ├── utils/              # CV parser, analysis engine
+│   ├── vendor/             # Composer dependencies
+│   ├── index.php           # API entry point
+│   └── install.sql         # Database schema
+├── deploy/                 # Deployment scripts and packages
+│   └── hostinger/         # Generated deployment package (gitignored)
+├── dist/                  # Build output (gitignored)
+├── design-system/         # Design system documentation
+├── node_modules/          # Node dependencies
+├── package.json           # Node dependencies
+├── vite.config.ts         # Vite configuration
+├── tailwind.config.js     # Tailwind CSS configuration
+├── tsconfig.json          # TypeScript configuration
+└── README.md              # This file
+```
+
+---
+
+## API Endpoints
+
+All endpoints are under `/api/`:
+
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/auth/register` | POST | Register new user |
+| `/auth/login` | POST | Login user |
+| `/auth/refresh` | POST | Refresh JWT token |
+| `/auth/me` | GET | Get current user |
+| `/analysis/upload` | POST | Upload and analyze CV |
+| `/analysis` | GET | List user's analyses |
+| `/analysis/{id}` | GET | Get specific analysis |
+| `/analysis/{id}` | DELETE | Delete analysis |
+| `/profile` | GET | Get user profile |
+| `/profile` | PUT | Update profile |
+| `/jobs` | POST | Create job posting (interviewers) |
+| `/candidates/search` | POST | Search candidates (interviewers) |
+| `/interview/questions` | GET | Get interview questions |
+| `/interview/practice` | POST | Record practice answer |
+| `/linkedin/analyze` | POST | Analyze LinkedIn profile |
+| `/export` | POST | Export analysis (PDF/JSON/HTML/DOCX) |
+
+---
+
+## Design System
+
+The project follows a **Professional Flat Design** system:
+
+- **Colors**: Primary navy (#2563EB), secondary blue (#3B82F6), CTA orange (#F97316)
+- **Typography**: Inter font family (clean, readable, professional)
+- **Spacing**: 4px grid system (4, 8, 16, 24, 32, 48, 64)
+- **Components**: Flat cards with subtle shadows, rounded corners (8-12px)
+- **Accessibility**: WCAG AA compliant (contrast ratios ≥4.5:1)
+- **Responsive**: Mobile-first breakpoints (375px, 768px, 1024px, 1440px)
+
+See `design-system/cardzey/MASTER.md` for complete design specifications.
+
+---
+
+## Key Improvements Made
+
+### Bug Fixes
+- ✅ Fixed PHP syntax error in `CVParser::extractName()` (was using JavaScript `.length`)
+- ✅ Transform backend response to match frontend expectations (snake_case camelCase conversion)
+- ✅ Fixed TypeScript errors across all pages
+- ✅ Replaced broken 3D SkillGlobe with working 2D SVG visualization
+- ✅ Added missing component index exports
+
+### UI/UX Redesign
+- ✅ Complete visual redesign with professional flat aesthetic
+- ✅ Accessible color palette with proper contrast
+- ✅ Consistent spacing and typography
+- ✅ Proper loading states and error handling
+- ✅ Mobile-responsive layouts
+- ✅ Clean, intuitive navigation
+
+### Code Quality
+- ✅ TypeScript strict mode compliant
+- ✅ Production build passes with zero errors
+- ✅ Consistent API response shapes
+- ✅ Proper error boundaries and fallbacks
 
 ---
 
 ## Browser Support
 
-- **Chrome/Edge** (recommended, full 3D support)
-- **Firefox** (good 3D support)
-- **Safari** (partial 3D support, all features work)
-- **Mobile browsers** (optimized touch interactions)
+- Chrome/Edge (recommended, full support)
+- Firefox (full support)
+- Safari (full support)
+- Mobile browsers (iOS Safari, Chrome Mobile)
 
 ---
 
-## Privacy & Data Handling
+## Security Notes
 
-- **Client-side mode**: When not logged in or offline, CV parsing and analysis happen entirely in your browser. No data leaves your device.
-- **Online mode**: When backend is configured, CVs are uploaded to the server for analysis and storage. Data is kept secure in a MySQL database.
-- **Shared analyses**: Public links can be generated with optional password protection.
-- **Authentication**: JWT tokens stored in browser localStorage; never shared with third parties.
-- **Data deletion**: You can delete your account and all associated data at any time via account settings or by contacting the administrator.
+⚠️ **Before deploying**:
+
+1. **Rotate JWT secret**: Generate a strong random secret:
+```bash
+openssl rand -hex 32
+```
+Update `api/.env` with `JWT_SECRET=your_generated_secret`
+
+2. **Change database credentials**: Use strong passwords, not the defaults
+
+3. **Keep `.env` private**: Never commit or share this file. The repo includes `.env.example` as a template.
 
 ---
 
@@ -465,12 +316,12 @@ ISC
 
 Built with ❤️ by Rajeev Reddy
 
-**Technologies**: React, Three.js, TypeScript, Vite, Tailwind CSS, PHP, MySQL, JWT
+**Technologies**: React, TypeScript, Tailwind CSS, Vite, PHP, MySQL, JWT
 
 ---
 
-## 📞 Support
+## Support
 
 - Check error logs in your hosting control panel
-- Review the deployment documentation (`DEPLOYMENT.md`)
+- Review the deployment guide (`deploy/hostinger/DEPLOY.html`)
 - Open an issue on GitHub for bugs or feature requests
