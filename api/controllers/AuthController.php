@@ -43,6 +43,11 @@ class AuthController
                 'role' => $input['role'] ?? 'candidate'
             ]);
 
+            // Generate JWT tokens
+            $jwt = new \App\Config\JWTManager();
+            $accessToken = $jwt->generateAccessToken($user);
+            $refreshToken = $jwt->generateRefreshToken($user);
+
             // Remove sensitive data
             unset($user['password_hash']);
 
@@ -55,6 +60,11 @@ class AuthController
                         'email' => $user['email'],
                         'name' => $user['name'],
                         'role' => $user['role']
+                    ],
+                    'tokens' => [
+                        'access_token' => $accessToken,
+                        'refresh_token' => $refreshToken,
+                        'expires_in' => $_ENV['JWT_EXPIRES_IN'] ?? 900
                     ]
                 ]
             ], 201);

@@ -45,7 +45,10 @@
       "Bash(LD_PRELOAD=/lib/x86_64-linux-gnu/libc.so.6 /snap/gitkraken/293/usr/share/gitkraken/resources/app.asar.unpacked/git/bin/git --version)",
       "Bash(ldd /snap/gitkraken/293/usr/share/gitkraken/resources/app.asar.unpacked/git/bin/git)",
       "Bash(npm list:*)",
-      "Bash(git:*)"
+      "Bash(git:*)",
+      "Bash(chmod +x deploy-hosting.sh create-release.sh github-release.sh)",
+      "Bash(./deploy-hosting.sh)",
+      "Bash(ls:*)"
     ]
   }
 }
