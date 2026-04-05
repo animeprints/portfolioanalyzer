@@ -1,0 +1,69 @@
+# Dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# PHP Dependencies (vendor will be committed for deployment)
+# vendor/  <-- We're committing this, so don't ignore
+
+# Build outputs
+dist/
+dist-ssr/
+*.local
+deploy/
+
+# Note: Use deploy-hosting.sh to generate fresh deployment packages in deploy/hostinger/
+# The deploy/ folder is ignored and should not be committed.
+
+# IDE
+.vscode/*
+!.vscode/extensions.json
+.idea
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Environment
+.env
+.env.local
+.env.*.local
+# Never commit any .env file anywhere
+**/.env
+**/.env.local
+
+# Logs
+logs
+*.log
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage directory used by tools like istanbul
+coverage/
+*.lcov
+
+# nyc test coverage
+.nyc_output
+
+# Claude Code
+.claude/
+
+# Temp files
+tmp/
+temp/
+
+# Deployment artifacts
+backend-deploy.zip
+*-release.zip
+
+# Backend uploads (user-uploaded CV files)
+backend/upload/

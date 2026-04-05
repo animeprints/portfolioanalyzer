@@ -1,0 +1,120 @@
+╔══════════════════════════════════════════════════════════════════╗
+║                   CV ANALYZER - DEPLOYMENT                      ║
+║                  For Hostinger (Non-Technical)                 ║
+╚══════════════════════════════════════════════════════════════════╝
+
+┌──────────────────────────────────────────────────────────────────┐
+│  STEP 1: DOWNLOAD THE PACKAGE                                    │
+└──────────────────────────────────────────────────────────────────┘
+
+   The file you need is:  deploy/hostinger/
+
+   It contains everything needed to run the app.
+
+┌──────────────────────────────────────────────────────────────────┐
+│  STEP 2: UPLOAD TO HOSTINGER                                     │
+└──────────────────────────────────────────────────────────────────┘
+
+   A. Log into Hostinger hPanel
+   B. Go to "Files" → "File Manager"
+   C. Navigate to "public_html/"
+   D. Upload ALL files from deploy/hostinger/ EXCEPT the "backend/" folder
+      → These go directly in public_html/
+   E. Create folder "public_html/api/"
+   F. Upload the "backend/" folder contents to "public_html/api/"
+
+┌──────────────────────────────────────────────────────────────────┐
+│  STEP 3: CREATE DATABASE                                         │
+└──────────────────────────────────────────────────────────────────┘
+
+   1. In hPanel, click "Databases"
+   2. Create a new MySQL database
+   3. Write down these details:
+      • Database Name: __________
+      • Username: __________
+      • Password: __________
+
+┌──────────────────────────────────────────────────────────────────┐
+│  STEP 4: CONFIGURE THE APP                                       │
+└──────────────────────────────────────────────────────────────────┘
+
+   1. In File Manager, go to "public_html/api/"
+   2. Find ".env.example" file
+   3. Click "Edit" and change these lines:
+
+      DB_NAME=__________
+      DB_USER=__________
+      DB_PASS=__________
+      JWT_SECRET=openssl rand -hex 32 (or any random 32-char string)
+      # ALLOWED_ORIGINS not needed - same domain deployment (no CORS)
+
+   4. Save the file as ".env" (without .example)
+
+┌──────────────────────────────────────────────────────────────────┐
+│  STEP 5: SETUP THE DATABASE                                      │
+└──────────────────────────────────────────────────────────────────┘
+
+   1. In hPanel, click "Databases" → "phpMyAdmin"
+   2. Click on your database
+   3. Click "Import" at the top
+   4. Click "Choose File" and select:
+        public_html/api/install.sql
+   5. Click "Go"
+
+┌──────────────────────────────────────────────────────────────────┐
+│  STEP 6: SET PERMISSIONS                                         │
+└──────────────────────────────────────────────────────────────────┘
+
+   1. In File Manager, go to "public_html/api/"
+   2. Find folder "upload"
+   3. Right-click → "Change Permissions"
+   4. Set to: 755
+   5. Click "Change"
+
+┌──────────────────────────────────────────────────────────────────┐
+│  STEP 7: ENABLE HTTPS (SSL)                                      │
+└──────────────────────────────────────────────────────────────────┘
+
+   1. In hPanel, go to "Security" → "SSL"
+   2. Enable "Free SSL Certificate"
+   3. Enable "Force HTTPS"
+
+┌──────────────────────────────────────────────────────────────────┐
+│  STEP 8: TEST YOUR SITE                                          │
+└──────────────────────────────────────────────────────────────────┘
+
+   Visit: https://yourdomain.com
+          Should see: CV Analyzer homepage
+
+   Visit: https://yourdomain.com/api/
+          Should see: "CV Analyzer API"
+
+┌──────────────────────────────────────────────────────────────────┐
+│  TROUBLESHOOTING                                                 │
+└──────────────────────────────────────────────────────────────────┘
+
+   ❌ 500 Error
+      → Check .env file exists in api/ folder
+      → Verify database credentials are correct
+
+   ❌ CSS/JS not loading
+      → Ensure .htaccess is in public_html/
+
+   ❌ Upload fails
+      → Ensure api/upload/ folder exists and has 755 permissions
+
+   ❌ PDF parsing fails
+      → Some hosts don't have pdftotext. Contact support.
+
+┌──────────────────────────────────────────────────────────────────┐
+│  NEED MORE HELP?                                                 │
+└──────────────────────────────────────────────────────────────────┘
+
+   • Check errors in hPanel → Metrics → Error Log
+   • Read DEPLOY.html (in the package) for visual guide
+   • Read README-HOSTINGER.md for detailed instructions
+   • Read DEPLOYMENT.md for complete documentation
+
+╔══════════════════════════════════════════════════════════════════╗
+║  That's it! Your CV Analyzer is now live. 🎉                    ║
+╚══════════════════════════════════════════════════════════════════╝
