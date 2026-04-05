@@ -1,6 +1,6 @@
 {
   "name": "animeprints-portfolio",
-  "version": "1.0.0",
+  "version": "1.2.3",
   "description": "Portfolio website for animeprints - Creative Developer",
   "type": "module",
   "main": "index.js",
